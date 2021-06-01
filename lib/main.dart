@@ -131,14 +131,10 @@ class AppState extends State<Application> {
               break;
 
             case 'personalinforuser':
-              return SlideLeftRouteZoomPage(page: PersonalInformationUser());
+              return SlideLeftRoute(page: PersonalInformationUser());
 
             case 'qrcode':
-              final Map<String, Object> arguments = settings.arguments;
-              return SlideTransferRightRoute(
-                  page: QRCodeScreen(
-                loadCamera: arguments['child'],
-              ));
+              return SlideLeftRoute(page: QRCodeScreen());
             // case 'qrcode':
             //   final Map<String, Object> arguments = settings.arguments;
             //   return SlideTransferRightRoute(page: TakePhoto());

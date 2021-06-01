@@ -54,7 +54,7 @@ dependencies:
   path_provider: ^0.5.0+1
   camera: ^0.7.0+4
   path:
-  image_picker:
+  image_picker: any
   #webview_flutter: ^0.3.9
   #flutter_webview_plugin: ^0.3.0+2
   local_auth: ^0.6.3+4

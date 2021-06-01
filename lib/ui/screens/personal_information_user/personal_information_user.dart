@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'package:qr_code_demo/GlobalTranslations.dart';
 import 'package:qr_code_demo/config/colors.dart';
 import 'package:qr_code_demo/ui/components/CusTextFormField.dart';
@@ -31,6 +35,17 @@ class _PersonalInformationUserState extends State<PersonalInformationUser> {
   TextEditingController _controllerPlaceOfPermanent =
       new TextEditingController();
   TextEditingController _controllerDateOfIssue = new TextEditingController();
+
+  String _path = null;
+  File file;
+  void _showPhotoLibrary() async {
+    file = await ImagePicker.pickImage(source: ImageSource.gallery);
+    // file.readAsBytesSync()
+    setState(() {
+      _path = file.path;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -159,7 +174,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser> {
                                           controller: _controllerIDNo,
                                           title: allTranslations.text("IDNo"))),
                                   SizedBox(
-                                    width: 10,
+                                    width: 5,
                                   ),
                                   Expanded(
                                       child: CusTextFormField(
@@ -181,7 +196,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser> {
                                         title: allTranslations.text("Gender")),
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 5,
                                   ),
                                   Expanded(
                                     child: CusTextFormField(
@@ -195,17 +210,338 @@ class _PersonalInformationUserState extends State<PersonalInformationUser> {
                                   controller: _controllerNativePlace,
                                   title: allTranslations.text("NativePlace")),
                               divider10,
-                              // CusTextFormField(
-                              //     title:
-                              //         allTranslations.text("PlaceOfPermanent")),
-                              // divider10,
                               CusTextFormField(
                                   controller: _controllerDateOfIssue,
                                   title: allTranslations.text("DateOfIssue")),
+                              divider10,
+                              Text(
+                                "Hình ảnh đính kèm",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Color(0xff9596ab)),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: InkWell(
+                                    onTap: () {
+                                      _showOptions(context);
+                                    },
+                                    child: Container(
+                                      height: (screenWidth * 0.35) - 40,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                              color: Colors.grey[400],
+                                              width: 2.0)),
+                                      child: FittedBox(
+                                        fit: BoxFit.fitHeight,
+                                        child: Container(
+                                          width: 95,
+                                          height: 55,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blueGrey[100],
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                    child: Container(
+                                                  height: 40,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                  ),
+                                                  child: Center(
+                                                    child: Container(
+                                                      height: 27,
+                                                      width: 20,
+                                                      child: FittedBox(
+                                                          fit: BoxFit.cover,
+                                                          child: Icon(
+                                                            Icons.person,
+                                                            color: Colors
+                                                                .blueGrey[200],
+                                                          )),
+                                                    ),
+                                                  ),
+                                                )),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Expanded(
+                                                    child: Container(
+                                                  height: 40,
+                                                  child: Column(
+                                                    children: [
+                                                      Flexible(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                      .blueGrey[
+                                                                  200],
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                          .blueGrey[
+                                                                      100],
+                                                                  width: 2.0)),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        flex: 1,
+                                                        fit: FlexFit.tight,
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                      .blueGrey[
+                                                                  200],
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                          .blueGrey[
+                                                                      100],
+                                                                  width: 4.0)),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                      .blueGrey[
+                                                                  200],
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                          .blueGrey[
+                                                                      100],
+                                                                  width: 3.0)),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                                  Container(
+                                    width: 5,
+                                    color: Colors.white,
+                                  ),
+                                  Expanded(
+                                      child: Container(
+                                    height: (screenWidth * 0.35) - 40,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        border: Border.all(
+                                            color: Colors.grey[400],
+                                            width: 2.0)),
+                                    child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Container(
+                                        width: 95,
+                                        height: 55,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blueGrey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                  child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Container(
+                                                    height: 20,
+                                                    width: 30,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                    ),
+                                                    child: Center(
+                                                      child: Container(
+                                                        height: 27,
+                                                        width: 20,
+                                                        child: RotatedBox(
+                                                          quarterTurns: 1,
+                                                          child: FittedBox(
+                                                              fit: BoxFit.cover,
+                                                              child: Icon(
+                                                                Icons
+                                                                    .fingerprint,
+                                                                color: Colors
+                                                                        .blueGrey[
+                                                                    200],
+                                                              )),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 20,
+                                                    width: 30,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                    ),
+                                                    child: Center(
+                                                      child: Container(
+                                                        height: 27,
+                                                        width: 20,
+                                                        child: RotatedBox(
+                                                          quarterTurns: 1,
+                                                          child: FittedBox(
+                                                              fit: BoxFit.cover,
+                                                              child: Icon(
+                                                                Icons
+                                                                    .fingerprint_rounded,
+                                                                color: Colors
+                                                                        .blueGrey[
+                                                                    200],
+                                                              )),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Expanded(
+                                                  child: Container(
+                                                height: 40,
+                                                child: Column(
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors
+                                                                .blueGrey[200],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                        .blueGrey[
+                                                                    100],
+                                                                width: 2.0)),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      fit: FlexFit.tight,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors
+                                                                .blueGrey[200],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                        .blueGrey[
+                                                                    100],
+                                                                width: 4.0)),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors
+                                                                .blueGrey[200],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                        .blueGrey[
+                                                                    100],
+                                                                width: 3.0)),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors
+                                                                .blueGrey[200],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                        .blueGrey[
+                                                                    100],
+                                                                width: 3.0)),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                                ],
+                              )
                             ],
                           ),
                         ),
                       )),
+                      file != null
+                          ? Image.file(
+                              file,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.fitHeight,
+                            )
+                          : Text("khong co hinh"),
                       Container(
                         height: 55,
                         decoration: BoxDecoration(
@@ -283,5 +619,70 @@ class _PersonalInformationUserState extends State<PersonalInformationUser> {
   Future barcodeScanner() async {
     String barcode = await BarcodeScanner.scan();
     print(barcode);
+  }
+
+  void _showOptions(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+              height: 150,
+              color: ColorConstants.cepColorBackground,
+              child: Column(children: <Widget>[
+                ListTile(
+                    leading: Icon(
+                      Icons.photo_camera,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      "Camera",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    )),
+                ListTile(
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showPhotoLibrary();
+                    },
+                    leading: Icon(
+                      Icons.photo_library,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      "Chọn ảnh từ thư viện",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ))
+              ]));
+        });
+  }
+}
+
+class ClipPainter1 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var height = size.height;
+    var width = size.width;
+    var path = new Path();
+
+    path.lineTo(0, size.height);
+    path.lineTo(size.width, height);
+    path.lineTo(size.width, 0);
+
+    /// [Bottom Left corner]
+    var thirdControlPoint = Offset(0, height);
+    var thirdEndPoint = Offset(width, height);
+    path.quadraticBezierTo(thirdControlPoint.dx, thirdControlPoint.dy,
+        thirdEndPoint.dx, thirdEndPoint.dy);
+
+    path.lineTo(0, size.height);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
   }
 }

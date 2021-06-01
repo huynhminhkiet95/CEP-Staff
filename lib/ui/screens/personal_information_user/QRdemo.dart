@@ -7,8 +7,7 @@ import 'package:qr_code_demo/ui/components/CustomDialog.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRCodeScreen extends StatefulWidget {
-  final Widget loadCamera;
-  const QRCodeScreen({Key key, this.loadCamera}) : super(key: key);
+  const QRCodeScreen({Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _QRCodeState();
 }
@@ -17,7 +16,6 @@ class _QRCodeState extends State<QRCodeScreen> {
   Barcode result;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool isLoad = false;
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -59,33 +57,6 @@ class _QRCodeState extends State<QRCodeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      // Expanded(
-                      //   child: Container(
-                      //       margin: EdgeInsets.all(12),
-                      //       child: InkWell(
-                      //         onTap: () async {
-                      //           await controller?.toggleFlash();
-                      //           setState(() {});
-                      //         },
-                      //         child: FutureBuilder(
-                      //           future: controller?.getFlashStatus(),
-                      //           builder: (context, snapshot) {
-                      //             if (snapshot.data != null) {
-                      //               if (snapshot.data == true) {
-                      //                 return Icon(Icons.flash_on,
-                      //                     color: Colors.white);
-                      //               } else {
-                      //                 return Icon(Icons.flash_off,
-                      //                     color: Colors.white);
-                      //               }
-                      //             } else {
-                      //               return Container();
-                      //             }
-                      //             // return Text('Flash: ${snapshot.data}');
-                      //           },
-                      //         ),
-                      //       )),
-                      // ),
                       FutureBuilder(
                           future: controller?.getFlashStatus(),
                           builder: (context, snapshot) {
