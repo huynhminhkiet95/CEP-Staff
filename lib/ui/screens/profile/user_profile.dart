@@ -33,6 +33,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
@@ -42,7 +43,7 @@ class ProfilePage extends StatelessWidget {
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          backgroundColor: ColorConstants.cepColorBackground,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0.0,
           bottomOpacity: 0.0,
           title: Text(
@@ -304,6 +305,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                     width: 100,
                     height: 100,
                     decoration: BoxDecoration(
+                        color: Colors.white,
                         shape: BoxShape.circle,
                         image: DecorationImage(
                             fit: BoxFit.cover,
@@ -317,10 +319,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                     globalUser.getUserInfo == null
                         ? ''
                         : globalUser.getUserInfo.hoTen,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                   )
                 ],
               ),

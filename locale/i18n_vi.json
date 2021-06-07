@@ -113,10 +113,10 @@
     "DeleteData":"Xóa Dữ Liệu",
     "Settings":"Cài Đặt",
     "CodeNumber":"Mã số",
-    "BranchID":"Chi nhánh ID:",
-    "Address":"Địa chỉ:",
-    "ManagerCodeNumber":"Mã số quản lý:",
-    "CreditGroups":"Tổ tín dụng:",
+    "BranchID":"Chi nhánh ID",
+    "Address":"Địa chỉ",
+    "ManagerCodeNumber":"Mã số quản lý",
+    "CreditGroups":"Tổ tín dụng",
     "PleaseSetupTouchID":"Vui lòng thiết lập Touch ID của bạn !",
     "SuccessfulAuthentication":"Xác thực thành công.",
     "SetupTouchID":"Thiết lập Touch-ID",
@@ -157,7 +157,9 @@
     "Ethnic":"Dân tộc",
     "Religion":"Tôn giáo",
     "IndividualTracesAndDeformities":"Đặc điểm nhận dạng",
-    "DateOfIssue":"Ngày cấp"
+    "DateOfIssue":"Ngày cấp",
+    "CustomerCode":"Mã khách hàng"
+
 
 
 }

@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:qr_code_demo/globalServer.dart';
 import 'package:async/async.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import '../GlobalUser.dart';
 
 class HttpBase {
@@ -155,7 +152,7 @@ class HttpBase {
   Future<http.Response> httpPostToken(String url, dynamic body) async {
     String token = globalUser.gettoken;
     var address = globalServer.getServerAddress;
-    var a = json.encode(body);
+    // var a = json.encode(body);
     http.Response result;
     try {
       result = await http.post(address + url,
@@ -312,42 +309,4 @@ class HttpBase {
       return null;
     }
   }
-
-  Future<void> compress() async {
-    final img = AssetImage("img/img.jpg");
-    print("pre compress");
-    final config = new ImageConfiguration();
-
-    AssetBundleImageKey key = await img.obtainKey(config);
-    final ByteData data = await key.bundle.load(key.name);
-
-    final beforeCompress = data.lengthInBytes;
-    print("beforeCompress = $beforeCompress");
-
-    final result =
-        await FlutterImageCompress.compressWithList(data.buffer.asUint8List());
-
-    print("after = ${result?.length ?? 0}");
-  }
-
-//   Future<File> compressImage(File f) async {
-//   ReceivePort receivePort = ReceivePort();
-
-//   await Isolate.spawn(getCompressedImage, receivePort.sendPort);
-//   SendPort sendPort = await receivePort.first;
-
-//   ReceivePort receivePort2 = ReceivePort();
-
-//   sendPort.send([
-//     f.path,
-//     f.uri.pathSegments.last,
-//     (await getTemporaryDirectory()).path,
-//     receivePort2.sendPort,
-//   ]);
-
-//   var msg = await receivePort2.first;
-
-//   return new File(msg);
-// }
-
 }

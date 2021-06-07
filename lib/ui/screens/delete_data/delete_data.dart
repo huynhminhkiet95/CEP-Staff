@@ -1132,7 +1132,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
               onPressed: () {
                 Navigator.of(context).pop();
               }),
-          backgroundColor: ColorConstants.cepColorBackground,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 20,
           title: const Text(
             'Xóa Dữ Liệu',

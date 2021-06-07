@@ -113,10 +113,10 @@
     "DeleteData":"Delete Data",
     "Settings":"Settings",
     "CodeNumber":"Code number",
-    "BranchID":"Branch ID:",
-    "Address":"Address:",
-    "ManagerCodeNumber":"Management code:",
-    "CreditGroups":"Credit groups:",
+    "BranchID":"Branch ID",
+    "Address":"Address",
+    "ManagerCodeNumber":"Management code",
+    "CreditGroups":"Credit groups",
     "PleaseSetupTouchID":"Please setup your Touch-ID !",
     "SuccessfulAuthentication":"Successful authentication.",
     "SetupTouchID":"Setup Touch-ID",
@@ -157,6 +157,7 @@
     "Ethnic":"Ethnic",
     "Religion":"Religion",
     "IndividualTracesAndDeformities":"Individual traces and deformities",
-    "DateOfIssue":"Date of issue"
+    "DateOfIssue":"Date of issue",
+    "CustomerCode":"Customer code"
 
 }

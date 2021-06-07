@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:qr_code_demo/config/colors.dart';
+import 'package:qr_code_demo/notifications/local_notification_widget.dart';
 import 'package:qr_code_demo/ui/components/WebViewPlugin.dart';
 import 'package:qr_code_demo/ui/navigation/slide_route.dart';
 import 'package:qr_code_demo/ui/screens/Home/dashboard.dart';
@@ -29,6 +33,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:qr_code_demo/ui/screens/survey/survey_detail.dart';
 import 'models/common/message.dart';
 import 'ui/screens/Login/welcomePage.dart';
+import 'package:qr_code_demo/notifications/local_notications_helper.dart';
 
 // extension ExtendedString on String {
 //   bool get isValidName {
@@ -62,16 +67,94 @@ class Application extends StatefulWidget {
 }
 
 class AppState extends State<Application> {
+  String messageTitle = "Empty";
+  String notificationAlert = "alert";
+  final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey(debugLabel: "Main Navigator");
+
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
+
   AuthenticationBloc authenticationBloc;
+
   @override
   void initState() {
     super.initState();
+
+    final settingsAndroid = AndroidInitializationSettings('app_icon');
+    final settingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) =>
+            onSelectNotification(payload));
+    flutterLocalNotificationsPlugin.initialize(
+        InitializationSettings(settingsAndroid, settingsIOS),
+        onSelectNotification: onSelectNotification);
+
+    _firebaseMessaging.configure(
+      onMessage: (message) async {
+        setState(() {
+          messageTitle = message["notification"]["title"];
+          notificationAlert = "New Notification Alert";
+        });
+        showIconNotification(
+          context,
+          flutterLocalNotificationsPlugin,
+          icon: Image.asset('assets/logo/CEP-logo_lauch_1.png'),
+          title: message["notification"]["title"],
+          body: message["notification"]["body"],
+          id: 41,
+        );
+      },
+      onResume: (message) async {
+        setState(() {
+          messageTitle = message["data"]["title"];
+          notificationAlert = "Application opened from Notification";
+        });
+        showIconNotification(
+          context,
+          flutterLocalNotificationsPlugin,
+          icon: Image.asset('assets/logo/CEP-logo_lauch.png'),
+          title: 'SmallImageTitle',
+          body: 'SmallImageBody',
+          id: 40,
+        );
+      },
+    );
+
+    _firebaseMessaging.subscribeToTopic('all');
+    _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings(
+      sound: true,
+      badge: true,
+      alert: true,
+    ));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print('Hello');
+    });
+    _firebaseMessaging.getToken().then((token) {
+      print(token); // Print the Token in Console
+    });
     final services = Services.of(context);
     //globalUser
     authenticationBloc = new AuthenticationBloc(
         services.commonService, services.sharePreferenceService);
-
     //DBProvider.db.checkColumn();
+  }
+
+  Future displayNotification(Map<String, dynamic> message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'channelid', 'flutterfcm', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      message['notification']['title'],
+      message['notification']['body'],
+      platformChannelSpecifics,
+      payload: 'hello',
+    );
   }
 
   @override
@@ -90,7 +173,30 @@ class AppState extends State<Application> {
     return BlocProvider<AuthenticationBloc>(
       bloc: authenticationBloc,
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'SourceSansPro'),
+        navigatorKey: navigatorKey,
+        theme: ThemeData(
+          fontFamily: 'SourceSansPro',
+          brightness: Brightness.light,
+          scaffoldBackgroundColor: ColorConstants.cepColorBackground,
+          accentColor: Colors.white,
+          textSelectionHandleColor: Colors.black,
+          primaryColor: Colors.blue,
+          cardColor: Colors.white,
+          highlightColor: ColorConstants.cepColorBackground,
+        ),
+
+        darkTheme: ThemeData(
+            primarySwatch: Colors.blue,
+            primaryColor: Colors.black,
+            brightness: Brightness.dark,
+            accentColor: Colors.black,
+            textSelectionHandleColor: Colors.white,
+            accentIconTheme: IconThemeData(color: Colors.black),
+            scaffoldBackgroundColor: Colors.black54,
+            cardColor: Colors.black,
+            highlightColor: Colors.white),
+
+        themeMode: ThemeMode.light,
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -132,6 +238,7 @@ class AppState extends State<Application> {
 
             case 'personalinforuser':
               return SlideLeftRoute(page: PersonalInformationUser());
+            //return SlideLeftRoute(page: LocalNotificationWidget());
 
             case 'qrcode':
               return SlideLeftRoute(page: QRCodeScreen());
@@ -201,5 +308,6 @@ class AppState extends State<Application> {
     );
   }
 
-  onSelectNotification(String payload) {}
+  Future onSelectNotification(String payload) =>
+      Navigator.pushNamed(navigatorKey.currentContext, 'userprofile');
 }

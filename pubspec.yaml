@@ -30,7 +30,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 
-  #google_maps_flutter: ^0.5.15
   flutter_html: ^0.11.1
   flutter_duration_picker: ^1.0.4
   cupertino_icons: ^0.1.2
@@ -47,33 +46,19 @@ dependencies:
   url_launcher: ^5.7.10
   location: ^2.3.4
   android_intent: ^0.3.0+2
-  barcode_scan: ^1.0.0
-  #permission_handler: ^3.0.0
-  pull_to_refresh: ^1.5.2
-  flutter_local_notifications: ^0.7.0
   path_provider: ^0.5.0+1
   camera: ^0.7.0+4
   path:
   image_picker: any
   image_crop: ^0.3.4
-  #webview_flutter: ^0.3.9
-  #flutter_webview_plugin: ^0.3.0+2
   local_auth: ^0.6.3+4
   flutter_masked_text: ^0.7.0
-  # adhara_socket_io: ^0.2.0
   sqflite: ^1.3.2+4
   autocomplete_textfield: ^1.7.3
-  #firebase_core: ^0.4.0
-  #firebase_messaging: ^4.0.0+3
-  #cloud_firestore: ^0.10.1
   date_utils: ^0.1.0+2
   simple_gesture_detector: ^0.1.3
-  #signalr_client: ^0.1.6
   launch_review: ^2.0.0
-  #photo_view: ^0.9.2
-  flutter_image_compress: ^0.6.5+1
   percent_indicator: ^2.1.9+1
-  ff_navigation_bar: ^0.1.5
   convex_bottom_bar: ^2.7.1+2
   cupertino_radio_choice: 1.0.0+1
   flutter_animated_dialog: ^1.2.0
@@ -81,12 +66,13 @@ dependencies:
   flutter_rounded_date_picker: ^1.0.5
   settings_ui: ^0.4.0
   number_slide_animation: ^0.1.1
-  #google_fonts: ^1.1.0 
   package_info: ^0.4.3+4
-  #map_launcher: ^1.1.3+1
   qr_code_scanner: ^0.3.5
-  video_player: ^1.0.1
-  camerawesome: any
+  firebase_analytics: any
+  firebase_messaging: any
+  firebase_core: ^0.4.0
+  flutter_local_notifications: ^0.7.1+1
+
 
 dev_dependencies:
   flutter_test:

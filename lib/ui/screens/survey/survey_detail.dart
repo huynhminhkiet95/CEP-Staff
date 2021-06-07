@@ -3306,9 +3306,9 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                       isUnderline: true,
                                                     ),
                                                   ),
-                                                  Divider(
-                                                    height: 10,
-                                                  ),
+                                                  // Divider(
+                                                  //   height: 10,
+                                                  // ),
                                                   Container(
                                                     width: screenWidth * 1,
                                                     child:

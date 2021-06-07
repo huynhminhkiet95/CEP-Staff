@@ -795,7 +795,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                       children: [], width: screenWidth * 0.7);
                 })
           ],
-          backgroundColor: ColorConstants.cepColorBackground,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 20,
           title: const Text('Chi Tiết Phát triển Cộng Đồng'),
           bottom: TabBar(
@@ -1270,6 +1270,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           margin: EdgeInsets.only(bottom: 30),
                                           child: CheckboxListTile(
                                             value: isScholarship,
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.blue,
                                             onChanged: (newValue) {},
                                             controlAffinity: ListTileControlAffinity
                                                 .leading, //  <-- leading Checkbox
@@ -1900,6 +1902,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           width: 80,
                                           margin: EdgeInsets.only(bottom: 30),
                                           child: CheckboxListTile(
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.blue,
                                             value: isGiftTET,
                                             onChanged: (newValue) {},
                                             controlAffinity: ListTileControlAffinity
@@ -2074,6 +2078,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           width: 80,
                                           margin: EdgeInsets.only(bottom: 30),
                                           child: CheckboxListTile(
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.blue,
                                             value: isHomeCEP,
                                             onChanged: (newValue) {},
                                             controlAffinity: ListTileControlAffinity
@@ -2761,6 +2767,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           margin: EdgeInsets.only(bottom: 30),
                                           child: CheckboxListTile(
                                             value: isCareerDevelopment,
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.blue,
                                             onChanged: (newValue) {},
                                             controlAffinity: ListTileControlAffinity
                                                 .leading, //  <-- leading Checkbox
@@ -3158,6 +3166,8 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                                           width: 80,
                                           margin: EdgeInsets.only(bottom: 30),
                                           child: CheckboxListTile(
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.blue,
                                             value: isInsurance,
                                             onChanged: (newValue) {},
                                             controlAffinity: ListTileControlAffinity

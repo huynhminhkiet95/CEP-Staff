@@ -99,7 +99,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
               //bool a = GlobalDownload.isSubmitDownload;
             },
           ),
-          backgroundColor: ColorConstants.cepColorBackground,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 20,
           title: const Text('Phát triển Cộng Đồng',
               style: TextStyle(fontWeight: FontWeight.w600)),
@@ -117,7 +117,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
             bloc: communityDevelopmentBloc,
             builder: (BuildContext context, CommunityDevelopmentState state) {
               return Container(
-                color: ColorConstants.cepColorBackground,
+                color: Theme.of(context).dividerColor,
                 child: ModalProgressHUDCustomize(
                   inAsyncCall: state?.isLoading ?? false,
                   child: StreamBuilder<List<KhachHang>>(
@@ -190,7 +190,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                       bottomLeft: Radius.elliptical(260, 100),
                                       // topRight: Radius.elliptical(260, 100),
                                     ),
-                                    color: Colors.white,
+                                    color: Theme.of(context).accentColor,
                                   ),
                                   child: Padding(
                                       padding: EdgeInsets.only(
@@ -311,7 +311,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                   //  color: Colors.blue,
                                   ),
                               Material(
-                                color: ColorConstants.cepColorBackground,
+                                color: Theme.of(context).dividerColor,
                                 child: TabBar(
                                   isScrollable: true,
                                   unselectedLabelColor:

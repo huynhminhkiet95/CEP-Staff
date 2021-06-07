@@ -1,43 +1,34 @@
 {
   "project_info": {
-    "project_number": "738449054098",
-    "firebase_url": "https://mplmobile-1555992338428.firebaseio.com",
-    "project_id": "mplmobile-1555992338428",
-    "storage_bucket": "mplmobile-1555992338428.appspot.com"
+    "project_number": "316383259142",
+    "project_id": "cep-nhan-vien",
+    "storage_bucket": "cep-nhan-vien.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:738449054098:android:440ce518f1f7c92b",
+        "mobilesdk_app_id": "1:316383259142:android:ba42bcf1c9406027137187",
         "android_client_info": {
           "package_name": "com.cep.CEPstaff"
         }
       },
       "oauth_client": [
         {
-          "client_id": "738449054098-s6khv9r5uk805j2c3luka28hqdc4s5or.apps.googleusercontent.com",
+          "client_id": "316383259142-lc9h0i04dhmplqgk9bljqa8r9nsatqh9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAUznGf_Vy7HPt-XiClpthEySxfjzkbo5Y"
+          "current_key": "AIzaSyByEn5Vhgd_ABmDDSjm8f68HRGuVY70sAo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "738449054098-s6khv9r5uk805j2c3luka28hqdc4s5or.apps.googleusercontent.com",
+              "client_id": "316383259142-lc9h0i04dhmplqgk9bljqa8r9nsatqh9.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "738449054098-2gk8588ms57q4oieiiq0rrlig089bnf3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.cep.CEPstaff",
-                "app_store_id": "1477031564"
-              }
             }
           ]
         }

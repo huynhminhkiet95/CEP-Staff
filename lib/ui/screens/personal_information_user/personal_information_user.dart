@@ -1,10 +1,7 @@
 import 'dart:io';
 
-import 'package:barcode_scan/barcode_scan.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:image_crop/image_crop.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:qr_code_demo/GlobalTranslations.dart';
 import 'package:qr_code_demo/config/colors.dart';
 import 'package:qr_code_demo/ui/components/CusTextFormField.dart';
@@ -30,6 +27,8 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   GlobalKey _scaffold = GlobalKey();
 
+  TextEditingController _controllerCustomerCode = new TextEditingController();
+  TextEditingController _controllerBranchID = new TextEditingController();
   TextEditingController _controllerIDNo = new TextEditingController();
   TextEditingController _controllerIDNoOld = new TextEditingController();
   TextEditingController _controllerFullName = new TextEditingController();
@@ -153,6 +152,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
     Widget qrCodeChild = _buildQrView(context);
     return Scaffold(
       key: _scaffold,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
             icon: Icon(
@@ -163,7 +163,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
             onPressed: () {
               Navigator.of(context).pop();
             }),
-        backgroundColor: ColorConstants.cepColorBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 20,
         title: Text(
           "Quét QR Code",
@@ -199,6 +199,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
       ),
       body: SingleChildScrollView(
         child: Container(
+          color: Colors.white,
           child: Stack(
             children: <Widget>[
               Container(
@@ -244,7 +245,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                     children: [
                       Expanded(
                           child: Container(
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.only(top: 16, right: 16, left: 16),
                         decoration: BoxDecoration(
                             color: Colors.grey[200],
                             boxShadow: [
@@ -267,6 +268,23 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: CusTextFormField(
+                                          controller: _controllerCustomerCode,
+                                          title: allTranslations
+                                              .text("CustomerCode"))),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Expanded(
+                                      child: CusTextFormField(
+                                          controller: _controllerBranchID,
+                                          title: allTranslations
+                                              .text("BranchID"))),
+                                ],
+                              ),
                               Row(
                                 children: [
                                   Expanded(
@@ -787,18 +805,19 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
     });
   }
 
-  Future barcodeScanner() async {
-    String barcode = await BarcodeScanner.scan();
-    print(barcode);
-  }
-
   void _showOptions(BuildContext context, int index) {
     showModalBottomSheet(
+        backgroundColor: Colors.transparent,
         context: context,
         builder: (context) {
           return Container(
-              height: listFileImageLast[index] != null ? 240 : 150,
-              color: ColorConstants.cepColorBackground,
+              height: listFileImageLast[index] != null ? 270 : 170,
+              // color: ColorConstants.cepColorBackground,
+              decoration: BoxDecoration(
+                  color: ColorConstants.cepColorBackground,
+                  borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(26),
+                      topRight: const Radius.circular(26))),
               child: Builder(
                 builder: (context) {
                   List<Widget> buildTileImage = List<Widget>();
@@ -864,7 +883,21 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       )));
-                  return Column(children: buildTileImage);
+                  return Column(
+                    children: [
+                      Container(
+                        //height: 40,
+                        child: Icon(
+                          Icons.remove,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                      Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: buildTileImage),
+                    ],
+                  );
                 },
               ));
         });

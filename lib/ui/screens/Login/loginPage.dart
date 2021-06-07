@@ -845,6 +845,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }
     return Scaffold(
       body: Container(
+        color: Colors.white,
         height: height,
         child: BlocEventStateBuilder<AuthenticationState>(
             bloc: authenticationBloc,

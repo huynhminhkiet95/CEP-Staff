@@ -56,44 +56,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorConstants.cepColorBackground,
-        elevation: 20,
-        title: Text(
-          allTranslations.text("Setting"),
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w600),
+    return MaterialApp(
+      color: Colors.red,
+      home: Scaffold(
+        //  backgroundColor: Colors.blue,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 20,
+          title: Text(
+            allTranslations.text("Setting"),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
         ),
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: 20,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
+        body: BlocEventStateBuilder<SettingState>(
+            bloc: settingBloc,
+            builder: (BuildContext context, SettingState state) {
+              return StreamBuilder<bool>(
+                  stream: settingBloc.getIsAuthenLocal,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    if (snapshot.data != null) {
+                      isAuthenLocal = snapshot.data;
+                    }
+                    return buildSettingsList();
+                  });
             }),
       ),
-      body: BlocEventStateBuilder<SettingState>(
-          bloc: settingBloc,
-          builder: (BuildContext context, SettingState state) {
-            return StreamBuilder<bool>(
-                stream: settingBloc.getIsAuthenLocal,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  if (snapshot.data != null) {
-                    isAuthenLocal = snapshot.data;
-                  }
-                  return buildSettingsList();
-                });
-          }),
     );
   }
 
   Widget buildSettingsList() {
     return SettingsList(
-      darkBackgroundColor: Colors.black,
-      lightBackgroundColor: Colors.white,
+      //   backgroundColor: Colors.grey[500],
       sections: [
         SettingsSection(
           title: 'Chung',
@@ -110,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subtitleTextStyle: TextStyle(
                   fontFamily: 'SourceSansPro',
                   fontSize: 14,
-                  color: Colors.grey),
+                  color: Colors.black38),
               onTap: () {
                 Navigator.pushNamed(context, 'language').then((value) {
                   setState(() {

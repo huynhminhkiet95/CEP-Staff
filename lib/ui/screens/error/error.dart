@@ -12,25 +12,26 @@ class ErrorScreen extends StatelessWidget {
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Theme.of(context).textSelectionHandleColor,
               size: 20,
             ),
             onPressed: () {
               Navigator.of(context).pop();
             }),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).accentColor,
         elevation: 20,
         title: Text(
           "Error",
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textSelectionHandleColor),
         ),
       ),
       body: Container(
         color: Colors.white,
         child: Stack(
           children: [
-            
             Center(
               child: Container(
                 height: 300,
@@ -48,11 +49,8 @@ class ErrorScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 wordSpacing: 1),
                           ),
-                        
                           RaisedButton(
-                            onPressed: () {
-                            
-                            },
+                            onPressed: () {},
                             child: Text(
                               allTranslations.text("TryAgain"),
                               style: TextStyle(
@@ -65,7 +63,6 @@ class ErrorScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                
                   ],
                 ),
               ),

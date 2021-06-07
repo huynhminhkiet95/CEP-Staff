@@ -135,7 +135,7 @@ class _SurveyScreenState extends State<SurveyScreen>
 
                 return Container(
                   color: surveyStream.listSurvey != null
-                      ? Colors.blue
+                      ? Theme.of(context).primaryColor
                       : Colors.white,
                   child: ModalProgressHUDCustomize(
                     inAsyncCall: state?.isLoadingSaveData ?? false,
@@ -143,7 +143,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                       children: [
                         Container(
                           height: size.height * 0.07,
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                           child: Center(
                             child: Text(
                               surveyStream.listSurvey != null
@@ -151,7 +151,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                   : "",
                               //  textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Color(0xff003399),
+                                  color: Theme.of(context).highlightColor,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w900,
                                   wordSpacing: 5),
@@ -165,7 +165,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                           decoration: BoxDecoration(
                             borderRadius: new BorderRadius.only(
                                 bottomLeft: Radius.elliptical(260, 100)),
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                           ),
                           child: surveyStream.listSurvey != null
                               ? Column(
@@ -223,7 +223,9 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontSize: 14,
-                                                          color: Colors.black),
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .textSelectionHandleColor),
                                                       underline: Container(
                                                         height: 0,
                                                         color: Colors.blue,
@@ -308,7 +310,9 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontSize: 14,
-                                                          color: Colors.black),
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .textSelectionHandleColor),
                                                       underline: Container(
                                                         height: 0,
                                                         color: Colors.blue,
@@ -344,7 +348,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                         Expanded(
                           child: Container(
                             color: surveyStream.listSurvey != null
-                                ? Colors.blue
+                                ? Theme.of(context).primaryColor
                                 : Colors.white,
                             child: Column(
                               children: [
@@ -601,7 +605,6 @@ class _SurveyScreenState extends State<SurveyScreen>
       },
     );
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
             icon: Icon(
@@ -612,7 +615,7 @@ class _SurveyScreenState extends State<SurveyScreen>
             onPressed: () {
               Navigator.of(context).pop();
             }),
-        backgroundColor: ColorConstants.cepColorBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 20,
         title: Text(
           allTranslations.text("BorrowingCapitalSurvey"),
@@ -702,7 +705,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                         child: Card(
                           elevation: 10,
                           shadowColor: Colors.grey,
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                           borderOnForeground: true,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),

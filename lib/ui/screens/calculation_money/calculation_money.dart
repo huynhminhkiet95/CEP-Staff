@@ -70,6 +70,7 @@ class _CalculationMoneyState extends State<CalculationMoney> {
         children: <Widget>[
           Expanded(
             child: Container(
+              color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40, top: 20),
                 child: ListView(
@@ -532,19 +533,13 @@ class _CalculationMoneyState extends State<CalculationMoney> {
           ),
           Container(
             height: 100,
-            decoration: new BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    blurRadius: 4,
-                    spreadRadius: 4,
-                    offset: Offset(1, 1), // changes position of shadow
-                  ),
-                ],
-                color: Colors.grey,
-                borderRadius: new BorderRadius.only(
-                    topLeft: Radius.elliptical(40, 40),
-                    topRight: Radius.elliptical(40, 40))),
+            color: Colors.grey,
+            // decoration: new BoxDecoration(
+
+            //     color: Colors.grey,
+            //     borderRadius: new BorderRadius.only(
+            //         topLeft: Radius.elliptical(40, 40),
+            //         topRight: Radius.elliptical(40, 40))),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Row(
