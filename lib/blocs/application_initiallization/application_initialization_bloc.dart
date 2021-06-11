@@ -15,7 +15,7 @@ class ApplicationInitializationBloc extends BlocEventStateBase<
   Stream<ApplicationInitializationState> eventHandler(
       ApplicationInitializationEvent event,
       ApplicationInitializationState currentState) async* {
-    String _server = 'DEV-VPN';
+    String _server = 'PROD';
     if (!currentState.isInitialized) {
       yield ApplicationInitializationState.notInitialized();
     }

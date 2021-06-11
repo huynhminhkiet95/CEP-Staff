@@ -291,7 +291,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
 
     // trao hoc bong & qua tang
     selectedIndexScholarshipAndGift =
-        widget.khachHang.hocBong.hocbong_Quatang.toInt();
+        widget.khachHang.hocBong.hocbong_Quatang.toInt() == 0 ? 2 : 1;
 
     // muc dich su dung hoc bong
     listUsePurpose = widget.listCombobox
@@ -672,7 +672,6 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     model.hocBong.truonghoc = _controllerSchoolName.text;
     model.hocBong.lop = double.parse(_controllerClassName.text);
     model.hocBong.hocluc = double.parse(_capacityValue);
-    model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
     model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
     model.hocBong.hocbong_Quatang = selectedIndexScholarshipAndGift.toDouble();
     model.hocBong.mucdich =

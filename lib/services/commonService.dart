@@ -4,6 +4,7 @@ import 'package:qr_code_demo/globalServer.dart';
 import 'package:qr_code_demo/models/community_development/comunity_development.dart';
 import 'package:qr_code_demo/models/download_data/survey_info.dart';
 import 'package:http/http.dart';
+import 'package:qr_code_demo/models/personal_information_user/update_information_user.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:qr_code_demo/dtos/UserLogin.dart';
 import 'package:qr_code_demo/httpProvider/HttpProviders.dart';
@@ -154,5 +155,10 @@ class CommonService {
   Future<Response> updateCommunityDevelopment(List<KhachHang> body) {
     return _httpBase.httpPostToken(
         ServiceName.UpdateCommunityDevelopmentInfo.toString(), body);
+  }
+
+  Future<Response> updateInfoCustomer(UpdateInformationUser body) {
+    return _httpBase.httpPostToken(
+        ServiceName.UpdateInfoCustomer.toString(), body);
   }
 }

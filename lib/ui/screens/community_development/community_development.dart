@@ -117,7 +117,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
             bloc: communityDevelopmentBloc,
             builder: (BuildContext context, CommunityDevelopmentState state) {
               return Container(
-                color: Theme.of(context).dividerColor,
+                color: ColorConstants.cepColorBackground,
                 child: ModalProgressHUDCustomize(
                   inAsyncCall: state?.isLoading ?? false,
                   child: StreamBuilder<List<KhachHang>>(
@@ -311,7 +311,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                   //  color: Colors.blue,
                                   ),
                               Material(
-                                color: Theme.of(context).dividerColor,
+                                color: ColorConstants.cepColorBackground,
                                 child: TabBar(
                                   isScrollable: true,
                                   unselectedLabelColor:

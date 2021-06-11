@@ -72,7 +72,7 @@ dependencies:
   firebase_messaging: any
   firebase_core: ^0.4.0
   flutter_local_notifications: ^0.7.1+1
-
+  qr_code_tools: any
 
 dev_dependencies:
   flutter_test:

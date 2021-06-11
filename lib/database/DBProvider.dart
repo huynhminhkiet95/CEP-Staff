@@ -1309,7 +1309,7 @@ class DBProvider {
                         ${item.hocBong == null ? 0 : item.hocBong.lop},
                         "${item.hocBong == null ? '' : item.hocBong.truonghoc}",
                         ${item.hocBong == null ? 0 : item.hocBong.quanhekhachhang},
-                        ${item.hocBong == null ? 0 : item.hocBong.hocbong_Quatang},
+                        ${item.hocBong == null ? 2 : item.hocBong.hocbong_Quatang},
                         ${item.hocBong == null ? 0 : item.hocBong.hocluc},
                         ${item.hocBong == null ? 0 : item.hocBong.danhanhocbong ? 1 : 0},
                         ${item.hocBong == null ? 0 : item.hocBong.dinhKemHoSo},

@@ -525,6 +525,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.5"
+  qr_code_tools:
+    dependency: "direct main"
+    description:
+      name: qr_code_tools
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7"
   quiver:
     dependency: transitive
     description:

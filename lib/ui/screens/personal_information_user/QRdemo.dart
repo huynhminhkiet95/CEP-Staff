@@ -27,6 +27,7 @@ class _QRCodeState extends State<QRCodeScreen> {
     controller.resumeCamera();
   }
 
+  int dialogCount = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,99 +193,104 @@ class _QRCodeState extends State<QRCodeScreen> {
       result = scanData;
       bool isCheck = _checkCitizenIdentificationCard(result.code);
       if (isCheck) {
-        showGeneralDialog(
-            barrierDismissible: false,
-            barrierColor: Colors.black.withOpacity(0.5),
-            transitionBuilder: (context, a1, a2, widget) {
-              Size size = MediaQuery.of(context).size;
-              double screenWidth = size.width;
-              return Transform.scale(
-                scale: a1.value,
-                child: Opacity(
-                  opacity: a1.value,
-                  child: AlertDialog(
-                    insetPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    // (horizontal:10 = left:10, right:10)(vertical:10 = top:10, bottom:10)
-                    contentPadding: EdgeInsets.zero,
-                    scrollable: true,
-                    backgroundColor: Colors.grey[200],
-                    elevation: 1,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.white70, width: 0),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    titlePadding: EdgeInsets.only(left: 15, right: 10, top: 10),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: screenWidth * 0.8,
-                          child: Text(
-                            "Nội dung mã QR: ",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Lato',
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                color: Colors.grey,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.grey)),
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.white,
+        if (dialogCount == 0) {
+          dialogCount++;
+          showGeneralDialog(
+              barrierDismissible: false,
+              barrierColor: Colors.black.withOpacity(0.5),
+              transitionBuilder: (context, a1, a2, widget) {
+                Size size = MediaQuery.of(context).size;
+                double screenWidth = size.width;
+                return Transform.scale(
+                  scale: a1.value,
+                  child: Opacity(
+                    opacity: a1.value,
+                    child: AlertDialog(
+                      insetPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      // (horizontal:10 = left:10, right:10)(vertical:10 = top:10, bottom:10)
+                      contentPadding: EdgeInsets.zero,
+                      scrollable: true,
+                      backgroundColor: Colors.grey[200],
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.white70, width: 0),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      titlePadding:
+                          EdgeInsets.only(left: 15, right: 10, top: 10),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: screenWidth * 0.8,
+                            child: Text(
+                              "Nội dung mã QR: ",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Lato',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
-                        )
+                          InkWell(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.grey)),
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      content: Container(
+                        padding:
+                            const EdgeInsets.only(left: 20, right: 20, top: 50),
+                        width: 150,
+                        child: Text(result.code),
+                      ),
+                      actions: [
+                        new FlatButton(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          textColor: Colors.grey,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _resumeCamera();
+                            dialogCount--;
+                          },
+                          child: new Text(
+                            "Đóng",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        new FlatButton(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          textColor: Colors.pink[500],
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _sendDataToParent();
+                          },
+                          child: new Text(
+                            "Sao chép",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ],
                     ),
-                    content: Container(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 20, top: 50),
-                      width: 150,
-                      child: Text(result.code),
-                    ),
-                    actions: [
-                      new FlatButton(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        textColor: Colors.grey,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _resumeCamera();
-                        },
-                        child: new Text(
-                          "Đóng",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      new FlatButton(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        textColor: Colors.pink[500],
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _sendDataToParent();
-                        },
-                        child: new Text(
-                          "Sao chép",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
                   ),
-                ),
-              );
-            },
-            transitionDuration: Duration(milliseconds: 200),
-            barrierLabel: '',
-            context: context,
-            pageBuilder: (context, animation1, animation2) {});
+                );
+              },
+              transitionDuration: Duration(milliseconds: 200),
+              barrierLabel: '',
+              context: context,
+              pageBuilder: (context, animation1, animation2) {});
+        }
       } else {
         showGeneralDialog(
             barrierDismissible: false,
