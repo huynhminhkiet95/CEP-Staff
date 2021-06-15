@@ -16,6 +16,7 @@ import 'package:qr_code_demo/ui/screens/downloadData/download_main.dart';
 import 'package:qr_code_demo/ui/screens/error/error.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/QRdemo.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/TakePhoto.dart';
+import 'package:qr_code_demo/ui/screens/personal_information_user/home.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/personal_information_user.dart';
 import 'package:qr_code_demo/ui/screens/profile/language.dart';
 import 'package:qr_code_demo/ui/screens/profile/setting.dart';
@@ -238,7 +239,7 @@ class AppState extends State<Application> {
 
             case 'personalinforuser':
               return SlideLeftRoute(page: PersonalInformationUser());
-            //return SlideLeftRoute(page: LocalNotificationWidget());
+            //return SlideLeftRoute(page: Home1());
 
             case 'qrcode':
               return SlideLeftRoute(page: QRCodeScreen());

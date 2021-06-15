@@ -96,5 +96,7 @@ dependencies {
     api "androidx.core:core:1.1.0-alpha03"
     //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
+    // implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
+    // implementation 'com.google.firebase:firebase-ml-vision-barcode-model:16.0.1'
 
 }

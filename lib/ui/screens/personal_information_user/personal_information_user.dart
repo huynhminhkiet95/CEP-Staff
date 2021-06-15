@@ -16,6 +16,7 @@ import 'package:qr_code_demo/enum/typeInfor.dart';
 import 'package:qr_code_demo/models/personal_information_user/update_information_user.dart';
 import 'package:qr_code_demo/services/service.dart';
 import 'package:qr_code_demo/ui/components/CusTextFormField.dart';
+import 'package:qr_code_demo/ui/components/ModalProgressHUDCustomize.dart';
 import 'package:qr_code_demo/ui/css/style.css.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_demo/ui/components/crop_image.dart';
@@ -159,11 +160,15 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
       listCitizenIdentificationImage.add(new UrlHinhanh(
           loaithongtinId: TypeInfo.avatar.index,
           ismattruoc: true,
-          urlHinhanh: base64Encode(listFileImageLast[0].readAsBytesSync())));
+          urlHinhanh: ""
+          //base64Encode(listFileImageLast[0].readAsBytesSync())
+          ));
       listCitizenIdentificationImage.add(new UrlHinhanh(
           loaithongtinId: TypeInfo.avatar.index,
           ismattruoc: false,
-          urlHinhanh: base64Encode(listFileImageLast[1].readAsBytesSync())));
+          urlHinhanh: ""
+          //base64Encode(listFileImageLast[1].readAsBytesSync())
+          ));
 
       UpdateInformationUser model = new UpdateInformationUser();
       model.ngay = FormatDateConstants.convertDateTimeToStringT(DateTime.now());
@@ -178,6 +183,18 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
       personalInformationUserBloc
           .emitEvent(UpdatePersonalInformationUserEvent(context, model));
     }
+  }
+
+  onClear() {
+    _controllerCustomerCode.text = "";
+    _controllerBranchID.text = "";
+    _controllerIDNo.text = "";
+    _controllerIDNoOld.text = "";
+    _controllerFullName.text = "";
+    _controllerBOD.text = "";
+    _controllerSex.text = "";
+    _controllerNativePlace.text = "";
+    _controllerDateOfIssue.text = "";
   }
 
   @override
@@ -249,633 +266,639 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
             bloc: personalInformationUserBloc,
             builder:
                 (BuildContext context, PersonalInformationUserState state) {
-              return SingleChildScrollView(
-                child: Container(
-                  color: Colors.white,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(top: 10),
-                        height: (screenHeight * 1 / 3) - 50,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.deepPurple[900],
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            )),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            "Thông Tin Khách Hàng",
-                            //  textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                wordSpacing: 5),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(16.0, 60.0, 16.0, 0.0),
+              return ModalProgressHUDCustomize(
+                inAsyncCall: state?.isLoading ?? false,
+                child: SingleChildScrollView(
+                  child: Container(
+                    color: Colors.white,
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(top: 10),
+                          height: (screenHeight * 1 / 3) - 50,
+                          width: double.infinity,
                           decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              boxShadow: [
-                                BoxShadow(
+                              color: Colors.deepPurple[900],
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(20),
+                                bottomRight: Radius.circular(20),
+                              )),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              "Thông Tin Khách Hàng",
+                              //  textAlign: TextAlign.center,
+                              style: TextStyle(
                                   color: Colors.white,
-                                  blurRadius: 1,
-                                  spreadRadius: 0,
-                                  offset: Offset(
-                                      1, 1), // changes position of shadow
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(15.0)),
-                          width: screenWidth,
-                          height: (screenHeight * 1) - 200,
-                          child: Form(
-                            key: _formKeyInfoCustomer,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                    child: Container(
-                                  padding: EdgeInsets.only(
-                                      top: 16, right: 16, left: 16, bottom: 16),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.white,
-                                          blurRadius: 1,
-                                          spreadRadius: 0,
-                                          offset: Offset(1,
-                                              1), // changes position of shadow
-                                        ),
-                                      ],
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15),
-                                      )),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.vertical,
-                                    physics: AlwaysScrollableScrollPhysics(
-                                        parent: BouncingScrollPhysics()),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                                child: CusTextFormField(
-                                                    controller:
-                                                        _controllerCustomerCode,
-                                                    textInputType:
-                                                        TextInputType.text,
-                                                    validator: (value) {
-                                                      if (value.isEmpty) {
-                                                        return 'Vui lòng nhập trường này!';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    title: allTranslations
-                                                        .text("CustomerCode"))),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Expanded(
-                                                child: CusTextFormField(
-                                                    controller:
-                                                        _controllerBranchID,
-                                                    textInputType:
-                                                        TextInputType.number,
-                                                    validator: (value) {
-                                                      if (value.isEmpty) {
-                                                        return 'Vui lòng nhập trường này!';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    title: allTranslations
-                                                        .text("BranchID"))),
-                                          ],
-                                        ),
-                                        divider10,
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                                child: CusTextFormField(
-                                                    controller: _controllerIDNo,
-                                                    textInputType:
-                                                        TextInputType.number,
-                                                    validator: (value) {
-                                                      if (value.isEmpty) {
-                                                        return 'Vui lòng nhập trường này!';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    title: allTranslations
-                                                        .text("IDNo"))),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Expanded(
-                                                child: CusTextFormField(
-                                                    controller:
-                                                        _controllerIDNoOld,
-                                                    textInputType:
-                                                        TextInputType.number,
-                                                    validator: (value) {
-                                                      if (value.isEmpty) {
-                                                        return 'Vui lòng nhập trường này!';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    title: allTranslations
-                                                        .text("IDNoOld"))),
-                                          ],
-                                        ),
-                                        divider10,
-                                        CusTextFormField(
-                                            controller: _controllerFullName,
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Vui lòng nhập trường này!';
-                                              }
-                                              return null;
-                                            },
-                                            title:
-                                                allTranslations.text("Name")),
-                                        divider10,
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: CusTextFormField(
-                                                  controller: _controllerSex,
-                                                  validator: (value) {
-                                                    if (value.isEmpty) {
-                                                      return 'Vui lòng nhập trường này!';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  title: allTranslations
-                                                      .text("Gender")),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Expanded(
-                                              child: CusTextFormField(
-                                                  controller: _controllerBOD,
-                                                  focusNode:
-                                                      new AlwaysDisabledFocusNode(),
-                                                  onTab: () {
-                                                    //print("object");
-                                                  },
-                                                  textInputType:
-                                                      TextInputType.datetime,
-                                                  validator: (value) {
-                                                    if (value.isEmpty) {
-                                                      return 'Vui lòng nhập trường này!';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  title: allTranslations
-                                                      .text("BOD")),
-                                            ),
-                                          ],
-                                        ),
-                                        divider10,
-                                        CusTextFormField(
-                                            controller: _controllerNativePlace,
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Vui lòng nhập trường này!';
-                                              }
-                                              return null;
-                                            },
-                                            title: allTranslations
-                                                .text("NativePlace")),
-                                        divider10,
-                                        CusTextFormField(
-                                            controller: _controllerDateOfIssue,
-                                            focusNode:
-                                                new AlwaysDisabledFocusNode(),
-                                            onTab: () {
-                                              //print("object");
-                                            },
-                                            textInputType:
-                                                TextInputType.datetime,
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Vui lòng nhập trường này!';
-                                              }
-                                              return null;
-                                            },
-                                            title: allTranslations
-                                                .text("DateOfIssue")),
-                                        divider10,
-                                        Text(
-                                          "Hình ảnh đính kèm",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                              color: Color(0xff9596ab)),
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                                child: InkWell(
-                                              onTap: () {
-                                                _showOptions(context, 0);
-                                              },
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                    "Mặt trước",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.red[600],
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                  Container(
-                                                    height:
-                                                        (screenWidth * 0.35) -
-                                                            40,
-                                                    padding: EdgeInsets.all(4),
-                                                    // decoration: BoxDecoration(
-                                                    //     color: Colors.white,
-                                                    //     borderRadius:
-                                                    //         BorderRadius
-                                                    //             .circular(8.0),
-                                                    //     border: Border.all(
-                                                    //         color: Colors
-                                                    //             .grey[400],
-                                                    //         width: 2.0)),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.fitHeight,
-                                                      child:
-                                                          listFileImageLast[
-                                                                      0] !=
-                                                                  null
-                                                              ? Container(
-                                                                  width: 95,
-                                                                  height: 55,
-                                                                  decoration:
-                                                                      new BoxDecoration(
-                                                                          borderRadius: BorderRadius.all(Radius.circular(
-                                                                              5.0)),
-                                                                          //color: Colors.redAccent,
-                                                                          shape: BoxShape
-                                                                              .rectangle,
-                                                                          image: new DecorationImage(
-                                                                              fit: BoxFit.fill,
-                                                                              image: FileImage(listFileImageLast[0]))),
-                                                                )
-                                                              : Container(
-                                                                  width: 95,
-                                                                  height: 55,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                              .blueGrey[
-                                                                          100],
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5.0),
-                                                                      border: Border.all(
-                                                                          color: isValidAttachFileFrontFace != false
-                                                                              ? Colors.grey[400]
-                                                                              : Colors.red[300],
-                                                                          width: 1.3)),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            8.0),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Expanded(
-                                                                            child:
-                                                                                Container(
-                                                                          height:
-                                                                              40,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                Colors.white,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                          ),
-                                                                          child:
-                                                                              Center(
-                                                                            child:
-                                                                                Container(
-                                                                              height: 27,
-                                                                              width: 20,
-                                                                              child: FittedBox(
-                                                                                  fit: BoxFit.cover,
-                                                                                  child: Icon(
-                                                                                    Icons.person,
-                                                                                    color: Colors.blueGrey[200],
-                                                                                  )),
-                                                                            ),
-                                                                          ),
-                                                                        )),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        Expanded(
-                                                                            child:
-                                                                                Container(
-                                                                          height:
-                                                                              40,
-                                                                          child:
-                                                                              Column(
-                                                                            children: [
-                                                                              Flexible(
-                                                                                flex: 1,
-                                                                                child: Container(
-                                                                                  decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
-                                                                                ),
-                                                                              ),
-                                                                              Flexible(
-                                                                                flex: 1,
-                                                                                fit: FlexFit.tight,
-                                                                                child: Container(
-                                                                                  decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
-                                                                                ),
-                                                                              ),
-                                                                              Flexible(
-                                                                                flex: 1,
-                                                                                child: Container(
-                                                                                  decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        )),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                    ),
-                                                  ),
-                                                  isValidAttachFileFrontFace !=
-                                                          false
-                                                      ? Container()
-                                                      : Text(
-                                                          "Vui lòng nhập trường này!",
-                                                          style: TextStyle(
-                                                              color: Colors.red,
-                                                              fontSize: 12),
-                                                        )
-                                                ],
-                                              ),
-                                            )),
-                                            Container(
-                                              width: 5,
-                                              color: Colors.white,
-                                            ),
-                                            Expanded(
-                                                child: InkWell(
-                                              onTap: () {
-                                                _showOptions(context, 1);
-                                              },
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                    "Mặt sau",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.red[600],
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                  Container(
-                                                    height:
-                                                        (screenWidth * 0.35) -
-                                                            40,
-                                                    padding: EdgeInsets.all(4),
-                                                    // decoration: BoxDecoration(
-                                                    //     color: Colors.white,
-                                                    //     borderRadius:
-                                                    //         BorderRadius
-                                                    //             .circular(8.0),
-                                                    //     border: Border.all(
-                                                    //         color: Colors
-                                                    //             .grey[400],
-                                                    //         width: 2.0)),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.fitHeight,
-                                                      child:
-                                                          listFileImageLast[
-                                                                      1] !=
-                                                                  null
-                                                              ? Container(
-                                                                  width: 95,
-                                                                  height: 55,
-                                                                  decoration: new BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.all(Radius.circular(
-                                                                              5.0)),
-                                                                      shape: BoxShape
-                                                                          .rectangle,
-                                                                      image: new DecorationImage(
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                          image:
-                                                                              FileImage(listFileImageLast[1]))),
-                                                                )
-                                                              : Container(
-                                                                  width: 95,
-                                                                  height: 55,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                              .blueGrey[
-                                                                          100],
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5.0),
-                                                                      border: Border.all(
-                                                                          color: isValidAttachFileFrontFace != false
-                                                                              ? Colors.grey[400]
-                                                                              : Colors.red[300],
-                                                                          width: 1.3)),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            5.0),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Expanded(
-                                                                            child:
-                                                                                Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.spaceAround,
-                                                                          children: [
-                                                                            Container(
-                                                                              height: 20,
-                                                                              width: 30,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Colors.white,
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                              ),
-                                                                              child: Center(
-                                                                                child: Container(
-                                                                                  height: 27,
-                                                                                  width: 20,
-                                                                                  child: RotatedBox(
-                                                                                    quarterTurns: 1,
-                                                                                    child: FittedBox(
-                                                                                        fit: BoxFit.cover,
-                                                                                        child: Icon(
-                                                                                          Icons.fingerprint,
-                                                                                          color: Colors.blueGrey[200],
-                                                                                        )),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                            Container(
-                                                                              height: 20,
-                                                                              width: 30,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Colors.white,
-                                                                                borderRadius: BorderRadius.circular(8.0),
-                                                                              ),
-                                                                              child: Center(
-                                                                                child: Container(
-                                                                                  height: 27,
-                                                                                  width: 20,
-                                                                                  child: RotatedBox(
-                                                                                    quarterTurns: 1,
-                                                                                    child: FittedBox(
-                                                                                        fit: BoxFit.cover,
-                                                                                        child: Icon(
-                                                                                          Icons.fingerprint_rounded,
-                                                                                          color: Colors.blueGrey[200],
-                                                                                        )),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        )),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        Expanded(
-                                                                            child:
-                                                                                Container(
-                                                                          height:
-                                                                              40,
-                                                                          child:
-                                                                              Column(
-                                                                            children: [
-                                                                              Flexible(
-                                                                                flex: 1,
-                                                                                child: Container(
-                                                                                  decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
-                                                                                ),
-                                                                              ),
-                                                                              Flexible(
-                                                                                flex: 1,
-                                                                                fit: FlexFit.tight,
-                                                                                child: Container(
-                                                                                  decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
-                                                                                ),
-                                                                              ),
-                                                                              Flexible(
-                                                                                flex: 1,
-                                                                                child: Container(
-                                                                                  decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
-                                                                                ),
-                                                                              ),
-                                                                              Flexible(
-                                                                                flex: 1,
-                                                                                child: Container(
-                                                                                  decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        )),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                    ),
-                                                  ),
-                                                  isValidAttachFileBackFace !=
-                                                          false
-                                                      ? Container()
-                                                      : Text(
-                                                          "Vui lòng nhập trường này!",
-                                                          style: TextStyle(
-                                                              color: Colors.red,
-                                                              fontSize: 12),
-                                                        )
-                                                ],
-                                              ),
-                                            )),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                                Container(
-                                  height: 55,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(15),
-                                        bottomRight: Radius.circular(15),
-                                      )),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Center(
-                                            child: Text("Chỉnh Sửa",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold))),
-                                      ),
-                                      VerticalDivider(
-                                        width: 5,
-                                        thickness: 5,
-                                        color: Colors.white,
-                                      ),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () => onSubmit(context),
-                                          child: Center(
-                                              child: Text("Cập Nhật",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold))),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  wordSpacing: 5),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Center(
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(16.0, 60.0, 16.0, 0.0),
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    blurRadius: 1,
+                                    spreadRadius: 0,
+                                    offset: Offset(
+                                        1, 1), // changes position of shadow
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(15.0)),
+                            width: screenWidth,
+                            height: (screenHeight * 1) - 200,
+                            child: Form(
+                              key: _formKeyInfoCustomer,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    padding: EdgeInsets.only(
+                                        top: 16,
+                                        right: 16,
+                                        left: 16,
+                                        bottom: 16),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.white,
+                                            blurRadius: 1,
+                                            spreadRadius: 0,
+                                            offset: Offset(1,
+                                                1), // changes position of shadow
+                                          ),
+                                        ],
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15),
+                                        )),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.vertical,
+                                      physics: AlwaysScrollableScrollPhysics(
+                                          parent: BouncingScrollPhysics()),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                  child: CusTextFormField(
+                                                      controller:
+                                                          _controllerCustomerCode,
+                                                      textInputType:
+                                                          TextInputType.text,
+                                                      validator: (value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Vui lòng nhập trường này!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      title:
+                                                          allTranslations.text(
+                                                              "CustomerCode"))),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Expanded(
+                                                  child: CusTextFormField(
+                                                      controller:
+                                                          _controllerBranchID,
+                                                      textInputType:
+                                                          TextInputType.number,
+                                                      validator: (value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Vui lòng nhập trường này!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      title: allTranslations
+                                                          .text("BranchID"))),
+                                            ],
+                                          ),
+                                          divider10,
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                  child: CusTextFormField(
+                                                      controller:
+                                                          _controllerIDNo,
+                                                      textInputType:
+                                                          TextInputType.number,
+                                                      validator: (value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Vui lòng nhập trường này!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      title: allTranslations
+                                                          .text("IDNo"))),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Expanded(
+                                                  child: CusTextFormField(
+                                                      controller:
+                                                          _controllerIDNoOld,
+                                                      textInputType:
+                                                          TextInputType.number,
+                                                      validator: (value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Vui lòng nhập trường này!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      title: allTranslations
+                                                          .text("IDNoOld"))),
+                                            ],
+                                          ),
+                                          divider10,
+                                          CusTextFormField(
+                                              controller: _controllerFullName,
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Vui lòng nhập trường này!';
+                                                }
+                                                return null;
+                                              },
+                                              title:
+                                                  allTranslations.text("Name")),
+                                          divider10,
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: CusTextFormField(
+                                                    controller: _controllerSex,
+                                                    validator: (value) {
+                                                      if (value.isEmpty) {
+                                                        return 'Vui lòng nhập trường này!';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    title: allTranslations
+                                                        .text("Gender")),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Expanded(
+                                                child: CusTextFormField(
+                                                    controller: _controllerBOD,
+                                                    focusNode:
+                                                        new AlwaysDisabledFocusNode(),
+                                                    onTab: () {
+                                                      //print("object");
+                                                    },
+                                                    textInputType:
+                                                        TextInputType.datetime,
+                                                    validator: (value) {
+                                                      if (value.isEmpty) {
+                                                        return 'Vui lòng nhập trường này!';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    title: allTranslations
+                                                        .text("BOD")),
+                                              ),
+                                            ],
+                                          ),
+                                          divider10,
+                                          CusTextFormField(
+                                              controller:
+                                                  _controllerNativePlace,
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Vui lòng nhập trường này!';
+                                                }
+                                                return null;
+                                              },
+                                              title: allTranslations
+                                                  .text("NativePlace")),
+                                          divider10,
+                                          CusTextFormField(
+                                              controller:
+                                                  _controllerDateOfIssue,
+                                              focusNode:
+                                                  new AlwaysDisabledFocusNode(),
+                                              onTab: () {
+                                                //print("object");
+                                              },
+                                              textInputType:
+                                                  TextInputType.datetime,
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Vui lòng nhập trường này!';
+                                                }
+                                                return null;
+                                              },
+                                              title: allTranslations
+                                                  .text("DateOfIssue")),
+                                          divider10,
+                                          Text(
+                                            "Hình ảnh đính kèm",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                                color: Color(0xff9596ab)),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                  child: InkWell(
+                                                onTap: () {
+                                                  _showOptions(context, 0);
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      "Mặt trước",
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.red[600],
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                    ),
+                                                    Container(
+                                                      height:
+                                                          (screenWidth * 0.35) -
+                                                              40,
+                                                      padding:
+                                                          EdgeInsets.all(4),
+                                                      // decoration: BoxDecoration(
+                                                      //     color: Colors.white,
+                                                      //     borderRadius:
+                                                      //         BorderRadius
+                                                      //             .circular(8.0),
+                                                      //     border: Border.all(
+                                                      //         color: Colors
+                                                      //             .grey[400],
+                                                      //         width: 2.0)),
+                                                      child: FittedBox(
+                                                        fit: BoxFit.fitHeight,
+                                                        child:
+                                                            listFileImageLast[
+                                                                        0] !=
+                                                                    null
+                                                                ? Container(
+                                                                    width: 95,
+                                                                    height: 55,
+                                                                    decoration: new BoxDecoration(
+                                                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                        //color: Colors.redAccent,
+                                                                        shape: BoxShape.rectangle,
+                                                                        image: new DecorationImage(fit: BoxFit.fill, image: FileImage(listFileImageLast[0]))),
+                                                                  )
+                                                                : Container(
+                                                                    width: 95,
+                                                                    height: 55,
+                                                                    decoration: BoxDecoration(
+                                                                        color: Colors.blueGrey[
+                                                                            100],
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                5.0),
+                                                                        border: Border.all(
+                                                                            color: isValidAttachFileFrontFace != false
+                                                                                ? Colors.grey[400]
+                                                                                : Colors.red[300],
+                                                                            width: 1.3)),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              8.0),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Expanded(
+                                                                              child: Container(
+                                                                            height:
+                                                                                40,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: Colors.white,
+                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                            ),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Container(
+                                                                                height: 27,
+                                                                                width: 20,
+                                                                                child: FittedBox(
+                                                                                    fit: BoxFit.cover,
+                                                                                    child: Icon(
+                                                                                      Icons.person,
+                                                                                      color: Colors.blueGrey[200],
+                                                                                    )),
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Expanded(
+                                                                              child: Container(
+                                                                            height:
+                                                                                40,
+                                                                            child:
+                                                                                Column(
+                                                                              children: [
+                                                                                Flexible(
+                                                                                  flex: 1,
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
+                                                                                  ),
+                                                                                ),
+                                                                                Flexible(
+                                                                                  flex: 1,
+                                                                                  fit: FlexFit.tight,
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
+                                                                                  ),
+                                                                                ),
+                                                                                Flexible(
+                                                                                  flex: 1,
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
+                                                                                  ),
+                                                                                )
+                                                                              ],
+                                                                            ),
+                                                                          )),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                      ),
+                                                    ),
+                                                    isValidAttachFileFrontFace !=
+                                                            false
+                                                        ? Container()
+                                                        : Text(
+                                                            "Vui lòng nhập trường này!",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12),
+                                                          )
+                                                  ],
+                                                ),
+                                              )),
+                                              Container(
+                                                width: 5,
+                                                color: Colors.white,
+                                              ),
+                                              Expanded(
+                                                  child: InkWell(
+                                                onTap: () {
+                                                  _showOptions(context, 1);
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      "Mặt sau",
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.red[600],
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                    ),
+                                                    Container(
+                                                      height:
+                                                          (screenWidth * 0.35) -
+                                                              40,
+                                                      padding:
+                                                          EdgeInsets.all(4),
+                                                      // decoration: BoxDecoration(
+                                                      //     color: Colors.white,
+                                                      //     borderRadius:
+                                                      //         BorderRadius
+                                                      //             .circular(8.0),
+                                                      //     border: Border.all(
+                                                      //         color: Colors
+                                                      //             .grey[400],
+                                                      //         width: 2.0)),
+                                                      child: FittedBox(
+                                                        fit: BoxFit.fitHeight,
+                                                        child:
+                                                            listFileImageLast[
+                                                                        1] !=
+                                                                    null
+                                                                ? Container(
+                                                                    width: 95,
+                                                                    height: 55,
+                                                                    decoration: new BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(
+                                                                                5.0)),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                        image: new DecorationImage(
+                                                                            fit:
+                                                                                BoxFit.fill,
+                                                                            image: FileImage(listFileImageLast[1]))),
+                                                                  )
+                                                                : Container(
+                                                                    width: 95,
+                                                                    height: 55,
+                                                                    decoration: BoxDecoration(
+                                                                        color: Colors.blueGrey[
+                                                                            100],
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                5.0),
+                                                                        border: Border.all(
+                                                                            color: isValidAttachFileFrontFace != false
+                                                                                ? Colors.grey[400]
+                                                                                : Colors.red[300],
+                                                                            width: 1.3)),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              5.0),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Expanded(
+                                                                              child: Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceAround,
+                                                                            children: [
+                                                                              Container(
+                                                                                height: 20,
+                                                                                width: 30,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.white,
+                                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                                ),
+                                                                                child: Center(
+                                                                                  child: Container(
+                                                                                    height: 27,
+                                                                                    width: 20,
+                                                                                    child: RotatedBox(
+                                                                                      quarterTurns: 1,
+                                                                                      child: FittedBox(
+                                                                                          fit: BoxFit.cover,
+                                                                                          child: Icon(
+                                                                                            Icons.fingerprint,
+                                                                                            color: Colors.blueGrey[200],
+                                                                                          )),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              Container(
+                                                                                height: 20,
+                                                                                width: 30,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.white,
+                                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                                ),
+                                                                                child: Center(
+                                                                                  child: Container(
+                                                                                    height: 27,
+                                                                                    width: 20,
+                                                                                    child: RotatedBox(
+                                                                                      quarterTurns: 1,
+                                                                                      child: FittedBox(
+                                                                                          fit: BoxFit.cover,
+                                                                                          child: Icon(
+                                                                                            Icons.fingerprint_rounded,
+                                                                                            color: Colors.blueGrey[200],
+                                                                                          )),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          )),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Expanded(
+                                                                              child: Container(
+                                                                            height:
+                                                                                40,
+                                                                            child:
+                                                                                Column(
+                                                                              children: [
+                                                                                Flexible(
+                                                                                  flex: 1,
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
+                                                                                  ),
+                                                                                ),
+                                                                                Flexible(
+                                                                                  flex: 1,
+                                                                                  fit: FlexFit.tight,
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
+                                                                                  ),
+                                                                                ),
+                                                                                Flexible(
+                                                                                  flex: 1,
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
+                                                                                  ),
+                                                                                ),
+                                                                                Flexible(
+                                                                                  flex: 1,
+                                                                                  child: Container(
+                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
+                                                                                  ),
+                                                                                )
+                                                                              ],
+                                                                            ),
+                                                                          )),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                      ),
+                                                    ),
+                                                    isValidAttachFileBackFace !=
+                                                            false
+                                                        ? Container()
+                                                        : Text(
+                                                            "Vui lòng nhập trường này!",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12),
+                                                          )
+                                                  ],
+                                                ),
+                                              )),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                                  Container(
+                                    height: 55,
+                                    decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(15),
+                                          bottomRight: Radius.circular(15),
+                                        )),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () => onClear(),
+                                            child: Center(
+                                                child: Text("Xóa",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold))),
+                                          ),
+                                        ),
+                                        VerticalDivider(
+                                          width: 5,
+                                          thickness: 5,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () => onSubmit(context),
+                                            child: Center(
+                                                child: Text("Cập Nhật",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold))),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
