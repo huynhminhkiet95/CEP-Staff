@@ -129,14 +129,15 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
 
   onSubmit(BuildContext context) {
     if (validationForm()) {
+      DateTime dateOfIssue = DateFormat('dd/MM/yyyy HH:mm')
+          .parse(_controllerDateOfIssue.text.replaceAll('-', '/') + ' 23:59');
       List<TblThongtinthaydoi> listChangeInfo = List<TblThongtinthaydoi>();
       listChangeInfo.add(new TblThongtinthaydoi(
-          loaithongtinId: TypeInfo.idNO.index,
-          giatriCu: _controllerIDNoOld.text,
-          giatriMoi: _controllerIDNo.text,
-          ngaycap: FormatDateConstants.convertDateTimeToStringT(
-              DateTime.now()) //_controllerDateOfIssue.text,
-          ));
+        loaithongtinId: TypeInfo.idNO.index,
+        giatriCu: _controllerIDNoOld.text,
+        giatriMoi: _controllerIDNo.text,
+        ngaycap: FormatDateConstants.convertDateTimeToStringT(dateOfIssue),
+      ));
       listChangeInfo.add(new TblThongtinthaydoi(
           loaithongtinId: TypeInfo.addressPermanent.index,
           giatriCu: "",
@@ -185,24 +186,11 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
     }
   }
 
-  onClear() {
-    _controllerCustomerCode.text = "";
-    _controllerBranchID.text = "";
-    _controllerIDNo.text = "";
-    _controllerIDNoOld.text = "";
-    _controllerFullName.text = "";
-    _controllerBOD.text = "";
-    _controllerSex.text = "";
-    _controllerNativePlace.text = "";
-    _controllerDateOfIssue.text = "";
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
-    Widget qrCodeChild = _buildQrView(context);
     return Scaffold(
         key: _scaffold,
         backgroundColor: Colors.white,
@@ -232,10 +220,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                 ),
                 onPressed: () async {
                   // barcodeScanner();
-                  var data =
-                      await Navigator.pushNamed(context, 'qrcode', arguments: {
-                    'child': qrCodeChild,
-                  });
+                  var data = await Navigator.pushNamed(context, 'qrcode');
                   if (data is String) {
                     var listInfoCard = data.split('|');
                     _controllerIDNo.text = listInfoCard[0];
@@ -862,7 +847,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                                       children: [
                                         Expanded(
                                           child: InkWell(
-                                            onTap: () => onClear(),
+                                            onTap: () => clearData(),
                                             child: Center(
                                                 child: Text("Xóa",
                                                     style: TextStyle(
@@ -903,35 +888,6 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                 ),
               );
             }));
-  }
-
-  Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-    );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-    });
   }
 
   void _showOptions(BuildContext context, int index) {
@@ -1050,6 +1006,19 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
     }
     _formKeyInfoCustomer.currentState.save();
     return isValid;
+  }
+
+  clearData() {
+    _controllerCustomerCode.text = "";
+    _controllerBranchID.text = "";
+    _controllerIDNo.text = "";
+    _controllerIDNoOld.text = "";
+    _controllerFullName.text = "";
+    _controllerSex.text = "";
+    _controllerBOD.text = "";
+    _controllerNativePlace.text = "";
+    _controllerDateOfIssue.text = "";
+    listFileImageLast = List<File>.generate(2, (int index) => null);
   }
 
 //   Future decode(String file) async {

@@ -138,8 +138,7 @@ class _QRCodeState extends State<QRCodeScreen> {
                                               await ImagePicker.pickImage(
                                                   source: ImageSource.gallery);
                                           if (file == null) {
-                                            throw Exception(
-                                                'File is not available');
+                                            _resumeCamera();
                                           } else {
                                             _isLoading.sink.add(true);
                                             var currentLabels =

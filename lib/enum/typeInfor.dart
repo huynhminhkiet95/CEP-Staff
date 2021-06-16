@@ -1,4 +1,5 @@
 enum TypeInfo {
+  zero,
   idNO,
   addressPermanent,
   registeredAddress,

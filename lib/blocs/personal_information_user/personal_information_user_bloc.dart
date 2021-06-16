@@ -30,9 +30,13 @@ class PersonalInformationUserBloc extends BlocEventStateBase<
   Stream<List<KhachHang>> get getPersonalInformationUserStream =>
       _getPersonalInformationUserController;
 
+  BehaviorSubject<bool> _getIsUpdateSuccessController = BehaviorSubject<bool>();
+  Stream<bool> get getIsUpdateSuccessStream => _getIsUpdateSuccessController;
+
   @override
   void dispose() {
     _getPersonalInformationUserController?.close();
+    _getIsUpdateSuccessController?.close();
     super.dispose();
   }
 
@@ -42,11 +46,13 @@ class PersonalInformationUserBloc extends BlocEventStateBase<
       PersonalInformationUserState state) async* {
     if (event is UpdatePersonalInformationUserEvent) {
       yield PersonalInformationUserState.updateLoading(true);
+      _getIsUpdateSuccessController.sink.add(false);
       var response =
           await commonService.updateInfoCustomer(event.updateInformationUser);
       if (response.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {
+          _getIsUpdateSuccessController.sink.add(true);
           if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
             Fluttertoast.showToast(
               msg: "Cập nhật thành công !",
