@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart';
 import 'package:qr_code_demo/globalServer.dart';
 import 'package:async/async.dart';
 import '../GlobalUser.dart';
@@ -270,10 +273,6 @@ class HttpBase {
   Future<http.StreamedResponse> httpPostOpenalpr(
       File file, int refNoValue) async {
     try {
-      //      final bytes = await file.readAsBytes();
-      //    final img.Image image = img.decodeImage(bytes);
-      // final img.Image resized1 = img.copyResize(image, width: 800);
-      // String base64Image = resized1.
       String token = globalUser.gettoken;
       Map<String, String> headers = {
         "Content-Type": 'application/json',
@@ -309,4 +308,68 @@ class HttpBase {
       return null;
     }
   }
+
+  Future<dynamic> httpPostDocument(File file) async {
+    try {
+      var address = globalServer.getServerAddress;
+      String token = globalUser.gettoken;
+      Response response;
+      var dio = Dio();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      String fileName = file.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "file": await MultipartFile.fromFile(file.path,
+            filename: fileName,
+            contentType: MediaType("image", basename(file.path))),
+      });
+      response = await dio.post(address + 'api/NhanVien/UploadImageByFormFile',
+          data: formData);
+      print("object");
+      return response;
+    } catch (e) {
+      print({"294": e});
+      return null;
+    }
+  }
+
+  Future<http.Response> getTestApiLocal() async {
+    try {
+      var address = 'https://10.0.2.2:44326/WeatherForecast/Get1231';
+      var result = await http.get(address, headers: {
+        "Content-Type": 'application/json',
+      }).timeout(const Duration(seconds: 10));
+      return result;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  // uploadFileFromDio(File photoFile) async {
+  //   var dio = new Dio();
+  //   dio.options.baseUrl = 'http://10.10.0.36:8889/api/NhanVien/UploadImageByFormFile';
+  //   dio.options.connectTimeout = 5000; //5s
+  //   dio.options.receiveTimeout = 5000;
+  //   FormData formData = new FormData();
+  //   formData.add("user_id", userProfile.userId);
+  //   formData.add("name", userProfile.name);
+  //   formData.add("email", userProfile.email);
+
+  //   if (photoFile != null &&
+  //       photoFile.path != null &&
+  //       photoFile.path.isNotEmpty) {
+  //     // Create a FormData
+  //     String fileName = basename(photoFile.path);
+  //     print("File Name : $fileName");
+  //     print("File Size : ${photoFile.lengthSync()}");
+  //     formData.add("user_picture", new UploadFileInfo(photoFile, fileName));
+  //   }
+  //   var response = await dio.post("user/manage_profile",
+  //       data: formData,
+  //       options: Options(
+  //           method: 'POST',
+  //           responseType: ResponseType.PLAIN // or ResponseType.JSON
+  //           ));
+  //   print("Response status: ${response.statusCode}");
+  //   print("Response data: ${response.data}");
+  // }
 }

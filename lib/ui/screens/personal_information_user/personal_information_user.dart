@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:geocoder/geocoder.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:image_crop/image_crop.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -17,11 +19,11 @@ import 'package:qr_code_demo/models/personal_information_user/update_information
 import 'package:qr_code_demo/services/service.dart';
 import 'package:qr_code_demo/ui/components/CusTextFormField.dart';
 import 'package:qr_code_demo/ui/components/ModalProgressHUDCustomize.dart';
+import 'package:qr_code_demo/ui/components/address_search.dart';
 import 'package:qr_code_demo/ui/css/style.css.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_demo/ui/components/crop_image.dart';
 import 'package:qr_code_demo/utils/always_disabled_focus_node.dart';
-
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class PersonalInformationUser extends StatefulWidget {
@@ -42,6 +44,10 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
 
   TextEditingController _controllerCustomerCode = new TextEditingController();
   TextEditingController _controllerBranchID = new TextEditingController();
+  TextEditingController _controllerLatLng = new TextEditingController();
+  TextEditingController _controllerCurrentResidence =
+      new TextEditingController();
+
   TextEditingController _controllerIDNo = new TextEditingController();
   TextEditingController _controllerIDNoOld = new TextEditingController();
   TextEditingController _controllerFullName = new TextEditingController();
@@ -52,9 +58,8 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
   TextEditingController _controllerPlaceOfPermanent =
       new TextEditingController();
   TextEditingController _controllerDateOfIssue = new TextEditingController();
-  Animation<double> _animation;
-  AnimationController _controller;
-  String _path = null;
+  // Animation<double> _animation;
+  // AnimationController _controller;
   final cropKey = GlobalKey<CropState>();
   var _formKeyInfoCustomer = GlobalKey<FormState>();
   List<File> listFileImage = List<File>.generate(2, (int index) => null);
@@ -115,10 +120,10 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
 
   @override
   void initState() {
-    _controller = AnimationController(
-      duration: Duration(milliseconds: 1500),
-      vsync: this,
-    );
+    // _controller = AnimationController(
+    //   duration: Duration(milliseconds: 1500),
+    //   vsync: this,
+    // );
 
     services = Services.of(context);
     personalInformationUserBloc = new PersonalInformationUserBloc(
@@ -181,8 +186,8 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
       model.checksum = "";
       model.tblThongtinthaydoi = listChangeInfo;
       model.urlHinhanh = listCitizenIdentificationImage;
-      personalInformationUserBloc
-          .emitEvent(UpdatePersonalInformationUserEvent(context, model));
+      personalInformationUserBloc.emitEvent(UpdatePersonalInformationUserEvent(
+          context, model, listFileImageLast));
     }
   }
 
@@ -204,7 +209,7 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
               onPressed: () {
                 Navigator.of(context).pop();
               }),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: Text(
             "Quét QR Code",
@@ -332,6 +337,16 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
+                                          Text(
+                                            "Thông Tin Chung",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                                letterSpacing: 1,
+                                                color: ColorConstants
+                                                    .cepColorBackground),
+                                          ),
+                                          divider10,
                                           Row(
                                             children: [
                                               Expanded(
@@ -367,6 +382,103 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                                                       title: allTranslations
                                                           .text("BranchID"))),
                                             ],
+                                          ),
+                                          divider10,
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Expanded(
+                                                  child: CusTextFormField(
+                                                      controller:
+                                                          _controllerLatLng,
+                                                      textInputType:
+                                                          TextInputType.number,
+                                                      validator: (value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Vui lòng nhập trường này!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      title:
+                                                          allTranslations.text(
+                                                              "Coordinates"))),
+                                              InkWell(
+                                                onTap: () => getCurrentLatLng(),
+                                                child: Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  color: Colors.green,
+                                                  child: Icon(
+                                                    Icons.gps_fixed,
+                                                    size: 20,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 3,
+                                              ),
+                                              InkWell(
+                                                onTap: () async {
+                                                  dynamic result =
+                                                      await Navigator.pushNamed(
+                                                          context,
+                                                          'googlemaps');
+                                                  print("object");
+                                                  if (result != null) {
+                                                    LatLng coordinates =
+                                                        result['address']
+                                                                ['coordinates']
+                                                            as LatLng;
+                                                    _controllerLatLng.text =
+                                                        coordinates.latitude
+                                                                .toString() +
+                                                            ',' +
+                                                            coordinates
+                                                                .longitude
+                                                                .toString();
+
+                                                    _controllerCurrentResidence
+                                                        .text = result[
+                                                            'address']
+                                                        ['descriptionAddress'];
+                                                  }
+                                                },
+                                                child: Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  color: Colors.green,
+                                                  child: Icon(
+                                                    Icons.map_sharp,
+                                                    size: 20,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          divider10,
+                                          CusTextFormField(
+                                              controller:
+                                                  _controllerCurrentResidence,
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Vui lòng nhập trường này!';
+                                                }
+                                                return null;
+                                              },
+                                              title: allTranslations
+                                                  .text("CurrentResidence")),
+                                          divider20,
+                                          Text(
+                                            "Thông Tin Cá Nhân",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                                letterSpacing: 1,
+                                                color: ColorConstants
+                                                    .cepColorBackground),
                                           ),
                                           divider10,
                                           Row(
@@ -1019,6 +1131,21 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
     _controllerNativePlace.text = "";
     _controllerDateOfIssue.text = "";
     listFileImageLast = List<File>.generate(2, (int index) => null);
+  }
+
+  getCurrentLatLng() async {
+    var location = new Location();
+    LocationData currentLocation = await location.getLocation();
+    _controllerLatLng.text = currentLocation.latitude.toString() +
+        ',' +
+        currentLocation.longitude.toString();
+
+    var coordinates =
+        new Coordinates(currentLocation.latitude, currentLocation.longitude);
+
+    var addressDescription =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    _controllerCurrentResidence.text = addressDescription.first.addressLine;
   }
 
 //   Future decode(String file) async {

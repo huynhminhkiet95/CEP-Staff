@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       home: Scaffold(
         //  backgroundColor: Colors.blue,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: Text(
             allTranslations.text("Setting"),

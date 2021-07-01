@@ -14,6 +14,8 @@ import 'package:qr_code_demo/ui/screens/community_development/community_developm
 import 'package:qr_code_demo/ui/screens/delete_data/delete_data.dart';
 import 'package:qr_code_demo/ui/screens/downloadData/download_main.dart';
 import 'package:qr_code_demo/ui/screens/error/error.dart';
+import 'package:qr_code_demo/ui/screens/google_maps/google_maps.dart';
+import 'package:qr_code_demo/ui/screens/google_maps/maps_demo.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/QRdemo.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/TakePhoto.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/home.dart';
@@ -178,12 +180,12 @@ class AppState extends State<Application> {
         theme: ThemeData(
           fontFamily: 'SourceSansPro',
           brightness: Brightness.light,
-          scaffoldBackgroundColor: ColorConstants.cepColorBackground,
+          //scaffoldBackgroundColor: ColorConstants.cepColorBackground,
           accentColor: Colors.white,
           textSelectionHandleColor: Colors.black,
           primaryColor: Colors.blue,
           cardColor: Colors.white,
-          highlightColor: ColorConstants.cepColorBackground,
+          //highlightColor: ColorConstants.cepColorBackground,'
         ),
 
         darkTheme: ThemeData(
@@ -289,6 +291,8 @@ class AppState extends State<Application> {
               return SlideBottomToTopRoute(page: LanguagesScreen());
             case 'calculation':
               return SlideLeftRoute(page: CalculationMoney());
+            case 'googlemaps':
+              return SlideLeftRoute(page: GoogleMapsScreen());
 
             default:
               return new MyCustomRoute(

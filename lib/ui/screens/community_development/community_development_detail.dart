@@ -794,7 +794,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                       children: [], width: screenWidth * 0.7);
                 })
           ],
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: const Text('Chi Tiết Phát triển Cộng Đồng'),
           bottom: TabBar(

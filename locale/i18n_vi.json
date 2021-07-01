@@ -158,7 +158,11 @@
     "Religion":"Tôn giáo",
     "IndividualTracesAndDeformities":"Đặc điểm nhận dạng",
     "DateOfIssue":"Ngày cấp",
-    "CustomerCode":"Mã khách hàng"
+    "CustomerCode":"Mã khách hàng",
+    "CurrentResidence":"Nơi ở hiện tại",
+    "Longitude":"Kinh độ",
+    "Latitude":"Vĩ độ",
+    "Coordinates":"Tọa độ"
 
 
 

@@ -28,10 +28,10 @@ class ApplicationInitializationBloc extends BlocEventStateBase<
       var server = new ServerInfo();
       switch (_server) {
         case "DEV-VPN":
-          server.serverAddress = "http://10.10.0.36:8889/";
-          server.serverApi = "http://10.10.0.36:8889/";
+          server.serverAddress = "http://10.10.0.51:8080/";
+          server.serverApi = "http://10.10.0.51:8080/";
           server.serverCode = _server;
-          server.serverNotification = "http://10.10.0.36:8889/";
+          server.serverNotification = "http://10.10.0.51:8080/";
           break;
         case "PROD":
           server.serverAddress = "https://staff-api.cep.org.vn/";

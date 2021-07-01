@@ -93,7 +93,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             //bool a = GlobalDownload.isSubmitDownload;
           },
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
         title: Text(
           allTranslations.text("DownLoad"),

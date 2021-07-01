@@ -107,8 +107,16 @@ class CommonService {
     }
   }
 
-  Future<StreamedResponse> saveImage(File file, int itemId) {
-    return _httpBase.httpPostOpenalpr(file, itemId);
+  // Future<StreamedResponse> saveImage(File file, int itemId) {
+  //   return _httpBase.httpPostOpenalpr(file, itemId);
+  // }
+
+  Future<dynamic> saveImage(File file) {
+    return _httpBase.httpPostDocument(file);
+  }
+
+  Future<Response> getTestApiLocal(File file) {
+    return _httpBase.getTestApiLocal();
   }
 
   Future<Response> downloadDataSurvey(

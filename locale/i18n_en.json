@@ -158,6 +158,10 @@
     "Religion":"Religion",
     "IndividualTracesAndDeformities":"Individual traces and deformities",
     "DateOfIssue":"Date of issue",
-    "CustomerCode":"Customer code"
+    "CustomerCode":"Customer code",
+    "CurrentResidence":"Current residence",
+    "Longitude":"Longitude",
+    "Latitude":"Latitude",
+    "Coordinates":"Coordinates"
 
 }

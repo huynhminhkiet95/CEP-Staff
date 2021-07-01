@@ -73,6 +73,13 @@ dependencies:
   firebase_core: ^0.4.0
   flutter_local_notifications: ^0.7.1+1
   mlkit: any
+  http_parser: any
+  dio: any
+  google_maps_flutter: ^0.5.11
+  geolocator: any
+  geocoding: any
+  geocoder: ^0.2.1
+  google_maps_webservice: any
 
 dev_dependencies:
   flutter_test:

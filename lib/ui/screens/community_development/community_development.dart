@@ -99,7 +99,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
               //bool a = GlobalDownload.isSubmitDownload;
             },
           ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: const Text('Phát triển Cộng Đồng',
               style: TextStyle(fontWeight: FontWeight.w600)),

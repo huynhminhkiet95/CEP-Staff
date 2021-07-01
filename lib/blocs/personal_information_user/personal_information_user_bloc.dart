@@ -10,6 +10,7 @@ import 'package:qr_code_demo/config/status_code.dart';
 import 'package:qr_code_demo/database/DBProvider.dart';
 import 'package:qr_code_demo/global_variables/global_teamID.dart';
 import 'package:qr_code_demo/models/community_development/comunity_development.dart';
+import 'package:qr_code_demo/models/personal_information_user/update_information_user.dart';
 import 'package:qr_code_demo/services/commonService.dart';
 import 'package:qr_code_demo/services/sharePreference.dart';
 import 'package:flutter/material.dart';
@@ -46,9 +47,15 @@ class PersonalInformationUserBloc extends BlocEventStateBase<
       PersonalInformationUserState state) async* {
     if (event is UpdatePersonalInformationUserEvent) {
       yield PersonalInformationUserState.updateLoading(true);
+      UpdateInformationUser updateInformationUser = event.updateInformationUser;
       _getIsUpdateSuccessController.sink.add(false);
+      for (var i = 0; i < event.imageFiles.length; i++) {
+        var resImage = await commonService.saveImage(event.imageFiles[i]);
+        updateInformationUser.urlHinhanh[i].urlHinhanh = resImage.data;
+      }
+
       var response =
-          await commonService.updateInfoCustomer(event.updateInformationUser);
+          await commonService.updateInfoCustomer(updateInformationUser);
       if (response.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {

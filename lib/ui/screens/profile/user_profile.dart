@@ -43,7 +43,7 @@ class ProfilePage extends StatelessWidget {
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 0.0,
           bottomOpacity: 0.0,
           title: Text(

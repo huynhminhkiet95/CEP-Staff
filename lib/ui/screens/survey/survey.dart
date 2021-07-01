@@ -151,7 +151,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                   : "",
                               //  textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Theme.of(context).highlightColor,
+                                  color: ColorConstants.cepColorBackground,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w900,
                                   wordSpacing: 5),
@@ -363,6 +363,82 @@ class _SurveyScreenState extends State<SurveyScreen>
                                             opacity: opacity,
                                             child: AnimatedContainer(
                                               height: 40,
+                                              width: this.isCheckAll == false
+                                                  ? 140
+                                                  : 160,
+                                              decoration:
+                                                  decorationButtonAnimated(
+                                                      Colors.green),
+                                              // Define how long the animation should take.
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              // Provide an optional curve to make the animation feel smoother.
+                                              curve: Curves.easeOut,
+                                              child: RawMaterialButton(
+                                                fillColor: Colors.green,
+                                                splashColor: Colors.grey,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Icon(
+                                                        this.isCheckAll == false
+                                                            ? Icons
+                                                                .check_box_outline_blank
+                                                            : Icons.check_box,
+                                                        color: Colors.white,
+                                                        size: 19,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10.0,
+                                                      ),
+                                                      Text(
+                                                        this.isCheckAll == false
+                                                            ? allTranslations
+                                                                .text(
+                                                                    "SelectAll")
+                                                            : allTranslations.text(
+                                                                "UnSelectAll"),
+                                                        maxLines: 1,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  isCheckAll = !isCheckAll;
+                                                  setState(() {
+                                                    if (isCheckAll) {
+                                                      for (var item
+                                                          in checkBoxSurvey) {
+                                                        item.status = true;
+                                                      }
+                                                    } else {
+                                                      for (var item
+                                                          in checkBoxSurvey) {
+                                                        item.status = false;
+                                                      }
+                                                    }
+                                                  });
+                                                },
+                                                shape: const StadiumBorder(),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                    surveyStream.listSurvey != null
+                                        ? AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: AnimatedContainer(
+                                              height: 40,
                                               decoration:
                                                   decorationButtonAnimated(
                                                       checkBoxSurvey
@@ -427,82 +503,6 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                         width:
                                                             screenWidth * 0.7);
                                                   }
-                                                },
-                                                shape: const StadiumBorder(),
-                                              ),
-                                            ),
-                                          )
-                                        : Container(),
-                                    surveyStream.listSurvey != null
-                                        ? AnimatedOpacity(
-                                            duration: const Duration(
-                                                milliseconds: 1000),
-                                            opacity: opacity,
-                                            child: AnimatedContainer(
-                                              height: 40,
-                                              width: this.isCheckAll == false
-                                                  ? 140
-                                                  : 160,
-                                              decoration:
-                                                  decorationButtonAnimated(
-                                                      Colors.green),
-                                              // Define how long the animation should take.
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              // Provide an optional curve to make the animation feel smoother.
-                                              curve: Curves.easeOut,
-                                              child: RawMaterialButton(
-                                                fillColor: Colors.green,
-                                                splashColor: Colors.grey,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(10.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Icon(
-                                                        this.isCheckAll == false
-                                                            ? Icons
-                                                                .check_box_outline_blank
-                                                            : Icons.check_box,
-                                                        color: Colors.white,
-                                                        size: 19,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        this.isCheckAll == false
-                                                            ? allTranslations
-                                                                .text(
-                                                                    "SelectAll")
-                                                            : allTranslations.text(
-                                                                "UnSelectAll"),
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  isCheckAll = !isCheckAll;
-                                                  setState(() {
-                                                    if (isCheckAll) {
-                                                      for (var item
-                                                          in checkBoxSurvey) {
-                                                        item.status = true;
-                                                      }
-                                                    } else {
-                                                      for (var item
-                                                          in checkBoxSurvey) {
-                                                        item.status = false;
-                                                      }
-                                                    }
-                                                  });
                                                 },
                                                 shape: const StadiumBorder(),
                                               ),
@@ -615,13 +615,24 @@ class _SurveyScreenState extends State<SurveyScreen>
             onPressed: () {
               Navigator.of(context).pop();
             }),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
         title: Text(
           allTranslations.text("BorrowingCapitalSurvey"),
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.filter_list,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              })
+        ],
       ),
       body: GestureDetector(
           onHorizontalDragUpdate: (details) {
