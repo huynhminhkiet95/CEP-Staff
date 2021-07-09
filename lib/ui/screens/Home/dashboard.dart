@@ -214,10 +214,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
           case "error":
             isDisable = true;
             break;
-          case "personalinforuser":
-            isDisable = true;
-            break;
-
           default:
         }
       }
@@ -454,10 +450,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                                       case "error":
                                         isDisable = true;
                                         break;
-                                      case "personalinforuser":
-                                        isDisable = true;
-                                        break;
-
                                       default:
                                     }
                                   }

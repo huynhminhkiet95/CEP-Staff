@@ -162,6 +162,7 @@
     "CurrentResidence":"Current residence",
     "Longitude":"Longitude",
     "Latitude":"Latitude",
-    "Coordinates":"Coordinates"
+    "Coordinates":"Coordinates",
+    "All":"All"
 
 }

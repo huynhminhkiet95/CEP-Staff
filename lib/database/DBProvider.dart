@@ -33,9 +33,17 @@ class DBProvider {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "CEP-NhanVien.dbo.db");
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    return await openDatabase(path,
-        version: int.parse(packageInfo.buildNumber),
-        onOpen: (db) {}, onCreate: (Database db, int version) async {
+    return await openDatabase(path, version: int.parse(packageInfo.buildNumber),
+        onOpen: (db) async {
+      await db.execute(
+          "CREATE TABLE IF NOT EXISTS history_search_address_googlemaps("
+          "id INTEGER,"
+          "addressLine TEXT,"
+          "subThoroughfare TEXT,"
+          "coordinates TEXT,"
+          "searchDate INTEGER"
+          ")");
+    }, onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE KhaoSat("
           "id INTEGER,"
           "ngayXuatDanhSach TEXT,"

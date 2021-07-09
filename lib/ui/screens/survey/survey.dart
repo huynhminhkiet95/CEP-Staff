@@ -3,7 +3,7 @@ import 'package:qr_code_demo/config/colors.dart';
 import 'package:qr_code_demo/models/download_data/comboboxmodel.dart';
 import 'package:qr_code_demo/models/survey/survey_result.dart';
 import 'package:qr_code_demo/ui/components/CustomDialog.dart';
-import 'package:qr_code_demo/ui/screens/Home/styles.dart';
+import 'package:badges/badges.dart';
 import 'package:qr_code_demo/ui/screens/survey/style.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_demo/config/CustomIcons/my_flutter_app_icons.dart';
@@ -31,7 +31,7 @@ class _SurveyScreenState extends State<SurveyScreen>
   List<String> listItemNgayXuatDS;
   String dropdownCumIdValue;
   String dropdownNgayXuatDanhSachValue;
-
+  int selectedIndexKhuVuc;
   double screenWidth, screenHeight;
 
   SurveyBloc surVeyBloc;
@@ -40,7 +40,11 @@ class _SurveyScreenState extends State<SurveyScreen>
   bool isCheckAll = false;
 
   SurveyStream surveyStream;
-
+  List<String> listTypeArea = [
+    allTranslations.text("All"),
+    allTranslations.text("NotYetSurveyed"),
+    allTranslations.text("Surveyed")
+  ];
   @override
   void initState() {
     animationController = AnimationController(
@@ -51,6 +55,7 @@ class _SurveyScreenState extends State<SurveyScreen>
     surVeyBloc.emitEvent(LoadSurveyEvent());
     setData();
     super.initState();
+    selectedIndexKhuVuc = 0;
   }
 
   Future<void> setData() async {
@@ -72,6 +77,15 @@ class _SurveyScreenState extends State<SurveyScreen>
 
   void _onSearchSurvey(String cumId, String date) {
     surVeyBloc.emitEvent(SearchSurveyEvent(cumId, date));
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Logout':
+        break;
+      case 'Settings':
+        break;
+    }
   }
 
   @override
@@ -511,6 +525,53 @@ class _SurveyScreenState extends State<SurveyScreen>
                                         : Container(),
                                   ],
                                 ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Builder(builder: (context) {
+                                  if (surveyStream.listSurvey != null) {
+                                    int badgesAll,
+                                        badgeNotSurvey,
+                                        badgeSurveyed = 0;
+
+                                    badgesAll = surveyStream.listSurvey.length;
+
+                                    badgeSurveyed = surveyStream.listSurvey
+                                        .where((e) =>
+                                            e.ghiChu.length > 0 &&
+                                            e.soTienDuyetChovay > 0)
+                                        .toList()
+                                        .length;
+
+                                    badgeNotSurvey = surveyStream.listSurvey
+                                        .where((e) =>
+                                            e.ghiChu.length == 0 &&
+                                            e.soTienDuyetChovay == 0)
+                                        .toList()
+                                        .length;
+
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        customRadio(
+                                            listTypeArea[0], 0, badgesAll),
+                                        VerticalDivider(
+                                          width: 10,
+                                        ),
+                                        customRadio(
+                                            listTypeArea[1], 1, badgeNotSurvey),
+                                        VerticalDivider(
+                                          width: 10,
+                                        ),
+                                        customRadio(
+                                            listTypeArea[2], 2, badgeSurveyed),
+                                      ],
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
                                 Expanded(
                                   child: Container(
                                       margin: EdgeInsets.only(top: 10),
@@ -565,7 +626,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                                         () {
                                                                       if (true ==
                                                                           value) {
-                                                                        initState();
+                                                                        surVeyBloc
+                                                                            .emitEvent(LoadSurveyEvent());
                                                                       }
                                                                     }));
                                                           },
@@ -623,15 +685,36 @@ class _SurveyScreenState extends State<SurveyScreen>
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         actions: [
-          IconButton(
-              icon: Icon(
-                Icons.filter_list,
-                color: Colors.white,
-                size: 20,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              })
+          // DropdownButton<String>(
+          //   items: <String>['A', 'B', 'C', 'D'].map((String value) {
+          //     return DropdownMenuItem<String>(
+          //       value: value,
+          //       child: new Text(value),
+          //     );
+          //   }).toList(),
+          //   onChanged: (_) {},
+          // ),
+          // PopupMenuButton<String>(
+          //   onSelected: handleClick,
+          //   itemBuilder: (BuildContext context) {
+          //     return {'Logout', 'Settings'}.map((String choice) {
+          //       return PopupMenuItem<String>(
+          //         value: choice,
+          //         child: Text(choice),
+          //       );
+          //     }).toList();
+          //   },
+          // ),
+          // IconButton(
+          //     icon: Icon(
+          //       Icons.filter_list,
+          //       color: Colors.white,
+          //       size: 20,
+          //     ),
+          //     onPressed: () {
+          //       Navigator.of(context).pop();
+          //     }),
+          //   DropD
         ],
       ),
       body: GestureDetector(
@@ -646,13 +729,35 @@ class _SurveyScreenState extends State<SurveyScreen>
   }
 
   Widget getItemListView(List<SurveyInfo> listSurvey) {
-    int count = listSurvey != null ? listSurvey.length : 0;
+    List<SurveyInfo> finalListSurvey;
+    if (selectedIndexKhuVuc == 0) {
+      finalListSurvey = listSurvey;
+    } else if (selectedIndexKhuVuc == 2) {
+      finalListSurvey = listSurvey
+          .where((e) => e.ghiChu.length > 0 && e.soTienDuyetChovay > 0)
+          .toList();
+    } else {
+      finalListSurvey = listSurvey
+          .where((e) => e.ghiChu.length == 0 && e.soTienDuyetChovay == 0)
+          .toList();
+    }
+
+    int count = finalListSurvey != null ? finalListSurvey.length : 0;
+    if (count == 0) {
+      return Container(
+        child: Center(
+            child: Text(
+          "Không có dữ liệu",
+          style: TextStyle(color: Colors.white),
+        )),
+      );
+    }
     return Container(
       child: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         itemCount: count,
         itemBuilder: (context, i) {
-          final int count = listSurvey.length;
+          final int count = finalListSurvey.length;
           final Animation<double> animation =
               Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                   parent: animationController,
@@ -672,7 +777,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                       onTap: () {
                         List<ComboboxModel> listCombobox =
                             globalUser.getListComboboxModel;
-                        List<SurveyInfo> listSurveyDetail = listSurvey;
+                        List<SurveyInfo> listSurveyDetail = finalListSurvey;
                         if (listCombobox == null || listCombobox.length == 0) {
                           Navigator.pushNamed(context, 'download', arguments: {
                             'selectedIndex': 4,
@@ -684,7 +789,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                         } else {
                           Navigator.pushNamed(context, 'surveydetail',
                               arguments: {
-                                'id': listSurvey[i].id,
+                                'id': finalListSurvey[i].id,
                                 'metadata': listCombobox,
                                 'surveydetail': listSurveyDetail[i],
                                 'surveyhistory':
@@ -759,7 +864,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                             child: Builder(builder: (context) {
                                           Widget cardBatBuoc = Container();
                                           Widget cardkhaosat = Container();
-                                          if (listSurvey[i].batBuocKhaosat ==
+                                          if (finalListSurvey[i]
+                                                  .batBuocKhaosat ==
                                               1) {
                                             cardBatBuoc = Card(
                                                 elevation: 3,
@@ -782,8 +888,10 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                 ));
                                           }
 
-                                          if (listSurvey[i].ghiChu.length > 0 &&
-                                              listSurvey[i].soTienDuyetChovay >
+                                          if (finalListSurvey[i].ghiChu.length >
+                                                  0 &&
+                                              finalListSurvey[i]
+                                                      .soTienDuyetChovay >
                                                   0) {
                                             cardkhaosat = Card(
                                                 elevation: 3,
@@ -846,7 +954,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
-                                              "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
+                                              "${finalListSurvey[i].thanhvienId} - ${finalListSurvey[i].hoVaTen}",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 13),
@@ -876,7 +984,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                   Container(
                                                     width: 30,
                                                     child: Text(
-                                                      listSurvey[i].gioiTinh ==
+                                                      finalListSurvey[i]
+                                                                  .gioiTinh ==
                                                               0
                                                           ? allTranslations
                                                               .text("FeMale")
@@ -907,7 +1016,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                     width: 1,
                                                   ),
                                                   Text(
-                                                    listSurvey[i]
+                                                    finalListSurvey[i]
                                                         .ngaySinh
                                                         .substring(0, 4),
                                                     style: TextStyle(
@@ -934,7 +1043,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                     width: 15,
                                                   ),
                                                   Text(
-                                                    listSurvey[i].cmnd,
+                                                    finalListSurvey[i].cmnd,
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -965,7 +1074,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                       child: FittedBox(
                                                         fit: BoxFit.scaleDown,
                                                         child: Text(
-                                                          listSurvey[i].diaChi,
+                                                          finalListSurvey[i]
+                                                              .diaChi,
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -984,7 +1094,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                   child: InkWell(
                                                     onTap: () {
                                                       MapUtils.openMap(
-                                                          listSurvey[i].diaChi);
+                                                          finalListSurvey[i]
+                                                              .diaChi);
                                                     },
                                                     child: Icon(
                                                       Icons.assistant_direction,
@@ -1010,6 +1121,54 @@ class _SurveyScreenState extends State<SurveyScreen>
                 );
               });
         },
+      ),
+    );
+  }
+
+  void changeIndex(int index) {
+    setState(() {
+      selectedIndexKhuVuc = index;
+    });
+  }
+
+  Widget customRadio(String txt, int index, int badge) {
+    return OutlineButton(
+      onPressed: () => changeIndex(index),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      borderSide: BorderSide(
+          color: selectedIndexKhuVuc == index
+              ? Colors.grey[100]
+              : ColorConstants.cepColorBackground.withOpacity(0)),
+      child: Row(
+        children: [
+          Text(
+            txt,
+            style: TextStyle(
+                color: selectedIndexKhuVuc == index
+                    ? Colors.grey[100]
+                    : Colors.grey[300],
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Badge(
+            badgeColor: Colors.grey,
+            borderRadius: BorderRadius.circular(5),
+            position: BadgePosition.topEnd(top: 1, end: 10),
+            alignment: Alignment.topRight,
+            animationDuration: Duration(milliseconds: 1000),
+            animationType: BadgeAnimationType.scale,
+            badgeContent: Text(
+              badge.toString(),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold),
+            ),
+            // position: BadgePosition.topEnd(top: 0, end: 0),
+          )
+        ],
       ),
     );
   }

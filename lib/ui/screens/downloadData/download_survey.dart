@@ -222,33 +222,38 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
                       child: Container(
                         child: Align(
                           alignment: Alignment.topCenter,
-                          child: RawMaterialButton(
-                            fillColor: Colors.green,
-                            splashColor: Colors.blue,
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.system_update,
-                                    color: Colors.white,
+                          child: Column(
+                            children: [
+                              RawMaterialButton(
+                                fillColor: Colors.green,
+                                splashColor: Colors.blue,
+                                child: Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.system_update,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      Text(
+                                        allTranslations
+                                            .text("DownloadSurveyInfo"),
+                                        maxLines: 1,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Text(
-                                    allTranslations.text("DownloadSurveyInfo"),
-                                    maxLines: 1,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
+                                ),
+                                onPressed: () {
+                                  _onSubmit();
+                                },
+                                shape: const StadiumBorder(),
                               ),
-                            ),
-                            onPressed: () {
-                              _onSubmit();
-                            },
-                            shape: const StadiumBorder(),
+                            ],
                           ),
                         ),
                       ),

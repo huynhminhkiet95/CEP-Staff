@@ -16,7 +16,6 @@ import 'package:qr_code_demo/services/commonService.dart';
 import 'package:qr_code_demo/services/sharePreference.dart';
 import 'package:qr_code_demo/blocs/survey/survey_state.dart';
 import 'package:qr_code_demo/blocs/survey/survey_event.dart';
-import 'package:qr_code_demo/ui/screens/community_development/community_development_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';

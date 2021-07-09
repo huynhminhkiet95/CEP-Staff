@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_webservice/places.dart';
+//import 'package:google_maps_webservice/places.dart';
 
 class AddressSearch extends SearchDelegate<Suggestion> {
   List<Address> address;
-  List<Prediction> data;
+  //List<Prediction> data;
   Coordinates coordinates;
 
   @override
@@ -65,6 +65,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
   Widget buildResults(BuildContext context) {
     return Container(
       color: Colors.white,
+      margin: EdgeInsets.only(top: 10),
       child: FutureBuilder(
           future: getAddress(query),
           builder: (context, snapshot) {
@@ -78,26 +79,46 @@ class AddressSearch extends SearchDelegate<Suggestion> {
 
                   suggestion.coordinates = address[index].coordinates;
                   suggestion.description = query;
-                  return ListTile(
-                    // we will display the data returned from our future here
-                    title: Text(
-                      subAddress.first,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      address[index].addressLine,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Container(
+                          color: Colors.grey[300],
+                          // padding: EdgeInsets.only(
+                          //     right: 10, left: 10, top: 10, bottom: 10),
+                          child: ListTile(
+                            // we will display the data returned from our future here
+                            title: Text(
+                              subAddress.first,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              address[index].addressLine,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+
+                            leading: Icon(
+                              Icons.location_city,
+                              color: Colors.blue,
+                            ),
+                            onTap: () {
+                              close(context, suggestion);
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                    leading: Icon(Icons.location_city),
-                    onTap: () {
-                      close(context, suggestion);
-                    },
+                      Divider(
+                        color: Colors.grey[500],
+                        height: 1,
+                      )
+                    ],
                   );
                 },
                 itemCount: address.length,

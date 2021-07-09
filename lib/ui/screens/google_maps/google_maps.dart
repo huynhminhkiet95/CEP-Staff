@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'dart:async';
-import 'dart:math' show cos, sqrt, asin;
 import 'package:location/location.dart' as currentLocation;
 import 'package:qr_code_demo/ui/components/address_search.dart';
-import 'package:qr_code_demo/ui/navigation/appbar.dart';
-import 'package:qr_code_demo/ui/screens/profile/user_profile.dart';
-import 'package:qr_code_demo/ui/components/custom_appbar.dart' as customAppbar;
 import 'package:qr_code_demo/utils/always_disabled_focus_node.dart';
-//import 'package:location/location.dart';
 
 class GoogleMapsScreen extends StatefulWidget {
+  final LatLng coordinates;
+  const GoogleMapsScreen({Key key, this.coordinates}) : super(key: key);
+
   @override
   _GoogleMapsScreenState createState() => _GoogleMapsScreenState();
 }
@@ -38,27 +33,37 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen>
 
   Set<Marker> markers = {};
   bool isForward = false;
-  //PolylinePoints polylinePoints;
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   // Method for retrieving the current location
   _getCurrentLocation() async {
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) async {
-      setState(() {
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(position.latitude, position.longitude),
-              zoom: 18.0,
-            ),
+    var location = new currentLocation.Location();
+    currentLocation.LocationData locationData = await location.getLocation();
+
+    Future.delayed(Duration(milliseconds: 1000), () {
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(locationData.latitude, locationData.longitude),
+            zoom: 18.0,
           ),
-        );
-      });
-    }).catchError((e) {
-      print(e);
+        ),
+      );
+    });
+  }
+
+  animateCoordinatesAvailable() {
+    Future.delayed(Duration(milliseconds: 1000), () {
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(
+                widget.coordinates.latitude, widget.coordinates.longitude),
+            zoom: 18.0,
+          ),
+        ),
+      );
     });
   }
 
@@ -93,7 +98,11 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen>
       ..addListener(() {
         setState(() {});
       });
-    _getCurrentLocation();
+    if (widget.coordinates == null) {
+      _getCurrentLocation();
+    } else {
+      animateCoordinatesAvailable();
+    }
   }
 
   void _onCamMove(CameraPosition position) {
@@ -128,7 +137,6 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen>
       height: height,
       width: width,
       child: Scaffold(
-        key: _scaffoldKey,
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
         body: Stack(
@@ -379,21 +387,7 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen>
                               ),
                             ),
                             onTap: () async {
-                              var location = new currentLocation.Location();
-                              currentLocation.LocationData locationData =
-                                  await location.getLocation();
-
-                              mapController.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                  CameraPosition(
-                                    target: LatLng(
-                                      locationData.latitude,
-                                      locationData.longitude,
-                                    ),
-                                    zoom: 18.0,
-                                  ),
-                                ),
-                              );
+                              _getCurrentLocation();
                             },
                           ),
                         ),

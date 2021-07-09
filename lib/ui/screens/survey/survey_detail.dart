@@ -556,10 +556,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
         : widget.surveyInfo.trinhDoHocVan.trim();
 
     /// quyen so huu
-    _ownershipModelDropdownList = Helper.buildDropdownFromMetaData(widget
-        .listCombobox
-        .where((e) => e.groupId == 'QuyenSoHuuNha')
-        .toList());
+    _ownershipModelDropdownList = Helper.buildDropdownFromMetaData(
+        widget.listCombobox.where((e) => e.groupId == 'SoHuuNha').toList());
     _ownershipValue = widget.surveyInfo.quyenSoHuuNha.trim().isEmpty
         ? "0"
         : widget.surveyInfo.quyenSoHuuNha.trim();
@@ -1214,7 +1212,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                         Row(
                                           children: [
                                             SizedBox(
-                                              width: screenWidth * 0.40,
+                                              width: screenWidth * 0.42,
                                               child: Text(
                                                 "Khu vực",
                                                 style: TextStyle(
@@ -1467,7 +1465,16 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                 ],
                                               ),
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.pushNamed(
+                                                  context, 'personalinforuser',
+                                                  arguments: {
+                                                    'customerCode': widget
+                                                        .surveyInfo.thanhvienId,
+                                                    'branchID': widget
+                                                        .surveyInfo.chinhanhId,
+                                                  });
+                                            },
                                             shape: const StadiumBorder(),
                                           ),
                                         ),

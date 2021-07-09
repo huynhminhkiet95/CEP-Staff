@@ -3,20 +3,18 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_code_demo/config/colors.dart';
-import 'package:qr_code_demo/ui/components/CustomDialog.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:mlkit/mlkit.dart';
 import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-class QRCodeScreen extends StatefulWidget {
-  const QRCodeScreen({Key key}) : super(key: key);
+class QRScannerScreen extends StatefulWidget {
+  const QRScannerScreen({Key key}) : super(key: key);
   @override
-  State<StatefulWidget> createState() => _QRCodeState();
+  State<StatefulWidget> createState() => _QRScannerState();
 }
 
-class _QRCodeState extends State<QRCodeScreen> {
+class _QRScannerState extends State<QRScannerScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   Barcode result;
   QRViewController controller;

@@ -27,7 +27,10 @@ import 'package:qr_code_demo/utils/always_disabled_focus_node.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class PersonalInformationUser extends StatefulWidget {
-  PersonalInformationUser({Key key}) : super(key: key);
+  final String customerCode;
+  final String branchID;
+  PersonalInformationUser({Key key, this.customerCode, this.branchID})
+      : super(key: key);
 
   @override
   _PersonalInformationUserState createState() =>
@@ -120,16 +123,13 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
 
   @override
   void initState() {
-    // _controller = AnimationController(
-    //   duration: Duration(milliseconds: 1500),
-    //   vsync: this,
-    // );
-
     services = Services.of(context);
     personalInformationUserBloc = new PersonalInformationUserBloc(
         services.sharePreferenceService, services.commonService);
 
     super.initState();
+    _controllerCustomerCode.text = widget.customerCode ?? '';
+    _controllerBranchID.text = widget.branchID ?? '';
   }
 
   onSubmit(BuildContext context) {
@@ -421,10 +421,30 @@ class _PersonalInformationUserState extends State<PersonalInformationUser>
                                               ),
                                               InkWell(
                                                 onTap: () async {
+                                                  var coordinatesArr =
+                                                      _controllerLatLng.text
+                                                          .split(',');
+                                                  LatLng coordinates;
+                                                  if (coordinatesArr.length ==
+                                                      2) {
+                                                    coordinates = new LatLng(
+                                                        double.parse(
+                                                            coordinatesArr
+                                                                .first),
+                                                        double.parse(
+                                                            coordinatesArr
+                                                                .last));
+                                                  }
+
                                                   dynamic result =
                                                       await Navigator.pushNamed(
-                                                          context,
-                                                          'googlemaps');
+                                                          _scaffold
+                                                              .currentContext,
+                                                          'googlemaps',
+                                                          arguments: {
+                                                        'coordinates':
+                                                            coordinates,
+                                                      });
                                                   print("object");
                                                   if (result != null) {
                                                     LatLng coordinates =

@@ -2,9 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:qr_code_demo/config/colors.dart';
-import 'package:qr_code_demo/notifications/local_notification_widget.dart';
-import 'package:qr_code_demo/ui/components/WebViewPlugin.dart';
 import 'package:qr_code_demo/ui/navigation/slide_route.dart';
 import 'package:qr_code_demo/ui/screens/Home/dashboard.dart';
 import 'package:qr_code_demo/ui/screens/Login/loginPage.dart';
@@ -15,10 +12,7 @@ import 'package:qr_code_demo/ui/screens/delete_data/delete_data.dart';
 import 'package:qr_code_demo/ui/screens/downloadData/download_main.dart';
 import 'package:qr_code_demo/ui/screens/error/error.dart';
 import 'package:qr_code_demo/ui/screens/google_maps/google_maps.dart';
-import 'package:qr_code_demo/ui/screens/google_maps/maps_demo.dart';
-import 'package:qr_code_demo/ui/screens/personal_information_user/QRdemo.dart';
-import 'package:qr_code_demo/ui/screens/personal_information_user/TakePhoto.dart';
-import 'package:qr_code_demo/ui/screens/personal_information_user/home.dart';
+import 'package:qr_code_demo/ui/screens/personal_information_user/qr_scanner.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/personal_information_user.dart';
 import 'package:qr_code_demo/ui/screens/profile/language.dart';
 import 'package:qr_code_demo/ui/screens/profile/setting.dart';
@@ -240,14 +234,20 @@ class AppState extends State<Application> {
               break;
 
             case 'personalinforuser':
-              return SlideLeftRoute(page: PersonalInformationUser());
-            //return SlideLeftRoute(page: Home1());
+              final Map<String, Object> arguments = settings.arguments;
+              if (arguments == null) {
+                return SlideLeftRoute(page: PersonalInformationUser());
+              } else {
+                return SlideLeftRoute(
+                    page: PersonalInformationUser(
+                  customerCode: arguments['customerCode'] ?? null,
+                  branchID: arguments['branchID'].toString(),
+                ));
+              }
+              break;
 
             case 'qrcode':
-              return SlideLeftRoute(page: QRCodeScreen());
-            // case 'qrcode':
-            //   final Map<String, Object> arguments = settings.arguments;
-            //   return SlideTransferRightRoute(page: TakePhoto());
+              return SlideLeftRoute(page: QRScannerScreen());
 
             case 'userprofile':
               return SlideLeftRoute(page: ProfilePageDesign());
@@ -292,7 +292,10 @@ class AppState extends State<Application> {
             case 'calculation':
               return SlideLeftRoute(page: CalculationMoney());
             case 'googlemaps':
-              return SlideLeftRoute(page: GoogleMapsScreen());
+              final Map<String, Object> arguments = settings.arguments;
+              return SlideLeftRoute(
+                  page:
+                      GoogleMapsScreen(coordinates: arguments['coordinates']));
 
             default:
               return new MyCustomRoute(
