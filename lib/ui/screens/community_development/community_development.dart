@@ -88,6 +88,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
     screenWidth = size.width;
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,

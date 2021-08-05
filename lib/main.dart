@@ -12,8 +12,9 @@ import 'package:qr_code_demo/ui/screens/delete_data/delete_data.dart';
 import 'package:qr_code_demo/ui/screens/downloadData/download_main.dart';
 import 'package:qr_code_demo/ui/screens/error/error.dart';
 import 'package:qr_code_demo/ui/screens/google_maps/google_maps.dart';
-import 'package:qr_code_demo/ui/screens/personal_information_user/qr_scanner.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/personal_information_user.dart';
+import 'package:qr_code_demo/ui/screens/personal_information_user/qr_scanner.dart';
+import 'package:qr_code_demo/ui/screens/personal_information_user/personal_information_user_detail.dart';
 import 'package:qr_code_demo/ui/screens/profile/language.dart';
 import 'package:qr_code_demo/ui/screens/profile/setting.dart';
 import 'package:qr_code_demo/ui/screens/profile/user_profile.dart';
@@ -233,21 +234,25 @@ class AppState extends State<Application> {
               return SlideLeftRoute(page: DeleteDataScreen());
               break;
 
-            case 'personalinforuser':
+            case 'personalinforuserdetail':
               final Map<String, Object> arguments = settings.arguments;
               if (arguments == null) {
-                return SlideLeftRoute(page: PersonalInformationUser());
+                return SlideLeftRoute(page: PersonalInformationUserDetail());
               } else {
                 return SlideLeftRoute(
-                    page: PersonalInformationUser(
+                    page: PersonalInformationUserDetail(
                   customerCode: arguments['customerCode'] ?? null,
                   branchID: arguments['branchID'].toString(),
                 ));
               }
               break;
+            case 'personalinforuser':
+              return SlideLeftRoute(page: PersonalInformationUser());
+              break;
 
             case 'qrcode':
               return SlideLeftRoute(page: QRScannerScreen());
+              break;
 
             case 'userprofile':
               return SlideLeftRoute(page: ProfilePageDesign());

@@ -3,6 +3,8 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:location/location.dart' as currentLocation;
+import 'package:qr_code_demo/database/DBProvider.dart';
+import 'package:qr_code_demo/models/googlemaps/addressgooglemaps.dart';
 import 'package:qr_code_demo/ui/components/address_search.dart';
 import 'package:qr_code_demo/utils/always_disabled_focus_node.dart';
 
@@ -406,6 +408,19 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen>
                 alignment: Alignment.bottomCenter,
                 child: InkWell(
                   onTap: () {
+                    AddressGoogleMaps addressGoogleMaps =
+                        new AddressGoogleMaps();
+                    var subAddress = _currentAddress.split(',');
+                    addressGoogleMaps.addressLine = _currentAddress;
+                    addressGoogleMaps.subThoroughfare = subAddress.first;
+                    addressGoogleMaps.coordinates =
+                        _lastMapPosition.latitude.toString() +
+                            ',' +
+                            _lastMapPosition.longitude.toString();
+
+                    addressGoogleMaps.searchDate =
+                        new DateTime.now().toString();
+                    newHistorySearchAddressGoogleMap(addressGoogleMaps);
                     Navigator.of(context).pop({
                       'address': {
                         'coordinates': _lastMapPosition,
@@ -456,5 +471,14 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen>
         ),
       ),
     );
+  }
+
+  void newHistorySearchAddressGoogleMap(
+      AddressGoogleMaps addressGoogleMaps) async {
+    try {
+      await DBProvider.db.newHistorySearchAddressGoogleMap(addressGoogleMaps);
+    } catch (e) {
+      throw 'Save address failed';
+    }
   }
 }

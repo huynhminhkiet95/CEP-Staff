@@ -35,6 +35,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,

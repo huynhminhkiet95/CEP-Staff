@@ -1123,6 +1123,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,

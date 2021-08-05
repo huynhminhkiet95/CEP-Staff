@@ -82,6 +82,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,

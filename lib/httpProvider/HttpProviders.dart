@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -309,8 +310,20 @@ class HttpBase {
     }
   }
 
+  String getFileSize(int file, int decimals) {
+    int bytes = file;
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) +
+        ' ' +
+        suffixes[i];
+  }
+
   Future<dynamic> httpPostDocument(File file) async {
     try {
+      int a = await file.length();
+      print(getFileSize(a, 2));
       var address = globalServer.getServerAddress;
       String token = globalUser.gettoken;
       Response response;
@@ -330,6 +343,40 @@ class HttpBase {
       print({"294": e});
       return null;
     }
+  }
+
+  Future<dynamic> uploadImage1(File _image) async {
+    var address = globalServer.getServerAddress;
+    // open a byteStream
+    var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
+    // get file length
+    var length = await _image.length();
+
+    // string to uri
+    var uri = Uri.parse(address + 'api/NhanVien/UploadImageByFormFile');
+
+    // create multipart request
+    var request = new http.MultipartRequest("POST", uri);
+
+    // if you need more parameters to parse, add those like this. i added "user_id". here this "user_id" is a key of the API request
+    //request.fields["user_id"] = "text";
+
+    // multipart that takes file.. here this "image_file" is a key of the API request
+    var multipartFile = new http.MultipartFile('image', stream, length,
+        filename: basename(_image.path));
+
+    // add file to multipart
+    request.files.add(multipartFile);
+
+    // send request to upload image
+    await request.send().then((response) async {
+      // listen for response
+      response.stream.transform(utf8.decoder).listen((value) {
+        print(value);
+      });
+    }).catchError((e) {
+      print(e);
+    });
   }
 
   Future<http.Response> getTestApiLocal() async {

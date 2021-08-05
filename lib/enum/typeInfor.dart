@@ -9,7 +9,7 @@ enum TypeInfo {
   fullName,
   email,
   avatar,
-  bod,
+  dob,
   sex,
   marriage
 }

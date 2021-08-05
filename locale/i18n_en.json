@@ -110,6 +110,7 @@
     "Statistical":"Statistical",
     "DownLoad":"DownLoad",
     "UpdatePersonalInfoUser":"Update Personal Info User",
+    "InfoCustomer":"Thông Tin Khách Hàng",
     "DeleteData":"Delete Data",
     "Settings":"Settings",
     "CodeNumber":"Code number",
@@ -163,6 +164,7 @@
     "Longitude":"Longitude",
     "Latitude":"Latitude",
     "Coordinates":"Coordinates",
-    "All":"All"
+    "All":"All",
+    "SaveImageFailed":"Image file save failed! Please contact admin for more details."
 
 }

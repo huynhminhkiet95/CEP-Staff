@@ -110,6 +110,7 @@
     "Statistical":"Thống Kê",
     "DownLoad":"Tải Xuống",
     "UpdatePersonalInfoUser":"Cập Nhật Thông Tin Cá Nhân",
+    "InfoCustomer":"Thông Tin Khách Hàng",
     "DeleteData":"Xóa Dữ Liệu",
     "Settings":"Cài Đặt",
     "CodeNumber":"Mã số",
@@ -163,7 +164,8 @@
     "Longitude":"Kinh độ",
     "Latitude":"Vĩ độ",
     "Coordinates":"Tọa độ",
-    "All":"Tất cả"
+    "All":"Tất cả",
+    "SaveImageFailed":"Lưu hình ảnh lên máy chủ thất bại! Vui lòng liên hệ admin để biết thêm chi tiết."
 
 
 

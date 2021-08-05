@@ -112,6 +112,7 @@ class CommonService {
   // }
 
   Future<dynamic> saveImage(File file) {
+    //return _httpBase.uploadImage1(file);
     return _httpBase.httpPostDocument(file);
   }
 

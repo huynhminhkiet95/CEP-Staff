@@ -17,6 +17,8 @@ import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
 
+import '../../../GlobalUser.dart';
+
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -61,6 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       home: Scaffold(
         //  backgroundColor: Colors.blue,
         appBar: AppBar(
+          centerTitle: true,
           backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: Text(
@@ -251,7 +254,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _loginSubmit() {
-    _authenticationBloc.emitEvent(AuthenticationEventLogout());
+    globalUser.settoken = "";
+    this.services.sharePreferenceService.saveToken("");
+    if (globalUser.getAuthenLocal) {
+      Navigator.pushNamed(context, '/welcomeLogin');
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+    // _authenticationBloc.emitEvent(AuthenticationEventLogout());
   }
 
   Future<void> _getAvailableBiometrics() async {

@@ -5,6 +5,8 @@ import 'package:qr_code_demo/models/download_data/comboboxmodel.dart';
 import 'package:qr_code_demo/models/download_data/survey_info.dart';
 import 'package:qr_code_demo/models/download_data/historysearchsurvey.dart';
 import 'package:qr_code_demo/models/download_data/survey_info_history.dart';
+import 'package:qr_code_demo/models/googlemaps/addressgooglemaps.dart';
+import 'package:qr_code_demo/models/personal_information_user/customer_info.dart';
 import 'package:qr_code_demo/models/users/user_info.dart';
 import 'package:qr_code_demo/models/users/user_role.dart';
 import 'package:package_info/package_info.dart';
@@ -37,11 +39,29 @@ class DBProvider {
         onOpen: (db) async {
       await db.execute(
           "CREATE TABLE IF NOT EXISTS history_search_address_googlemaps("
-          "id INTEGER,"
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
           "addressLine TEXT,"
           "subThoroughfare TEXT,"
           "coordinates TEXT,"
           "searchDate INTEGER"
+          ")");
+      await db.execute("CREATE TABLE IF NOT EXISTS customer_info("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "customerCode TEXT,"
+          "branchId INTEGER,"
+          "coordinates TEXT,"
+          "currentResidence TEXT,"
+          "newId TEXT,"
+          "oldId TEXT,"
+          "fullName TEXT,"
+          "sex TEXT,"
+          "dob TEXT,"
+          "nativePlace TEXT,"
+          "dateOfIssue TEXT,"
+          "frontImage TEXT,"
+          "backImage TEXT,"
+          "createDate TEXT,"
+          "updateDate TEXT"
           ")");
     }, onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE KhaoSat("
@@ -1716,6 +1736,125 @@ class DBProvider {
     } catch (error) {
       // executed for errors of all types other than Exception
     }
+  }
+
+  newHistorySearchAddressGoogleMap(AddressGoogleMaps addressGoogleMaps) async {
+    final db = await database;
+    try {
+      int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
+          '''SELECT COUNT(*) FROM history_search_address_googlemaps " +
+              "WHERE addressLine = "${addressGoogleMaps.addressLine}" '''));
+      String queryString;
+      if (checkExistsData == 0) {
+        queryString =
+            '''INSERT Into history_search_address_googlemaps(id,addressLine,subThoroughfare,coordinates,searchDate)
+             SELECT ${addressGoogleMaps.id}, "${addressGoogleMaps.addressLine}","${addressGoogleMaps.subThoroughfare}",
+                    "${addressGoogleMaps.coordinates}","${addressGoogleMaps.searchDate}"
+             WHERE NOT EXISTS(SELECT 1 FROM history_search_address_googlemaps WHERE addressLine = "${addressGoogleMaps.addressLine}")''';
+      } else {
+        queryString =
+            '''UPDATE history_search_address_googlemaps SET searchDate = "${addressGoogleMaps.searchDate}" WHERE addressLine = "${addressGoogleMaps.addressLine}"
+             ''';
+      }
+
+      db.rawInsert(queryString);
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+  }
+
+  getHistorySearchAddressGoogleMap() async {
+    final db = await database;
+    var resAddressGoogleMaps =
+        await db.query("history_search_address_googlemaps", limit: 100);
+    List<AddressGoogleMaps> listAddressGoogleMaps = resAddressGoogleMaps
+            .isNotEmpty
+        ? resAddressGoogleMaps.map((c) => AddressGoogleMaps.fromMap(c)).toList()
+        : [];
+    return listAddressGoogleMaps;
+  }
+
+  newCustomerInfo(CustomerInfo customerInfo) async {
+    final db = await database;
+    try {
+      int checkExistsData = Sqflite.firstIntValue(
+          await db.rawQuery('''SELECT COUNT(*) FROM customer_info " +
+              "WHERE customerCode = "${customerInfo.customerCode}" 
+              AND branchId = ${customerInfo.branchId} AND oldId = "${customerInfo.oldId}"'''));
+      String queryString;
+      if (checkExistsData == 0) {
+        queryString = '''INSERT Into customer_info(
+                                        customerCode,
+                                        branchId,
+                                        coordinates,
+                                        currentResidence,
+                                        newId,
+                                        oldId,
+                                        fullName,
+                                        sex,
+                                        dob,
+                                        nativePlace,
+                                        dateOfIssue,
+                                        frontImage,
+                                        backImage,
+                                        createDate
+                                        )
+             SELECT  
+                    "${customerInfo.customerCode}",
+                    ${customerInfo.branchId},
+                    "${customerInfo.coordinates}",
+                    "${customerInfo.currentResidence}",
+                    "${customerInfo.newId}",
+                    "${customerInfo.oldId}",
+                    "${customerInfo.fullName}",
+                    "${customerInfo.sex}",
+                    "${customerInfo.dob}",
+                    "${customerInfo.nativePlace}",
+                    "${customerInfo.dateOfIssue}",
+                    "${customerInfo.frontImage}",
+                    "${customerInfo.backImage}",
+                    "${customerInfo.createDate}"
+                    
+             WHERE NOT EXISTS(SELECT 1 FROM customer_info WHERE customerCode = "${customerInfo.customerCode}" 
+              AND branchId = "${customerInfo.branchId}")''';
+      } else {
+        queryString = '''UPDATE customer_info 
+               SET 
+                   coordinates = "${customerInfo.coordinates}", 
+                   currentResidence = "${customerInfo.currentResidence}", 
+                   newId = "${customerInfo.newId}", 
+                   oldId = "${customerInfo.oldId}", 
+                   fullName = "${customerInfo.fullName}", 
+                   sex = "${customerInfo.sex}", 
+                   dob = "${customerInfo.dob}", 
+                   nativePlace = "${customerInfo.nativePlace}", 
+                   dateOfIssue = "${customerInfo.dateOfIssue}", 
+                   frontImage = "${customerInfo.frontImage}", 
+                   backImage = "${customerInfo.backImage}", 
+                   updateDate = "${customerInfo.updateDate}"
+               WHERE customerCode = "${customerInfo.customerCode}" AND 
+                     branchId = "${customerInfo.branchId}" AND id = ${customerInfo.id}
+             ''';
+      }
+
+      db.rawInsert(queryString);
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+  }
+
+  getCustomerInfo() async {
+    final db = await database;
+    var res = await db.query("customer_info", limit: 100);
+    List<CustomerInfo> listCustomerInfomation =
+        res.isNotEmpty ? res.map((c) => CustomerInfo.fromJson(c)).toList() : [];
+    return listCustomerInfomation;
   }
 
   dropDataBase() async {

@@ -771,6 +771,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
               icon: Icon(
                 Icons.save,

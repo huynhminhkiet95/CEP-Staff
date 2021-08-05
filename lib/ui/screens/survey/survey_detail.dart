@@ -914,6 +914,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
             builder: (BuildContext context, SurveyState state) {
               return new Scaffold(
                 appBar: new AppBar(
+                  centerTitle: true,
                   leading: IconButton(
                       icon: Icon(
                         Icons.close,
@@ -1466,8 +1467,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               ),
                                             ),
                                             onPressed: () {
-                                              Navigator.pushNamed(
-                                                  context, 'personalinforuser',
+                                              Navigator.pushNamed(context,
+                                                  'personalinforuserdetail',
                                                   arguments: {
                                                     'customerCode': widget
                                                         .surveyInfo.thanhvienId,

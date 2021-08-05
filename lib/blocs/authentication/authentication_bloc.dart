@@ -183,9 +183,9 @@ class AuthenticationBloc
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String buildNumber = packageInfo.buildNumber;
           if (int.parse(buildNumber) < versionStaff.maPhienBan) {
-            _getIsNewVersionController.sink.add(false);
-          } else {
             _getIsNewVersionController.sink.add(true);
+          } else {
+            _getIsNewVersionController.sink.add(false);
           }
         }
       }

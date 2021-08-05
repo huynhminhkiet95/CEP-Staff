@@ -74,7 +74,7 @@ dependencies:
   flutter_local_notifications: ^0.7.1+1
   mlkit: ^0.15.1
   http_parser: ^3.1.4
-  dio: ^3.0.10
+  dio: ^3.0.8
   google_maps_flutter: ^0.5.11
   geocoding: ^1.0.5
   geocoder: ^0.2.1
