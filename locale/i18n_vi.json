@@ -165,8 +165,10 @@
     "Latitude":"Vĩ độ",
     "Coordinates":"Tọa độ",
     "All":"Tất cả",
-    "SaveImageFailed":"Lưu hình ảnh lên máy chủ thất bại! Vui lòng liên hệ admin để biết thêm chi tiết."
-
-
+    "SaveImageFailed":"Lưu hình ảnh lên máy chủ thất bại! Vui lòng liên hệ admin để biết thêm chi tiết.",
+    "Warning":"Cảnh báo !",
+    "NotificationReset":"Hành động này sẽ khôi phục lại hệ thống dữ liệu trên ứng dụng của bạn nhưng sẽ xóa tất cả dữ liệu hiện tại của máy.! Bạn có muốn thực hiện không.?",
+    "RestoreSuccessfully": "Khôi phục hệ thống thành công."
+    
 
 }

@@ -165,6 +165,9 @@
     "Latitude":"Latitude",
     "Coordinates":"Coordinates",
     "All":"All",
-    "SaveImageFailed":"Image file save failed! Please contact admin for more details."
+    "SaveImageFailed":"Image file save failed! Please contact admin for more details.",
+    "Warning":"Warning !",
+    "NotificationReset":"This action will restore system data on your apps but will delete all data currently on your device.! Do you want to reset.?",
+    "RestoreSuccessfully": "successfully restored."
 
 }

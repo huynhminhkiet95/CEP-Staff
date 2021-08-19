@@ -6,12 +6,12 @@ import 'models/download_data/comboboxmodel.dart';
 import 'models/users/user_info.dart';
 
 class GlobalUser {
-  String _defaultCenter;
-  String _defaultClient;
-  String _defaultSubsidiary;
-  String _defaultSystem;
-  String _subsidiaryId;
-  String _subsidiaryName;
+  // String _defaultCenter;
+  // String _defaultClient;
+  // String _defaultSubsidiary;
+  // String _defaultSystem;
+  // String _subsidiaryId;
+  // String _subsidiaryName;
   String _userName;
   String _password;
   bool _isAuthenLocal;
@@ -24,9 +24,9 @@ class GlobalUser {
   String _token;
   bool _isNotification;
   int _id;
-  int _staffId;
-  int _employeeId;
-  String _systemId;
+  // int _staffId;
+  // int _employeeId;
+  // String _systemId;
   UserInfo _userInfo;
   UserRole _userRole;
   HistoryScreen _historyScreen;
@@ -37,13 +37,13 @@ class GlobalUser {
 
   set setId(int value) => _id = value;
 
-  int get getStaffId => _staffId;
+  // int get getStaffId => _staffId;
 
-  set setemployeeId(int value) => _employeeId = value;
+  // set setemployeeId(int value) => _employeeId = value;
 
-  int get getemployeeId => _employeeId;
+  // int get getemployeeId => _employeeId;
 
-  set setStaffId(int value) => _staffId = value;
+  // set setStaffId(int value) => _staffId = value;
 
   String get getUserId => _userId;
 
@@ -78,29 +78,29 @@ class GlobalUser {
   set setCumIdOfCommunityDevelopment(String value) =>
       _cumIdOfCommunityDevelopment = value;
 
-  String get getDefaultCenter => _defaultCenter;
+  // String get getDefaultCenter => _defaultCenter;
 
-  set setDefaultCenter(String value) => _defaultCenter = value;
+  // set setDefaultCenter(String value) => _defaultCenter = value;
 
-  String get getDefaultClient => _defaultClient;
+  // String get getDefaultClient => _defaultClient;
 
-  set setDefaultClient(String value) => _defaultClient = value;
+  // set setDefaultClient(String value) => _defaultClient = value;
 
-  String get getDefaultSubsidiary => _defaultSubsidiary;
+  // String get getDefaultSubsidiary => _defaultSubsidiary;
 
-  set setdefaultSubsidiary(String value) => _defaultSubsidiary = value;
+  // set setdefaultSubsidiary(String value) => _defaultSubsidiary = value;
 
-  String get getDefaultSystem => _defaultSystem;
+  // String get getDefaultSystem => _defaultSystem;
 
-  set setDefaultSystem(String value) => _defaultSystem = value;
+  // set setDefaultSystem(String value) => _defaultSystem = value;
 
-  String get getSubsidiaryId => _subsidiaryId;
+  // String get getSubsidiaryId => _subsidiaryId;
 
-  set setSubsidiaryId(String value) => _subsidiaryId = value;
+  // set setSubsidiaryId(String value) => _subsidiaryId = value;
 
-  get getSubsidiaryName => _subsidiaryName;
+  // get getSubsidiaryName => _subsidiaryName;
 
-  set setSubsidiaryName(String value) => _subsidiaryName = value;
+  // set setSubsidiaryName(String value) => _subsidiaryName = value;
 
   String get getdefaultBranch => _defaultBranch;
 
@@ -134,9 +134,9 @@ class GlobalUser {
 
   set setNotification(bool value) => _isNotification = value;
 
-  String get getSystemId => _systemId;
+  // String get getSystemId => _systemId;
 
-  set setSystemId(String value) => _systemId = value;
+  // set setSystemId(String value) => _systemId = value;
 
   static final GlobalUser userGlobal = new GlobalUser._internal();
 

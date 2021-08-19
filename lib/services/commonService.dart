@@ -61,51 +61,23 @@ class CommonService {
     return _httpBase.httpGetHub(url);
   }
 
-  Future<Response> updateNotifications(
-      String userId, String reqIds, String status) {
-    Map map = new Map();
-    map["Username"] = userId;
-    map["ReqIds"] = reqIds;
-    map["FinalStatusMessage"] = status;
-    var url = sprintf(ServiceName.Update_Notifications.toString(),
-        [globalUser.getDefaultSubsidiary, '']);
-    return _httpBase.httpPostHub(url, map);
-  }
+  // Future<Response> updateNotifications(
+  //     String userId, String reqIds, String status) {
+  //   Map map = new Map();
+  //   map["Username"] = userId;
+  //   map["ReqIds"] = reqIds;
+  //   map["FinalStatusMessage"] = status;
+  //   var url = sprintf(ServiceName.Update_Notifications.toString(),
+  //       [globalUser.getDefaultSubsidiary, '']);
+  //   return _httpBase.httpPostHub(url, map);
+  // }
 
-  Future<Response> deleteNotifications(String strReqIds) {
-    Map map = new Map();
-    var url = sprintf(ServiceName.Delete_Notifications.toString() + strReqIds,
-        [globalUser.getDefaultSubsidiary, '']);
-    return _httpBase.httpPostHubNoBody(url, map);
-  }
-
-  static void goInspectionList(String type) async {
-    if (await canLaunch('chrome://')) {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=&driverid=${globalUser.getStaffId}&equimentcode=&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: false);
-    } else {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=&driverid=${globalUser.getStaffId}&equimentcode=&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: true);
-    }
-  }
-
-  static void goInspectionListTrip(String type, bookno) async {
-    if (await canLaunch('chrome://')) {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=$bookno&driverid=${globalUser.getStaffId}&equimentcode=${globalDriverProfile.getfleet}&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: false);
-    } else {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=$bookno&driverid=${globalUser.getStaffId}&equimentcode=${globalDriverProfile.getfleet}&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: true);
-    }
-  }
+  // Future<Response> deleteNotifications(String strReqIds) {
+  //   Map map = new Map();
+  //   var url = sprintf(ServiceName.Delete_Notifications.toString() + strReqIds,
+  //       [globalUser.getDefaultSubsidiary, '']);
+  //   return _httpBase.httpPostHubNoBody(url, map);
+  // }
 
   // Future<StreamedResponse> saveImage(File file, int itemId) {
   //   return _httpBase.httpPostOpenalpr(file, itemId);

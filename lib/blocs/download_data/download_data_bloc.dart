@@ -73,9 +73,9 @@ class DownloadDataBloc
                   .newHistorySearchKhaoSat(event.cumID, event.ngayxuatDS,
                       globalUser.getUserName, event.masoql);
               for (var item in jsonBody["data"]) {
-                var listKhaoSat = SurveyInfo.fromJson(item);
-                listKhaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
-                await DBProvider.db.newKhaoSat(listKhaoSat);
+                var khaoSat = SurveyInfo.fromJson(item);
+                khaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
+                await DBProvider.db.newKhaoSat(khaoSat);
               }
               this.sharePreferenceService.saveCumId(event.cumID);
               ToastResultMessage.success(
@@ -139,6 +139,25 @@ class DownloadDataBloc
           globalUser.getUserInfo.chiNhanhID,
           event.cumID,
           globalUser.getUserInfo.masoql);
+
+      List<ComboboxModel> metaDataList =
+          await DBProvider.db.getAllMetaDataForTBD();
+      if (metaDataList.length == 0) {
+        var response = await commonService.downloadDataComboBox();
+        if (response.statusCode == StatusCodeConstants.OK) {
+          var jsonBody = json.decode(response.body);
+          if (jsonBody["isSuccessed"]) {
+            if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
+              insertMetaDataJsonToSqlite(jsonBody["data"]);
+            }
+          } else {
+            ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+          }
+        } else {
+          ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+        }
+      }
+
       if (response.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {

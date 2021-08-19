@@ -87,6 +87,7 @@ class AuthenticationBloc
               this._sharePreferenceService.saveToken(jsonBodyToken["token"]);
               if (event.userName != globalUser.getUserName) {
                 this._sharePreferenceService.saveAuthenLocal(false);
+                this._sharePreferenceService.saveCumId(null);
               }
 
               this._sharePreferenceService.saveUserName(event.userName);

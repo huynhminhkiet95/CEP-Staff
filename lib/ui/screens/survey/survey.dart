@@ -1065,16 +1065,15 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                   VerticalDivider(
                                                     width: 1,
                                                   ),
-                                                  Container(
-                                                    child: FittedBox(
-                                                      fit: BoxFit.scaleDown,
-                                                      child: Text(
-                                                        finalListSurvey[i]
-                                                            .diaChi,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 13),
+                                                  Expanded(
+                                                    child: Text(
+                                                      finalListSurvey[i].diaChi,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
                                                       ),
                                                     ),
                                                   ),

@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -17,30 +17,29 @@ import 'package:qr_code_demo/config/colors.dart';
 import 'package:qr_code_demo/config/formatdate.dart';
 import 'package:qr_code_demo/config/locatetype.dart';
 import 'package:qr_code_demo/enum/typeInfor.dart';
+import 'package:qr_code_demo/globalServer.dart';
+import 'package:qr_code_demo/models/personal_information_user/customer_info.dart';
 import 'package:qr_code_demo/models/personal_information_user/update_information_user.dart';
 import 'package:qr_code_demo/services/service.dart';
 import 'package:qr_code_demo/ui/components/CusTextFormField.dart';
-import 'package:qr_code_demo/ui/components/ModalProgressHUDCustomize.dart';
-import 'package:qr_code_demo/ui/components/address_search.dart';
 import 'package:qr_code_demo/ui/css/style.css.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_demo/ui/components/crop_image.dart';
 import 'package:qr_code_demo/utils/always_disabled_focus_node.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class PersonalInformationUserDetail extends StatefulWidget {
-  final String customerCode;
-  final String branchID;
-  PersonalInformationUserDetail({Key key, this.customerCode, this.branchID})
-      : super(key: key);
+class PersonalInformationUserUpdate extends StatefulWidget {
+  final CustomerInfo customerInfo;
+
+  PersonalInformationUserUpdate({Key key, this.customerInfo}) : super(key: key);
 
   @override
-  _PersonalInformationUserDetailState createState() =>
-      _PersonalInformationUserDetailState();
+  _PersonalInformationUserUpdateState createState() =>
+      _PersonalInformationUserUpdateState();
 }
 
-class _PersonalInformationUserDetailState
-    extends State<PersonalInformationUserDetail> with TickerProviderStateMixin {
+class _PersonalInformationUserUpdateState
+    extends State<PersonalInformationUserUpdate> with TickerProviderStateMixin {
   double screenHeight, screenWidth;
   QRViewController controller;
   Barcode result;
@@ -57,11 +56,9 @@ class _PersonalInformationUserDetailState
   TextEditingController _controllerIDNoOld = new TextEditingController();
   TextEditingController _controllerFullName = new TextEditingController();
   TextEditingController _controllerDOB = new TextEditingController();
-  TextEditingController _controllerNationality = new TextEditingController();
   TextEditingController _controllerSex = new TextEditingController();
   TextEditingController _controllerNativePlace = new TextEditingController();
-  TextEditingController _controllerPlaceOfPermanent =
-      new TextEditingController();
+
   TextEditingController _controllerDateOfIssue = new TextEditingController();
   // Animation<double> _animation;
   // AnimationController _controller;
@@ -69,7 +66,8 @@ class _PersonalInformationUserDetailState
   var _formKeyInfoCustomer = GlobalKey<FormState>();
   List<File> listFileImage = List<File>.generate(2, (int index) => null);
   List<File> listFileImageLast = List<File>.generate(2, (int index) => null);
-
+  String fontImageUrl;
+  String backImageUrl;
   final picker = ImagePicker();
 
   PersonalInformationUserBloc personalInformationUserBloc;
@@ -130,8 +128,28 @@ class _PersonalInformationUserDetailState
         services.sharePreferenceService, services.commonService);
 
     super.initState();
-    _controllerCustomerCode.text = widget.customerCode ?? '';
-    _controllerBranchID.text = widget.branchID ?? '';
+    _controllerCustomerCode.text = widget.customerInfo?.customerCode ?? '';
+    _controllerBranchID.text = widget.customerInfo?.branchId.toString() ?? '';
+    _controllerLatLng.text = widget.customerInfo?.coordinates ?? '';
+    _controllerCurrentResidence.text =
+        widget.customerInfo?.currentResidence ?? '';
+    _controllerIDNo.text = widget.customerInfo?.newId ?? '';
+    _controllerIDNoOld.text = widget.customerInfo?.oldId ?? '';
+    _controllerFullName.text = widget.customerInfo?.fullName ?? '';
+    _controllerDOB.text = widget.customerInfo?.dob ?? '';
+    _controllerSex.text = widget.customerInfo?.sex ?? '';
+    _controllerNativePlace.text = widget.customerInfo?.nativePlace ?? '';
+    _controllerDateOfIssue.text = FormatDateConstants.convertDateTimeToDDMMYYYY(
+        widget.customerInfo.dateOfIssue);
+    fontImageUrl = globalServer.getServerAddress +
+        widget.customerInfo.frontImage
+            .replaceAll(r'\', r'/')
+            .substring(24, widget.customerInfo.frontImage.length);
+    backImageUrl = globalServer.getServerAddress +
+        widget.customerInfo.backImage
+            .replaceAll(r'\', r'/')
+            .substring(24, widget.customerInfo.backImage.length);
+    getCurrentResidenceFromCoordinates(widget.customerInfo.coordinates);
   }
 
   onSubmit(BuildContext context) {
@@ -168,13 +186,13 @@ class _PersonalInformationUserDetailState
       listCitizenIdentificationImage.add(new UrlHinhanh(
           loaithongtinId: TypeInfo.avatar.index,
           ismattruoc: true,
-          urlHinhanh: ""
+          urlHinhanh: widget.customerInfo.frontImage
           //base64Encode(listFileImageLast[0].readAsBytesSync())
           ));
       listCitizenIdentificationImage.add(new UrlHinhanh(
           loaithongtinId: TypeInfo.avatar.index,
           ismattruoc: false,
-          urlHinhanh: ""
+          urlHinhanh: widget.customerInfo.backImage
           //base64Encode(listFileImageLast[1].readAsBytesSync())
           ));
 
@@ -190,7 +208,7 @@ class _PersonalInformationUserDetailState
       model.urlHinhanh = listCitizenIdentificationImage;
       model.locateType = LocateType.surveyCoordinates;
       model.latiLongTude = _controllerLatLng.text;
-      personalInformationUserBloc.emitEvent(InsertPersonalInformationUserEvent(
+      personalInformationUserBloc.emitEvent(UpdatePersonalInformationUserEvent(
           context, model, listFileImageLast));
     }
   }
@@ -217,45 +235,14 @@ class _PersonalInformationUserDetailState
           backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: Text(
-            "Quét QR Code",
+            widget.customerInfo.customerCode +
+                ' - ' +
+                widget.customerInfo.fullName +
+                ' - CN' +
+                widget.customerInfo.branchId.toString(),
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
-          actions: [
-            IconButton(
-                icon: Icon(
-                  Icons.qr_code_scanner,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                onPressed: () async {
-                  // barcodeScanner();
-                  var data = await Navigator.pushNamed(context, 'qrcode');
-                  if (data is String) {
-                    var listInfoCard = data.split('|');
-                    _controllerIDNo.text = listInfoCard[0];
-                    _controllerIDNoOld.text = listInfoCard[1];
-                    _controllerFullName.text = listInfoCard[2];
-                    String bod = listInfoCard[3].substring(0, 2) +
-                        '/' +
-                        listInfoCard[3].substring(2, 4) +
-                        '/' +
-                        listInfoCard[3].substring(4, 8);
-                    _controllerDOB.text = DateFormat('dd-MM-yyyy')
-                        .format(DateFormat("dd/MM/yyyy").parse(bod));
-                    _controllerSex.text = listInfoCard[4];
-                    _controllerNativePlace.text = listInfoCard[5];
-                    String dateOfIssue = listInfoCard[6].substring(0, 2) +
-                        '/' +
-                        listInfoCard[6].substring(2, 4) +
-                        '/' +
-                        listInfoCard[6].substring(4, 8);
-                    _controllerDateOfIssue.text = DateFormat('dd-MM-yyyy')
-                        .format(DateFormat("dd/MM/yyyy").parse(dateOfIssue));
-                  }
-                  print(data);
-                }),
-          ],
         ),
         body: BlocEventStateBuilder<PersonalInformationUserState>(
             bloc: personalInformationUserBloc,
@@ -361,6 +348,8 @@ class _PersonalInformationUserDetailState
                                             children: [
                                               Expanded(
                                                   child: CusTextFormField(
+                                                      focusNode:
+                                                          new AlwaysDisabledFocusNode(),
                                                       controller:
                                                           _controllerCustomerCode,
                                                       textInputType:
@@ -379,6 +368,8 @@ class _PersonalInformationUserDetailState
                                               ),
                                               Expanded(
                                                   child: CusTextFormField(
+                                                      focusNode:
+                                                          new AlwaysDisabledFocusNode(),
                                                       controller:
                                                           _controllerBranchID,
                                                       textInputType:
@@ -685,103 +676,116 @@ class _PersonalInformationUserDetailState
                                                       //             .grey[400],
                                                       //         width: 2.0)),
                                                       child: FittedBox(
-                                                        fit: BoxFit.fitHeight,
-                                                        child:
-                                                            listFileImageLast[
-                                                                        0] !=
-                                                                    null
-                                                                ? Container(
-                                                                    width: 95,
-                                                                    height: 55,
-                                                                    decoration: new BoxDecoration(
-                                                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                                        //color: Colors.redAccent,
-                                                                        shape: BoxShape.rectangle,
-                                                                        image: new DecorationImage(fit: BoxFit.fill, image: FileImage(listFileImageLast[0]))),
-                                                                  )
-                                                                : Container(
-                                                                    width: 95,
-                                                                    height: 55,
-                                                                    decoration: BoxDecoration(
-                                                                        color: Colors.blueGrey[
-                                                                            100],
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                5.0),
-                                                                        border: Border.all(
-                                                                            color: isValidAttachFileFrontFace != false
-                                                                                ? Colors.grey[400]
-                                                                                : Colors.red[300],
-                                                                            width: 1.3)),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
+                                                          fit: BoxFit.fitHeight,
+                                                          child: listFileImageLast[
+                                                                      0] !=
+                                                                  null
+                                                              ? Container(
+                                                                  width: 95,
+                                                                  height: 55,
+                                                                  decoration:
+                                                                      new BoxDecoration(
+                                                                          borderRadius: BorderRadius.all(Radius.circular(
+                                                                              5.0)),
+                                                                          //color: Colors.redAccent,
+                                                                          shape: BoxShape
+                                                                              .rectangle,
+                                                                          image: new DecorationImage(
+                                                                              fit: BoxFit.fill,
+                                                                              image: FileImage(listFileImageLast[0]))),
+                                                                )
+                                                              : fontImageUrl ==
+                                                                      ''
+                                                                  ? Container(
+                                                                      width: 95,
+                                                                      height:
+                                                                          55,
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors.blueGrey[
+                                                                              100],
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              5.0),
+                                                                          border: Border.all(
+                                                                              color: isValidAttachFileFrontFace != false ? Colors.grey[400] : Colors.red[300],
+                                                                              width: 1.3)),
                                                                       child:
-                                                                          Row(
-                                                                        children: [
-                                                                          Expanded(
-                                                                              child: Container(
-                                                                            height:
-                                                                                40,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: Colors.white,
-                                                                              borderRadius: BorderRadius.circular(8.0),
-                                                                            ),
-                                                                            child:
-                                                                                Center(
-                                                                              child: Container(
-                                                                                height: 27,
-                                                                                width: 20,
-                                                                                child: FittedBox(
-                                                                                    fit: BoxFit.cover,
-                                                                                    child: Icon(
-                                                                                      Icons.person,
-                                                                                      color: Colors.blueGrey[200],
-                                                                                    )),
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8.0),
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                                child: Container(
+                                                                              height: 40,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Colors.white,
+                                                                                borderRadius: BorderRadius.circular(8.0),
                                                                               ),
-                                                                            ),
-                                                                          )),
-                                                                          SizedBox(
-                                                                            width:
-                                                                                5,
-                                                                          ),
-                                                                          Expanded(
-                                                                              child: Container(
-                                                                            height:
-                                                                                40,
-                                                                            child:
-                                                                                Column(
-                                                                              children: [
-                                                                                Flexible(
-                                                                                  flex: 1,
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
-                                                                                  ),
+                                                                              child: Center(
+                                                                                child: Container(
+                                                                                  height: 27,
+                                                                                  width: 20,
+                                                                                  child: FittedBox(
+                                                                                      fit: BoxFit.cover,
+                                                                                      child: Icon(
+                                                                                        Icons.person,
+                                                                                        color: Colors.blueGrey[200],
+                                                                                      )),
                                                                                 ),
-                                                                                Flexible(
-                                                                                  flex: 1,
-                                                                                  fit: FlexFit.tight,
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
-                                                                                  ),
-                                                                                ),
-                                                                                Flexible(
-                                                                                  flex: 1,
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
-                                                                                  ),
-                                                                                )
-                                                                              ],
+                                                                              ),
+                                                                            )),
+                                                                            SizedBox(
+                                                                              width: 5,
                                                                             ),
-                                                                          )),
-                                                                        ],
+                                                                            Expanded(
+                                                                                child: Container(
+                                                                              height: 40,
+                                                                              child: Column(
+                                                                                children: [
+                                                                                  Flexible(
+                                                                                    flex: 1,
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Flexible(
+                                                                                    flex: 1,
+                                                                                    fit: FlexFit.tight,
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Flexible(
+                                                                                    flex: 1,
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              ),
+                                                                            )),
+                                                                          ],
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                      ),
+                                                                    )
+                                                                  : Container(
+                                                                      width: 95,
+                                                                      height:
+                                                                          55,
+                                                                      decoration: new BoxDecoration(
+                                                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                          //color: Colors.redAccent,
+                                                                          shape: BoxShape.rectangle,
+                                                                          image: new DecorationImage(
+                                                                            fit:
+                                                                                BoxFit.fill,
+                                                                            image:
+                                                                                NetworkImage(
+                                                                              fontImageUrl,
+                                                                            ),
+                                                                          )),
+                                                                    )),
                                                     ),
                                                     isValidAttachFileFrontFace !=
                                                             false
@@ -851,124 +855,133 @@ class _PersonalInformationUserDetailState
                                                                                 BoxFit.fill,
                                                                             image: FileImage(listFileImageLast[1]))),
                                                                   )
-                                                                : Container(
-                                                                    width: 95,
-                                                                    height: 55,
-                                                                    decoration: BoxDecoration(
-                                                                        color: Colors.blueGrey[
-                                                                            100],
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                5.0),
-                                                                        border: Border.all(
-                                                                            color: isValidAttachFileFrontFace != false
-                                                                                ? Colors.grey[400]
-                                                                                : Colors.red[300],
-                                                                            width: 1.3)),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              5.0),
-                                                                      child:
-                                                                          Row(
-                                                                        children: [
-                                                                          Expanded(
-                                                                              child: Column(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceAround,
+                                                                : backImageUrl ==
+                                                                        ''
+                                                                    ? Container(
+                                                                        width:
+                                                                            95,
+                                                                        height:
+                                                                            55,
+                                                                        decoration: BoxDecoration(
+                                                                            color:
+                                                                                Colors.blueGrey[100],
+                                                                            borderRadius: BorderRadius.circular(5.0),
+                                                                            border: Border.all(color: isValidAttachFileFrontFace != false ? Colors.grey[400] : Colors.red[300], width: 1.3)),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(5.0),
+                                                                          child:
+                                                                              Row(
                                                                             children: [
-                                                                              Container(
-                                                                                height: 20,
-                                                                                width: 30,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Colors.white,
-                                                                                  borderRadius: BorderRadius.circular(8.0),
-                                                                                ),
-                                                                                child: Center(
-                                                                                  child: Container(
-                                                                                    height: 27,
-                                                                                    width: 20,
-                                                                                    child: RotatedBox(
-                                                                                      quarterTurns: 1,
-                                                                                      child: FittedBox(
-                                                                                          fit: BoxFit.cover,
-                                                                                          child: Icon(
-                                                                                            Icons.fingerprint,
-                                                                                            color: Colors.blueGrey[200],
-                                                                                          )),
+                                                                              Expanded(
+                                                                                  child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                children: [
+                                                                                  Container(
+                                                                                    height: 20,
+                                                                                    width: 30,
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: Colors.white,
+                                                                                      borderRadius: BorderRadius.circular(8.0),
+                                                                                    ),
+                                                                                    child: Center(
+                                                                                      child: Container(
+                                                                                        height: 27,
+                                                                                        width: 20,
+                                                                                        child: RotatedBox(
+                                                                                          quarterTurns: 1,
+                                                                                          child: FittedBox(
+                                                                                              fit: BoxFit.cover,
+                                                                                              child: Icon(
+                                                                                                Icons.fingerprint,
+                                                                                                color: Colors.blueGrey[200],
+                                                                                              )),
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
                                                                                   ),
-                                                                                ),
-                                                                              ),
-                                                                              Container(
-                                                                                height: 20,
-                                                                                width: 30,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Colors.white,
-                                                                                  borderRadius: BorderRadius.circular(8.0),
-                                                                                ),
-                                                                                child: Center(
-                                                                                  child: Container(
-                                                                                    height: 27,
-                                                                                    width: 20,
-                                                                                    child: RotatedBox(
-                                                                                      quarterTurns: 1,
-                                                                                      child: FittedBox(
-                                                                                          fit: BoxFit.cover,
-                                                                                          child: Icon(
-                                                                                            Icons.fingerprint_rounded,
-                                                                                            color: Colors.blueGrey[200],
-                                                                                          )),
+                                                                                  Container(
+                                                                                    height: 20,
+                                                                                    width: 30,
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: Colors.white,
+                                                                                      borderRadius: BorderRadius.circular(8.0),
+                                                                                    ),
+                                                                                    child: Center(
+                                                                                      child: Container(
+                                                                                        height: 27,
+                                                                                        width: 20,
+                                                                                        child: RotatedBox(
+                                                                                          quarterTurns: 1,
+                                                                                          child: FittedBox(
+                                                                                              fit: BoxFit.cover,
+                                                                                              child: Icon(
+                                                                                                Icons.fingerprint_rounded,
+                                                                                                color: Colors.blueGrey[200],
+                                                                                              )),
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
                                                                                   ),
-                                                                                ),
+                                                                                ],
+                                                                              )),
+                                                                              SizedBox(
+                                                                                width: 5,
                                                                               ),
+                                                                              Expanded(
+                                                                                  child: Container(
+                                                                                height: 40,
+                                                                                child: Column(
+                                                                                  children: [
+                                                                                    Flexible(
+                                                                                      flex: 1,
+                                                                                      child: Container(
+                                                                                        decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
+                                                                                      ),
+                                                                                    ),
+                                                                                    Flexible(
+                                                                                      flex: 1,
+                                                                                      fit: FlexFit.tight,
+                                                                                      child: Container(
+                                                                                        decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
+                                                                                      ),
+                                                                                    ),
+                                                                                    Flexible(
+                                                                                      flex: 1,
+                                                                                      child: Container(
+                                                                                        decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
+                                                                                      ),
+                                                                                    ),
+                                                                                    Flexible(
+                                                                                      flex: 1,
+                                                                                      child: Container(
+                                                                                        decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
+                                                                                      ),
+                                                                                    )
+                                                                                  ],
+                                                                                ),
+                                                                              )),
                                                                             ],
-                                                                          )),
-                                                                          SizedBox(
-                                                                            width:
-                                                                                5,
                                                                           ),
-                                                                          Expanded(
-                                                                              child: Container(
-                                                                            height:
-                                                                                40,
-                                                                            child:
-                                                                                Column(
-                                                                              children: [
-                                                                                Flexible(
-                                                                                  flex: 1,
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 2.0)),
-                                                                                  ),
-                                                                                ),
-                                                                                Flexible(
-                                                                                  flex: 1,
-                                                                                  fit: FlexFit.tight,
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 4.0)),
-                                                                                  ),
-                                                                                ),
-                                                                                Flexible(
-                                                                                  flex: 1,
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
-                                                                                  ),
-                                                                                ),
-                                                                                Flexible(
-                                                                                  flex: 1,
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.blueGrey[100], width: 3.0)),
-                                                                                  ),
-                                                                                )
-                                                                              ],
-                                                                            ),
-                                                                          )),
-                                                                        ],
+                                                                        ),
+                                                                      )
+                                                                    : Container(
+                                                                        width:
+                                                                            95,
+                                                                        height:
+                                                                            55,
+                                                                        decoration: new BoxDecoration(
+                                                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                            //color: Colors.redAccent,
+                                                                            shape: BoxShape.rectangle,
+                                                                            image: new DecorationImage(
+                                                                              fit: BoxFit.fill,
+                                                                              image: NetworkImage(
+                                                                                backImageUrl,
+                                                                              ),
+                                                                            )),
                                                                       ),
-                                                                    ),
-                                                                  ),
                                                       ),
                                                     ),
                                                     isValidAttachFileBackFace !=
@@ -1000,23 +1013,23 @@ class _PersonalInformationUserDetailState
                                         )),
                                     child: Row(
                                       children: [
-                                        Expanded(
-                                          child: InkWell(
-                                            onTap: () => clearData(),
-                                            child: Center(
-                                                child: Text("Xóa",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.bold))),
-                                          ),
-                                        ),
-                                        VerticalDivider(
-                                          width: 5,
-                                          thickness: 5,
-                                          color: Colors.white,
-                                        ),
+                                        // Expanded(
+                                        //   child: InkWell(
+                                        //     onTap: () => clearData(),
+                                        //     child: Center(
+                                        //         child: Text("Xóa",
+                                        //             style: TextStyle(
+                                        //                 color: Colors.white,
+                                        //                 fontSize: 14,
+                                        //                 fontWeight:
+                                        //                     FontWeight.bold))),
+                                        //   ),
+                                        // ),
+                                        // VerticalDivider(
+                                        //   width: 5,
+                                        //   thickness: 5,
+                                        //   color: Colors.white,
+                                        // ),
                                         Expanded(
                                           child: InkWell(
                                             onTap: () => onSubmit(context),
@@ -1148,14 +1161,14 @@ class _PersonalInformationUserDetailState
     isValidAttachFileBackFace = true;
     bool isValid;
     isValid = _formKeyInfoCustomer.currentState.validate();
-    if (listFileImageLast[0] == null) {
-      isValid = false;
-      isValidAttachFileFrontFace = false;
-    }
-    if (listFileImageLast[1] == null) {
-      isValid = false;
-      isValidAttachFileBackFace = false;
-    }
+    // if (listFileImageLast[0] == null) {
+    //   isValid = false;
+    //   isValidAttachFileFrontFace = false;
+    // }
+    // if (listFileImageLast[1] == null) {
+    //   isValid = false;
+    //   isValidAttachFileBackFace = false;
+    // }
     if (!isValid) {
       setState(() {});
     }
@@ -1188,6 +1201,15 @@ class _PersonalInformationUserDetailState
 
     var addressDescription =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    _controllerCurrentResidence.text = addressDescription.first.addressLine;
+  }
+
+  getCurrentResidenceFromCoordinates(String coordinatesStr) async {
+    var coordinates = coordinatesStr.split(',');
+    var coordinatesModel = new Coordinates(
+        double.parse(coordinates[0]), double.parse(coordinates[1]));
+    var addressDescription =
+        await Geocoder.local.findAddressesFromCoordinates(coordinatesModel);
     _controllerCurrentResidence.text = addressDescription.first.addressLine;
   }
 

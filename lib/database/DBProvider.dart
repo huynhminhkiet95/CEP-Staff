@@ -61,7 +61,8 @@ class DBProvider {
           "frontImage TEXT,"
           "backImage TEXT,"
           "createDate TEXT,"
-          "updateDate TEXT"
+          "updateDate TEXT,"
+          "username TEXT"
           ")");
     }, onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE KhaoSat("
@@ -1046,7 +1047,7 @@ class DBProvider {
     final db = await database;
     try {
       int checkExistsData = Sqflite.firstIntValue(await db.rawQuery(
-          "SELECT COUNT(*) FROM historysearchkhaosat_tbl WHERE cumID='$cumID' and username = '$username' and ngayXuatDanhSach = '$ngayXuatDanhSach'"));
+          "SELECT COUNT(*) FROM historysearchkhaosat_tbl WHERE cumID='$cumID' and username = '$username' and ngayXuatDanhSach = '$ngayXuatDanhSach' and masoql = '$masoql'"));
       if (checkExistsData == 0) {
         String queryString =
             '''INSERT Into historysearchkhaosat_tbl(cumID,ngayXuatDanhSach,username,masoql)
@@ -1059,8 +1060,9 @@ class DBProvider {
       }
       List<Map> list = await db.query("historysearchkhaosat_tbl",
           columns: ["id"],
-          where: "cumID = ? and username = ?",
-          whereArgs: [cumID, username],
+          where:
+              "cumID = ? and username = ? and ngayXuatDanhSach = ? and masoql = ?",
+          whereArgs: [cumID, username, ngayXuatDanhSach, masoql],
           limit: 1);
       var a = list.first;
       id = a["id"];
@@ -1783,7 +1785,7 @@ class DBProvider {
       int checkExistsData = Sqflite.firstIntValue(
           await db.rawQuery('''SELECT COUNT(*) FROM customer_info " +
               "WHERE customerCode = "${customerInfo.customerCode}" 
-              AND branchId = ${customerInfo.branchId} AND oldId = "${customerInfo.oldId}"'''));
+              AND branchId = ${customerInfo.branchId} AND oldId = "${customerInfo.oldId}" AND username = "${globalUser.getUserName}"'''));
       String queryString;
       if (checkExistsData == 0) {
         queryString = '''INSERT Into customer_info(
@@ -1800,7 +1802,8 @@ class DBProvider {
                                         dateOfIssue,
                                         frontImage,
                                         backImage,
-                                        createDate
+                                        createDate,
+                                        username
                                         )
              SELECT  
                     "${customerInfo.customerCode}",
@@ -1816,10 +1819,11 @@ class DBProvider {
                     "${customerInfo.dateOfIssue}",
                     "${customerInfo.frontImage}",
                     "${customerInfo.backImage}",
-                    "${customerInfo.createDate}"
+                    "${customerInfo.createDate}",
+                    "${globalUser.getUserName}"
                     
              WHERE NOT EXISTS(SELECT 1 FROM customer_info WHERE customerCode = "${customerInfo.customerCode}" 
-              AND branchId = "${customerInfo.branchId}")''';
+              AND branchId = "${customerInfo.branchId}" AND username = "${globalUser.getUserName}")''';
       } else {
         queryString = '''UPDATE customer_info 
                SET 
@@ -1836,7 +1840,7 @@ class DBProvider {
                    backImage = "${customerInfo.backImage}", 
                    updateDate = "${customerInfo.updateDate}"
                WHERE customerCode = "${customerInfo.customerCode}" AND 
-                     branchId = "${customerInfo.branchId}" AND id = ${customerInfo.id}
+                     branchId = "${customerInfo.branchId}" AND id = ${customerInfo.id} AND username = "${globalUser.getUserName}"
              ''';
       }
 
@@ -1849,17 +1853,36 @@ class DBProvider {
     }
   }
 
+  // updateCustomerInfo(CustomerInfo customerInfo) async {
+  //   final db = await database;
+  //   String queryString;
+  // }
+
   getCustomerInfo() async {
     final db = await database;
-    var res = await db.query("customer_info", limit: 100);
+    var res = await db.query("customer_info",
+        where: "username = ?", whereArgs: [globalUser.getUserName], limit: 100);
+
     List<CustomerInfo> listCustomerInfomation =
         res.isNotEmpty ? res.map((c) => CustomerInfo.fromJson(c)).toList() : [];
     return listCustomerInfomation;
   }
 
   dropDataBase() async {
-    final db = await database;
-    await db.execute("DROP DATABASE TestDB.db");
+    try {
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String path = join(documentsDirectory.path, "CEP-NhanVien.dbo.db");
+      // Delete the database
+      await deleteDatabase(path);
+      _database = await initDB();
+    } on Exception catch (ex) {
+      print(ex);
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+
+    //initDB();
   }
 
 //   Future<void> dropTableIfExistsThenReCreate() async {

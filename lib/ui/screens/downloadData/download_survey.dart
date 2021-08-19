@@ -60,7 +60,7 @@ class _DownloadSurveyState extends State<DownloadSurvey> {
             ? ''
             : globalUser.getUserInfo.chiNhanhID,
         //chiNhanhID: 4,
-        cumID: _textCumIDAutoComplete.text.toString(),
+        cumID: _textCumIDAutoComplete.text.toString().toUpperCase(),
         ngayxuatDS: _textDateEditingController.text.toString(),
         //masoql: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.masoql
         masoql: globalUser.getUserInfo.masoql.toString()));

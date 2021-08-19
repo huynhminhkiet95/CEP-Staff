@@ -27,6 +27,7 @@ dialogCustomForCEP(BuildContext context, String title, onPressed(),
               titlePadding: EdgeInsets.only(left: 15, right: 10, top: 10),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     width: children.length == 0
@@ -58,7 +59,7 @@ dialogCustomForCEP(BuildContext context, String title, onPressed(),
                 ],
               ),
               content: Container(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 25),
                 width: width,
                 height: children.length == 0 ? 0 : null,
                 child: Column(

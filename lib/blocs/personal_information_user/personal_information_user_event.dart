@@ -8,6 +8,15 @@ abstract class PersonalInformationUserEvent extends BlocEvent {
   PersonalInformationUserEvent();
 }
 
+class InsertPersonalInformationUserEvent extends PersonalInformationUserEvent {
+  final UpdateInformationUser updateInformationUser;
+  final List<File> imageFiles;
+  final BuildContext context;
+  InsertPersonalInformationUserEvent(
+      this.context, this.updateInformationUser, this.imageFiles)
+      : super();
+}
+
 class UpdatePersonalInformationUserEvent extends PersonalInformationUserEvent {
   final UpdateInformationUser updateInformationUser;
   final List<File> imageFiles;

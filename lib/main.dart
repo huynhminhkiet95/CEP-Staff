@@ -13,6 +13,7 @@ import 'package:qr_code_demo/ui/screens/downloadData/download_main.dart';
 import 'package:qr_code_demo/ui/screens/error/error.dart';
 import 'package:qr_code_demo/ui/screens/google_maps/google_maps.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/personal_information_user.dart';
+import 'package:qr_code_demo/ui/screens/personal_information_user/personal_information_user_update.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/qr_scanner.dart';
 import 'package:qr_code_demo/ui/screens/personal_information_user/personal_information_user_detail.dart';
 import 'package:qr_code_demo/ui/screens/profile/language.dart';
@@ -245,6 +246,12 @@ class AppState extends State<Application> {
                   branchID: arguments['branchID'].toString(),
                 ));
               }
+              break;
+            case 'personalinforuserupdate':
+              final Map<String, Object> arguments = settings.arguments;
+              return SlideLeftRoute(
+                  page: PersonalInformationUserUpdate(
+                      customerInfo: arguments['customerInfo']));
               break;
             case 'personalinforuser':
               return SlideLeftRoute(page: PersonalInformationUser());
