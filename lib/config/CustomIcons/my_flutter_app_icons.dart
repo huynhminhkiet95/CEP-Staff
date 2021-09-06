@@ -75,4 +75,6 @@ class IconsCustomize {
       IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData id_card_1 =
       IconData(0xf2c2, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData sliders_h =
+      IconData(0xf1de, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

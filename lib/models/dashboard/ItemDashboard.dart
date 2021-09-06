@@ -21,7 +21,7 @@ class ItemDashBoard {
         title: allTranslations.text("DeptRecovery"),
         img: "assets/dashboard/credit-hover.png",
         icon: Icons.attach_money,
-        router: "error"));
+        router: "deptcollection"));
     list.add(new ItemDashBoard(
         title: allTranslations.text("SavingAdvisory"),
         img: "assets/dashboard/saving-hover.png",
@@ -47,6 +47,7 @@ class ItemDashBoard {
         img: "assets/dashboard/document-download-outline.png",
         icon: Icons.download_rounded,
         router: "personalinforuser"));
+
     return list;
   }
 

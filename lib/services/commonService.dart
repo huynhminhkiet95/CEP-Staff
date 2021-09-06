@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:qr_code_demo/dtos/datalogin.dart';
-import 'package:qr_code_demo/globalServer.dart';
 import 'package:qr_code_demo/models/community_development/comunity_development.dart';
 import 'package:qr_code_demo/models/download_data/survey_info.dart';
 import 'package:http/http.dart';
@@ -10,8 +9,6 @@ import 'package:qr_code_demo/dtos/UserLogin.dart';
 import 'package:qr_code_demo/httpProvider/HttpProviders.dart';
 import 'package:qr_code_demo/services/service_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../GlobalUser.dart';
-import '../globalDriverProfile.dart';
 
 class CommonService {
   final HttpBase _httpBase;

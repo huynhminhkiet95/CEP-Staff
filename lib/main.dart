@@ -9,6 +9,7 @@ import 'package:qr_code_demo/ui/screens/calculation_money/calculation_money.dart
 import 'package:qr_code_demo/ui/screens/community_development/community_development.dart';
 import 'package:qr_code_demo/ui/screens/community_development/community_development_detail.dart';
 import 'package:qr_code_demo/ui/screens/delete_data/delete_data.dart';
+import 'package:qr_code_demo/ui/screens/dept_collection/dept_collection.dart';
 import 'package:qr_code_demo/ui/screens/downloadData/download_main.dart';
 import 'package:qr_code_demo/ui/screens/error/error.dart';
 import 'package:qr_code_demo/ui/screens/google_maps/google_maps.dart';
@@ -253,6 +254,10 @@ class AppState extends State<Application> {
                   page: PersonalInformationUserUpdate(
                       customerInfo: arguments['customerInfo']));
               break;
+            case 'deptcollection':
+              return SlideLeftRoute(page: DeptCollectionScreen());
+              break;
+
             case 'personalinforuser':
               return SlideLeftRoute(page: PersonalInformationUser());
               break;

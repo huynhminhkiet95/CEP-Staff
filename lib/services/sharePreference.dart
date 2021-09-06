@@ -4,7 +4,6 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:qr_code_demo/config/constants.dart';
 import 'package:qr_code_demo/dtos/serverInfo.dart';
-import 'package:qr_code_demo/globalDriverProfile.dart';
 import 'package:qr_code_demo/globalServer.dart';
 import 'package:qr_code_demo/models/location/currentPosition.dart';
 
@@ -169,27 +168,20 @@ class SharePreferenceService {
     share.setString(KeyConstants.licenseNumber, licenseNumber);
     share.setString(KeyConstants.fleet, fleet);
     share.setString(KeyConstants.avatar, avatar);
-
-    globalDriverProfile.setDriverName = driverName;
-    globalDriverProfile.setPhoneNumber = phoneNumber;
-    globalDriverProfile.seticNumber = icNumber;
-    globalDriverProfile.setlicenseNumber = licenseNumber;
-    globalDriverProfile.setfleet = fleet;
-    globalDriverProfile.setavatar = avatar;
   }
 
-  Future<void> getDriverProfile() async {
-    globalDriverProfile.setDriverName =
-        share.getString(KeyConstants.driverName) ?? "";
-    globalDriverProfile.setPhoneNumber =
-        share.getString(KeyConstants.phoneNumber) ?? "";
-    globalDriverProfile.seticNumber =
-        share.getString(KeyConstants.icNumber) ?? "";
-    globalDriverProfile.setlicenseNumber =
-        share.getString(KeyConstants.licenseNumber) ?? "";
-    globalDriverProfile.setfleet = share.getString(KeyConstants.fleet) ?? "";
-    globalDriverProfile.setavatar = share.getString(KeyConstants.avatar) ?? "";
-  }
+  // Future<void> getDriverProfile() async {
+  //   globalDriverProfile.setDriverName =
+  //       share.getString(KeyConstants.driverName) ?? "";
+  //   globalDriverProfile.setPhoneNumber =
+  //       share.getString(KeyConstants.phoneNumber) ?? "";
+  //   globalDriverProfile.seticNumber =
+  //       share.getString(KeyConstants.icNumber) ?? "";
+  //   globalDriverProfile.setlicenseNumber =
+  //       share.getString(KeyConstants.licenseNumber) ?? "";
+  //   globalDriverProfile.setfleet = share.getString(KeyConstants.fleet) ?? "";
+  //   globalDriverProfile.setavatar = share.getString(KeyConstants.avatar) ?? "";
+  // }
 
   Future<void> updateCurrentPosition(LocationData location) async {
     share.setDouble(KeyConstants.latitude, location.latitude);
