@@ -3,7 +3,10 @@ import 'package:qr_code_demo/blocs/authentication/authentication_bloc.dart';
 import 'package:qr_code_demo/blocs/authentication/authentication_state.dart';
 import 'package:qr_code_demo/blocs/decision/decision_state_action.dart';
 import 'package:qr_code_demo/ui/screens/Home/dashboard.dart';
+import 'package:qr_code_demo/ui/screens/Login/loginPage.dart';
 import 'package:qr_code_demo/ui/screens/Login/welcomePage.dart';
+
+import '../../GlobalUser.dart';
 
 class DecisionStateTransform
     extends BlocStateTransformBase<DecisionStateAction, AuthenticationState> {
@@ -22,7 +25,9 @@ class DecisionStateTransform
     // String token = globalUser.gettoken;
 
     if (authenticationState == null || !authenticationState.isAuthenticated) {
-      action = DecisionStateAction.routeToPage(WelcomePage());
+      action = globalUser.getAuthenLocal
+          ? DecisionStateAction.routeToPage(WelcomePage())
+          : DecisionStateAction.routeToPage(LoginPage());
     } else {
       action = DecisionStateAction.routeToPage(MenuDashboardPage());
     }

@@ -13,6 +13,7 @@ class CropImageScreen extends ModalRoute<void> {
   CropImageScreen(this.fileImage);
   final cropKey = GlobalKey<CropState>();
   StreamController<double> _value = StreamController<double>();
+  double _value1 = 1;
   StreamController<bool> _isLoading = StreamController<bool>();
   @override
   Duration get transitionDuration => Duration(milliseconds: 500);
@@ -68,122 +69,118 @@ class CropImageScreen extends ModalRoute<void> {
             inAsyncCall: snapshot.data ?? false,
             child: Stack(
               children: [
-                StreamBuilder<double>(
-                    stream: _value.stream,
-                    builder: (context, snapshot) {
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                                color: Colors.black.withOpacity(0.1),
-                                child: Center(
-                                    child: Crop.file(
-                                  fileImage,
-                                  key: cropKey,
-                                  alwaysShowGrid: true,
-                                  scale: snapshot.data ?? 1,
-                                ))),
-                          ),
-                          Container(
-                              height: 150,
-                              color: Colors.black,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                          color: Colors.black.withOpacity(0.1),
+                          child: Center(
+                              child: Crop.file(
+                            fileImage,
+                            key: cropKey,
+                            alwaysShowGrid: true,
+                            scale: _value1 ?? 1,
+                          ))),
+                    ),
+                    Container(
+                        height: 150,
+                        color: Colors.black,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: Colors.blueGrey[700],
+                                inactiveTrackColor:
+                                    Colors.blueGrey.withOpacity(0.2),
+                                trackShape: RectangularSliderTrackShape(),
+                                trackHeight: 4.0,
+                                thumbColor: Colors.blueGrey,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 10.0,
+                                    elevation: 2,
+                                    pressedElevation: 10),
+                                overlayColor: Colors.blueGrey.withAlpha(32),
+                                overlayShape: RoundSliderOverlayShape(
+                                    overlayRadius: 30.0),
+                              ),
+                              child: Slider(
+                                activeColor: Colors.grey,
+                                value: _value1,
+                                min: 1,
+                                max: 3,
+                                divisions: 20,
+                                label: '$_value1',
+                                onChanged: (value) {
+                                  _value1 = value;
+                                  changedExternalState();
+                                },
+                              ),
+                            ),
+                            Divider(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                      activeTrackColor: Colors.blueGrey[700],
-                                      inactiveTrackColor:
-                                          Colors.blueGrey.withOpacity(0.2),
-                                      trackShape: RectangularSliderTrackShape(),
-                                      trackHeight: 4.0,
-                                      thumbColor: Colors.blueGrey,
-                                      thumbShape: RoundSliderThumbShape(
-                                          enabledThumbRadius: 10.0,
-                                          elevation: 2,
-                                          pressedElevation: 10),
-                                      overlayColor:
-                                          Colors.blueGrey.withAlpha(32),
-                                      overlayShape: RoundSliderOverlayShape(
-                                          overlayRadius: 30.0),
-                                    ),
-                                    child: Slider(
-                                      activeColor: Colors.grey,
-                                      value: snapshot.data ?? 1,
-                                      min: 1,
-                                      max: 3,
-                                      divisions: 20,
-                                      label: '${snapshot.data}',
-                                      onChanged: (value) {
-                                        _value.sink.add(value);
-                                      },
+                                  InkWell(
+                                    onTap: () => Navigator.pop(context),
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          top: 10, left: 10, right: 10),
+                                      height: 30,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          color: Colors.black38,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Colors.black38)),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
-                                  Divider(
-                                    height: 10,
+                                  Text(
+                                    "Chỉnh sửa ảnh",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                  Container(
-                                    height: 40,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InkWell(
-                                          onTap: () => Navigator.pop(context),
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                                top: 10, left: 10, right: 10),
-                                            height: 30,
-                                            width: 30,
-                                            decoration: BoxDecoration(
-                                                color: Colors.black38,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.black38)),
-                                            child: Icon(
-                                              Icons.close,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "Chỉnh sửa ảnh",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            _cropImage(context);
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                                top: 10, left: 10, right: 10),
-                                            height: 30,
-                                            width: 30,
-                                            decoration: BoxDecoration(
-                                                color: Colors.black38,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.black38)),
-                                            child: Icon(
-                                              Icons.check,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  InkWell(
+                                    onTap: () {
+                                      _cropImage(context);
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          top: 10, left: 10, right: 10),
+                                      height: 30,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          color: Colors.black38,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Colors.black38)),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  Divider(
-                                    height: 10,
                                   ),
                                 ],
-                              ))
-                        ],
-                      );
-                    }),
+                              ),
+                            ),
+                            Divider(
+                              height: 10,
+                            ),
+                          ],
+                        ))
+                  ],
+                )
 
                 // Align(
                 //   alignment: Alignment.bottomRight,

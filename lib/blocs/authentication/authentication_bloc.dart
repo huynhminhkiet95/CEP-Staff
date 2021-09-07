@@ -87,6 +87,7 @@ class AuthenticationBloc
               this._sharePreferenceService.saveToken(jsonBodyToken["token"]);
               if (event.userName != globalUser.getUserName) {
                 this._sharePreferenceService.saveAuthenLocal(false);
+                this._sharePreferenceService.saveCumId(null);
               }
 
               this._sharePreferenceService.saveUserName(event.userName);
@@ -183,9 +184,9 @@ class AuthenticationBloc
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String buildNumber = packageInfo.buildNumber;
           if (int.parse(buildNumber) < versionStaff.maPhienBan) {
-            _getIsNewVersionController.sink.add(false);
-          } else {
             _getIsNewVersionController.sink.add(true);
+          } else {
+            _getIsNewVersionController.sink.add(false);
           }
         }
       }

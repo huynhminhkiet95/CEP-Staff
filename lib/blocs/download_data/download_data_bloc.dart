@@ -44,6 +44,23 @@ class DownloadDataBloc
           await commonService.downloadDataSurveyHistoryForTBDD(
               event.chiNhanhID, event.cumID, event.ngayxuatDS, event.masoql);
 
+      List<ComboboxModel> metaDataList =
+          await DBProvider.db.getAllMetaDataForTBD();
+      if (metaDataList.length == 0) {
+        var response = await commonService.downloadDataComboBox();
+        if (response.statusCode == StatusCodeConstants.OK) {
+          var jsonBody = json.decode(response.body);
+          if (jsonBody["isSuccessed"]) {
+            if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
+              insertMetaDataJsonToSqlite(jsonBody["data"]);
+            }
+          } else {
+            ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+          }
+        } else {
+          ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+        }
+      }
       if (response == null || responseSurveyHistory == null) {
         yield DownloadDataState.updateLoading(false);
         ToastResultMessage.error(allTranslations.text("NetworkSlow"));
@@ -56,9 +73,9 @@ class DownloadDataBloc
                   .newHistorySearchKhaoSat(event.cumID, event.ngayxuatDS,
                       globalUser.getUserName, event.masoql);
               for (var item in jsonBody["data"]) {
-                var listKhaoSat = SurveyInfo.fromJson(item);
-                listKhaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
-                await DBProvider.db.newKhaoSat(listKhaoSat);
+                var khaoSat = SurveyInfo.fromJson(item);
+                khaoSat.idHistoryKhaoSat = idHistoryKhaoSat;
+                await DBProvider.db.newKhaoSat(khaoSat);
               }
               this.sharePreferenceService.saveCumId(event.cumID);
               ToastResultMessage.success(
@@ -105,15 +122,7 @@ class DownloadDataBloc
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {
           if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
-            List<ComboboxModel> listCombobox = new List<ComboboxModel>();
-            for (var item in jsonBody["data"]) {
-              var listKhaoSat = ComboboxModel.fromJson(item);
-              listCombobox.add(listKhaoSat);
-            }
-            globalUser.setListComboboxModel = listCombobox;
-            await DBProvider.db.newMetaDataForTBD(listCombobox);
-            ToastResultMessage.success(
-                allTranslations.text("DownLoadDataSuccess"));
+            insertMetaDataJsonToSqlite(jsonBody["data"]);
           }
           yield DownloadDataState.updateLoading(false);
         } else {
@@ -130,6 +139,25 @@ class DownloadDataBloc
           globalUser.getUserInfo.chiNhanhID,
           event.cumID,
           globalUser.getUserInfo.masoql);
+
+      List<ComboboxModel> metaDataList =
+          await DBProvider.db.getAllMetaDataForTBD();
+      if (metaDataList.length == 0) {
+        var response = await commonService.downloadDataComboBox();
+        if (response.statusCode == StatusCodeConstants.OK) {
+          var jsonBody = json.decode(response.body);
+          if (jsonBody["isSuccessed"]) {
+            if (jsonBody["data"] != null || !jsonBody["data"].isEmpty) {
+              insertMetaDataJsonToSqlite(jsonBody["data"]);
+            }
+          } else {
+            ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+          }
+        } else {
+          ToastResultMessage.error(allTranslations.text("ServerNotFound"));
+        }
+      }
+
       if (response.statusCode == StatusCodeConstants.OK) {
         var jsonBody = json.decode(response.body);
         if (jsonBody["isSuccessed"]) {
@@ -157,5 +185,16 @@ class DownloadDataBloc
         ToastResultMessage.error(allTranslations.text("ServerNotFound"));
       }
     }
+  }
+
+  void insertMetaDataJsonToSqlite(dynamic data) async {
+    List<ComboboxModel> listCombobox = new List<ComboboxModel>();
+    for (var item in data) {
+      var listKhaoSat = ComboboxModel.fromJson(item);
+      listCombobox.add(listKhaoSat);
+    }
+    globalUser.setListComboboxModel = listCombobox;
+    await DBProvider.db.newMetaDataForTBD(listCombobox);
+    ToastResultMessage.success(allTranslations.text("DownLoadDataSuccess"));
   }
 }

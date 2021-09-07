@@ -118,7 +118,7 @@ class DeleteDataBloc
           await DBProvider.db.getAllLichSuKhaoSat();
       surveyStream.listHistorySearch = listHistorySearch;
       surveyStream.listSurvey = listSurvey
-          .where((e) => e.idHistoryKhaoSat == historySearch.id ?? 0)
+          .where((e) => e.idHistoryKhaoSat == historySearch?.id ?? 0)
           .toList();
       surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
 
@@ -319,7 +319,7 @@ class DeleteDataBloc
         await DBProvider.db.getAllLichSuKhaoSat();
     surveyStream.listHistorySearch = listHistorySearch;
     surveyStream.listSurvey = listSurvey
-        .where((e) => e.idHistoryKhaoSat == historySearch.id ?? 0)
+        .where((e) => e.idHistoryKhaoSat == historySearch?.id ?? 0)
         .toList();
     surveyStream.listSurveyInfoHistory = listSurveyInfoHistory;
 

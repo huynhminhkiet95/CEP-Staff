@@ -1,16 +1,14 @@
 import 'dart:io';
 import 'package:qr_code_demo/dtos/datalogin.dart';
-import 'package:qr_code_demo/globalServer.dart';
 import 'package:qr_code_demo/models/community_development/comunity_development.dart';
 import 'package:qr_code_demo/models/download_data/survey_info.dart';
 import 'package:http/http.dart';
+import 'package:qr_code_demo/models/personal_information_user/update_information_user.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:qr_code_demo/dtos/UserLogin.dart';
 import 'package:qr_code_demo/httpProvider/HttpProviders.dart';
 import 'package:qr_code_demo/services/service_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../GlobalUser.dart';
-import '../globalDriverProfile.dart';
 
 class CommonService {
   final HttpBase _httpBase;
@@ -60,54 +58,35 @@ class CommonService {
     return _httpBase.httpGetHub(url);
   }
 
-  Future<Response> updateNotifications(
-      String userId, String reqIds, String status) {
-    Map map = new Map();
-    map["Username"] = userId;
-    map["ReqIds"] = reqIds;
-    map["FinalStatusMessage"] = status;
-    var url = sprintf(ServiceName.Update_Notifications.toString(),
-        [globalUser.getDefaultSubsidiary, '']);
-    return _httpBase.httpPostHub(url, map);
+  // Future<Response> updateNotifications(
+  //     String userId, String reqIds, String status) {
+  //   Map map = new Map();
+  //   map["Username"] = userId;
+  //   map["ReqIds"] = reqIds;
+  //   map["FinalStatusMessage"] = status;
+  //   var url = sprintf(ServiceName.Update_Notifications.toString(),
+  //       [globalUser.getDefaultSubsidiary, '']);
+  //   return _httpBase.httpPostHub(url, map);
+  // }
+
+  // Future<Response> deleteNotifications(String strReqIds) {
+  //   Map map = new Map();
+  //   var url = sprintf(ServiceName.Delete_Notifications.toString() + strReqIds,
+  //       [globalUser.getDefaultSubsidiary, '']);
+  //   return _httpBase.httpPostHubNoBody(url, map);
+  // }
+
+  // Future<StreamedResponse> saveImage(File file, int itemId) {
+  //   return _httpBase.httpPostOpenalpr(file, itemId);
+  // }
+
+  Future<dynamic> saveImage(File file) {
+    //return _httpBase.uploadImage1(file);
+    return _httpBase.httpPostDocument(file);
   }
 
-  Future<Response> deleteNotifications(String strReqIds) {
-    Map map = new Map();
-    var url = sprintf(ServiceName.Delete_Notifications.toString() + strReqIds,
-        [globalUser.getDefaultSubsidiary, '']);
-    return _httpBase.httpPostHubNoBody(url, map);
-  }
-
-  static void goInspectionList(String type) async {
-    if (await canLaunch('chrome://')) {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=&driverid=${globalUser.getStaffId}&equimentcode=&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: false);
-    } else {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=&driverid=${globalUser.getStaffId}&equimentcode=&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: true);
-    }
-  }
-
-  static void goInspectionListTrip(String type, bookno) async {
-    if (await canLaunch('chrome://')) {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=$bookno&driverid=${globalUser.getStaffId}&equimentcode=${globalDriverProfile.getfleet}&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: false);
-    } else {
-      await launch(
-          globalServer.getServerInspection +
-              'inspection?bookno=$bookno&driverid=${globalUser.getStaffId}&equimentcode=${globalDriverProfile.getfleet}&userid=${globalUser.getId}&type=${type.toString()}',
-          forceSafariVC: true);
-    }
-  }
-
-  Future<StreamedResponse> saveImage(File file, int itemId) {
-    return _httpBase.httpPostOpenalpr(file, itemId);
+  Future<Response> getTestApiLocal(File file) {
+    return _httpBase.getTestApiLocal();
   }
 
   Future<Response> downloadDataSurvey(
@@ -154,5 +133,10 @@ class CommonService {
   Future<Response> updateCommunityDevelopment(List<KhachHang> body) {
     return _httpBase.httpPostToken(
         ServiceName.UpdateCommunityDevelopmentInfo.toString(), body);
+  }
+
+  Future<Response> updateInfoCustomer(UpdateInformationUser body) {
+    return _httpBase.httpPostToken(
+        ServiceName.UpdateInfoCustomer.toString(), body);
   }
 }

@@ -3,7 +3,7 @@ import 'package:qr_code_demo/config/colors.dart';
 import 'package:qr_code_demo/models/download_data/comboboxmodel.dart';
 import 'package:qr_code_demo/models/survey/survey_result.dart';
 import 'package:qr_code_demo/ui/components/CustomDialog.dart';
-import 'package:qr_code_demo/ui/screens/Home/styles.dart';
+import 'package:badges/badges.dart';
 import 'package:qr_code_demo/ui/screens/survey/style.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_demo/config/CustomIcons/my_flutter_app_icons.dart';
@@ -31,7 +31,7 @@ class _SurveyScreenState extends State<SurveyScreen>
   List<String> listItemNgayXuatDS;
   String dropdownCumIdValue;
   String dropdownNgayXuatDanhSachValue;
-
+  int selectedIndexKhuVuc;
   double screenWidth, screenHeight;
 
   SurveyBloc surVeyBloc;
@@ -40,7 +40,11 @@ class _SurveyScreenState extends State<SurveyScreen>
   bool isCheckAll = false;
 
   SurveyStream surveyStream;
-
+  List<String> listTypeArea = [
+    allTranslations.text("All"),
+    allTranslations.text("NotYetSurveyed"),
+    allTranslations.text("Surveyed")
+  ];
   @override
   void initState() {
     animationController = AnimationController(
@@ -51,6 +55,7 @@ class _SurveyScreenState extends State<SurveyScreen>
     surVeyBloc.emitEvent(LoadSurveyEvent());
     setData();
     super.initState();
+    selectedIndexKhuVuc = 0;
   }
 
   Future<void> setData() async {
@@ -72,6 +77,15 @@ class _SurveyScreenState extends State<SurveyScreen>
 
   void _onSearchSurvey(String cumId, String date) {
     surVeyBloc.emitEvent(SearchSurveyEvent(cumId, date));
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Logout':
+        break;
+      case 'Settings':
+        break;
+    }
   }
 
   @override
@@ -151,7 +165,7 @@ class _SurveyScreenState extends State<SurveyScreen>
                                   : "",
                               //  textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Theme.of(context).highlightColor,
+                                  color: ColorConstants.cepColorBackground,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w900,
                                   wordSpacing: 5),
@@ -363,6 +377,82 @@ class _SurveyScreenState extends State<SurveyScreen>
                                             opacity: opacity,
                                             child: AnimatedContainer(
                                               height: 40,
+                                              width: this.isCheckAll == false
+                                                  ? 140
+                                                  : 160,
+                                              decoration:
+                                                  decorationButtonAnimated(
+                                                      Colors.green),
+                                              // Define how long the animation should take.
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              // Provide an optional curve to make the animation feel smoother.
+                                              curve: Curves.easeOut,
+                                              child: RawMaterialButton(
+                                                fillColor: Colors.green,
+                                                splashColor: Colors.grey,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Icon(
+                                                        this.isCheckAll == false
+                                                            ? Icons
+                                                                .check_box_outline_blank
+                                                            : Icons.check_box,
+                                                        color: Colors.white,
+                                                        size: 19,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10.0,
+                                                      ),
+                                                      Text(
+                                                        this.isCheckAll == false
+                                                            ? allTranslations
+                                                                .text(
+                                                                    "SelectAll")
+                                                            : allTranslations.text(
+                                                                "UnSelectAll"),
+                                                        maxLines: 1,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  isCheckAll = !isCheckAll;
+                                                  setState(() {
+                                                    if (isCheckAll) {
+                                                      for (var item
+                                                          in checkBoxSurvey) {
+                                                        item.status = true;
+                                                      }
+                                                    } else {
+                                                      for (var item
+                                                          in checkBoxSurvey) {
+                                                        item.status = false;
+                                                      }
+                                                    }
+                                                  });
+                                                },
+                                                shape: const StadiumBorder(),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                    surveyStream.listSurvey != null
+                                        ? AnimatedOpacity(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            opacity: opacity,
+                                            child: AnimatedContainer(
+                                              height: 40,
                                               decoration:
                                                   decorationButtonAnimated(
                                                       checkBoxSurvey
@@ -433,84 +523,55 @@ class _SurveyScreenState extends State<SurveyScreen>
                                             ),
                                           )
                                         : Container(),
-                                    surveyStream.listSurvey != null
-                                        ? AnimatedOpacity(
-                                            duration: const Duration(
-                                                milliseconds: 1000),
-                                            opacity: opacity,
-                                            child: AnimatedContainer(
-                                              height: 40,
-                                              width: this.isCheckAll == false
-                                                  ? 140
-                                                  : 160,
-                                              decoration:
-                                                  decorationButtonAnimated(
-                                                      Colors.green),
-                                              // Define how long the animation should take.
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              // Provide an optional curve to make the animation feel smoother.
-                                              curve: Curves.easeOut,
-                                              child: RawMaterialButton(
-                                                fillColor: Colors.green,
-                                                splashColor: Colors.grey,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(10.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Icon(
-                                                        this.isCheckAll == false
-                                                            ? Icons
-                                                                .check_box_outline_blank
-                                                            : Icons.check_box,
-                                                        color: Colors.white,
-                                                        size: 19,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Text(
-                                                        this.isCheckAll == false
-                                                            ? allTranslations
-                                                                .text(
-                                                                    "SelectAll")
-                                                            : allTranslations.text(
-                                                                "UnSelectAll"),
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  isCheckAll = !isCheckAll;
-                                                  setState(() {
-                                                    if (isCheckAll) {
-                                                      for (var item
-                                                          in checkBoxSurvey) {
-                                                        item.status = true;
-                                                      }
-                                                    } else {
-                                                      for (var item
-                                                          in checkBoxSurvey) {
-                                                        item.status = false;
-                                                      }
-                                                    }
-                                                  });
-                                                },
-                                                shape: const StadiumBorder(),
-                                              ),
-                                            ),
-                                          )
-                                        : Container(),
                                   ],
                                 ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Builder(builder: (context) {
+                                  if (surveyStream.listSurvey != null) {
+                                    int badgesAll,
+                                        badgeNotSurvey,
+                                        badgeSurveyed = 0;
+
+                                    badgesAll = surveyStream.listSurvey.length;
+
+                                    badgeSurveyed = surveyStream.listSurvey
+                                        .where((e) =>
+                                            e.ghiChu.length > 0 &&
+                                            e.soTienDuyetChovay > 0)
+                                        .toList()
+                                        .length;
+
+                                    badgeNotSurvey = surveyStream.listSurvey
+                                        .where((e) =>
+                                            e.ghiChu.length == 0 &&
+                                            e.soTienDuyetChovay == 0)
+                                        .toList()
+                                        .length;
+
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        customRadio(
+                                            listTypeArea[0], 0, badgesAll),
+                                        VerticalDivider(
+                                          width: 10,
+                                        ),
+                                        customRadio(
+                                            listTypeArea[1], 1, badgeNotSurvey),
+                                        VerticalDivider(
+                                          width: 10,
+                                        ),
+                                        customRadio(
+                                            listTypeArea[2], 2, badgeSurveyed),
+                                      ],
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
                                 Expanded(
                                   child: Container(
                                       margin: EdgeInsets.only(top: 10),
@@ -565,7 +626,8 @@ class _SurveyScreenState extends State<SurveyScreen>
                                                                         () {
                                                                       if (true ==
                                                                           value) {
-                                                                        initState();
+                                                                        surVeyBloc
+                                                                            .emitEvent(LoadSurveyEvent());
                                                                       }
                                                                     }));
                                                           },
@@ -606,6 +668,7 @@ class _SurveyScreenState extends State<SurveyScreen>
     );
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -615,13 +678,45 @@ class _SurveyScreenState extends State<SurveyScreen>
             onPressed: () {
               Navigator.of(context).pop();
             }),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
         title: Text(
           allTranslations.text("BorrowingCapitalSurvey"),
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
+        actions: [
+          // DropdownButton<String>(
+          //   items: <String>['A', 'B', 'C', 'D'].map((String value) {
+          //     return DropdownMenuItem<String>(
+          //       value: value,
+          //       child: new Text(value),
+          //     );
+          //   }).toList(),
+          //   onChanged: (_) {},
+          // ),
+          // PopupMenuButton<String>(
+          //   onSelected: handleClick,
+          //   itemBuilder: (BuildContext context) {
+          //     return {'Logout', 'Settings'}.map((String choice) {
+          //       return PopupMenuItem<String>(
+          //         value: choice,
+          //         child: Text(choice),
+          //       );
+          //     }).toList();
+          //   },
+          // ),
+          // IconButton(
+          //     icon: Icon(
+          //       Icons.filter_list,
+          //       color: Colors.white,
+          //       size: 20,
+          //     ),
+          //     onPressed: () {
+          //       Navigator.of(context).pop();
+          //     }),
+          //   DropD
+        ],
       ),
       body: GestureDetector(
           onHorizontalDragUpdate: (details) {
@@ -635,370 +730,437 @@ class _SurveyScreenState extends State<SurveyScreen>
   }
 
   Widget getItemListView(List<SurveyInfo> listSurvey) {
-    int count = listSurvey != null ? listSurvey.length : 0;
-    return Container(
-      child: ListView.builder(
-        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        itemCount: count,
-        itemBuilder: (context, i) {
-          final int count = listSurvey.length;
-          final Animation<double> animation =
-              Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                  parent: animationController,
-                  curve: Interval((1 / count) * i, 1.0,
-                      curve: Curves.fastOutSlowIn)));
-          animationController.forward();
+    List<SurveyInfo> finalListSurvey;
+    if (selectedIndexKhuVuc == 0) {
+      finalListSurvey = listSurvey;
+    } else if (selectedIndexKhuVuc == 2) {
+      finalListSurvey = listSurvey
+          .where((e) => e.ghiChu.length > 0 && e.soTienDuyetChovay > 0)
+          .toList();
+    } else {
+      finalListSurvey = listSurvey
+          .where((e) => e.ghiChu.length == 0 && e.soTienDuyetChovay == 0)
+          .toList();
+    }
 
-          return AnimatedBuilder(
-              animation: animationController,
-              builder: (BuildContext context, Widget child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: Transform(
-                    transform: Matrix4.translationValues(
-                        0.0, 50 * (1.0 - animation.value), 0.0),
-                    child: InkWell(
-                      onTap: () {
-                        List<ComboboxModel> listCombobox =
-                            globalUser.getListComboboxModel;
-                        List<SurveyInfo> listSurveyDetail = listSurvey;
-                        if (listCombobox == null || listCombobox.length == 0) {
-                          Navigator.pushNamed(context, 'download', arguments: {
-                            'selectedIndex': 4,
-                          }).then((value) => setState(() {
-                                if (true == value) {
-                                  initState();
-                                }
-                              }));
-                        } else {
-                          Navigator.pushNamed(context, 'surveydetail',
-                              arguments: {
-                                'id': listSurvey[i].id,
-                                'metadata': listCombobox,
-                                'surveydetail': listSurveyDetail[i],
-                                'surveyhistory':
-                                    surveyStream.listSurveyInfoHistory,
-                              }).then((value) {
-                            //String a = value;
-                            if (value is List<SurveyInfo>) {
-                              setState(() {
-                                // listSurvey = value;
-                                surVeyBloc.emitEvent(SearchSurveyEvent(
-                                    dropdownCumIdValue, null));
-                              });
-                            }
-                          });
-                          // setState(() {
-                          //       String a = value;
-                          //    //   listSurvey = value;
-                          //     }));
-                        }
-                      },
-                      child: Container(
-                        // decoration: BoxDecoration(
-                        //   borderRadius: BorderRadius.all(
-                        //     Radius.circular(13),
-                        //   ),
-                        //   color: Colors.blue,
-                        // ),
-                        // height: 130,
-                        child: Card(
-                          elevation: 10,
-                          shadowColor: Colors.grey,
-                          color: Theme.of(context).cardColor,
-                          borderOnForeground: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 2, bottom: 8),
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.blue,
-                                  value: checkBoxSurvey[i].status,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      this.checkBoxSurvey[i].status = value;
-                                      int totalCheck = this
-                                          .checkBoxSurvey
-                                          .where((e) => e.status == true)
-                                          .length;
-                                      if (totalCheck ==
-                                          this.checkBoxSurvey.length) {
-                                        this.isCheckAll = true;
-                                      } else {
-                                        this.isCheckAll = false;
-                                      }
-                                    });
-                                  },
-                                ),
-                                Expanded(
-                                  //     width: screenWidth * 0.82,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(right: 10),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            child: Builder(builder: (context) {
-                                          Widget cardBatBuoc = Container();
-                                          Widget cardkhaosat = Container();
-                                          if (listSurvey[i].batBuocKhaosat ==
-                                              1) {
-                                            cardBatBuoc = Card(
-                                                elevation: 3,
-                                                color: Colors.red[900],
-                                                child: Container(
-                                                  height: 20,
-                                                  width: 140,
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      allTranslations
-                                                          .text("Mandatory"),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                ));
-                                          }
+    int count = finalListSurvey != null ? finalListSurvey.length : 0;
+    if (count == 0) {
+      return Container(
+        child: Center(
+            child: Text(
+          "Không có dữ liệu",
+          style: TextStyle(color: Colors.white),
+        )),
+      );
+    }
+    return ListView.builder(
+      physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      itemCount: count,
+      itemBuilder: (context, i) {
+        final int count = finalListSurvey.length;
+        final Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
+            .animate(CurvedAnimation(
+                parent: animationController,
+                curve: Interval((1 / count) * i, 1.0,
+                    curve: Curves.fastOutSlowIn)));
+        animationController.forward();
 
-                                          if (listSurvey[i].ghiChu.length > 0 &&
-                                              listSurvey[i].soTienDuyetChovay >
-                                                  0) {
-                                            cardkhaosat = Card(
-                                                elevation: 3,
-                                                color: Colors.red,
-                                                child: Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: 5, left: 5),
-                                                  height: 20,
-                                                  width: 100,
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      allTranslations
-                                                          .text("Surveyed"),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color: Colors.white),
-                                                    ),
+        return AnimatedBuilder(
+            animation: animationController,
+            builder: (BuildContext context, Widget child) {
+              return FadeTransition(
+                opacity: animation,
+                child: Transform(
+                  transform: Matrix4.translationValues(
+                      0.0, 50 * (1.0 - animation.value), 0.0),
+                  child: InkWell(
+                    onTap: () {
+                      List<ComboboxModel> listCombobox =
+                          globalUser.getListComboboxModel;
+                      List<SurveyInfo> listSurveyDetail = finalListSurvey;
+                      if (listCombobox == null || listCombobox.length == 0) {
+                        Navigator.pushNamed(context, 'download', arguments: {
+                          'selectedIndex': 4,
+                        }).then((value) => setState(() {
+                              if (true == value) {
+                                initState();
+                              }
+                            }));
+                      } else {
+                        Navigator.pushNamed(context, 'surveydetail',
+                            arguments: {
+                              'id': finalListSurvey[i].id,
+                              'metadata': listCombobox,
+                              'surveydetail': listSurveyDetail[i],
+                              'surveyhistory':
+                                  surveyStream.listSurveyInfoHistory,
+                            }).then((value) {
+                          //String a = value;
+                          if (value is List<SurveyInfo>) {
+                            setState(() {
+                              // listSurvey = value;
+                              surVeyBloc.emitEvent(
+                                  SearchSurveyEvent(dropdownCumIdValue, null));
+                            });
+                          }
+                        });
+                        // setState(() {
+                        //       String a = value;
+                        //    //   listSurvey = value;
+                        //     }));
+                      }
+                    },
+                    child: Container(
+                      // decoration: BoxDecoration(
+                      //   borderRadius: BorderRadius.all(
+                      //     Radius.circular(13),
+                      //   ),
+                      //   color: Colors.blue,
+                      // ),
+                      // height: 130,
+                      child: Card(
+                        elevation: 10,
+                        shadowColor: Colors.grey,
+                        color: Theme.of(context).cardColor,
+                        borderOnForeground: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 2, bottom: 8),
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                checkColor: Colors.white,
+                                activeColor: Colors.blue,
+                                value: checkBoxSurvey[i].status,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    this.checkBoxSurvey[i].status = value;
+                                    int totalCheck = this
+                                        .checkBoxSurvey
+                                        .where((e) => e.status == true)
+                                        .length;
+                                    if (totalCheck ==
+                                        this.checkBoxSurvey.length) {
+                                      this.isCheckAll = true;
+                                    } else {
+                                      this.isCheckAll = false;
+                                    }
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                //     width: screenWidth * 0.82,
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                          child: Builder(builder: (context) {
+                                        Widget cardBatBuoc = Container();
+                                        Widget cardkhaosat = Container();
+                                        if (finalListSurvey[i].batBuocKhaosat ==
+                                            1) {
+                                          cardBatBuoc = Card(
+                                              elevation: 3,
+                                              color: Colors.red[900],
+                                              child: Container(
+                                                height: 20,
+                                                width: 140,
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    allTranslations
+                                                        .text("Mandatory"),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors.white),
                                                   ),
-                                                ));
-                                          } else {
-                                            cardkhaosat = Card(
-                                                elevation: 3,
-                                                color: Colors.grey,
-                                                child: Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: 5,
-                                                      left: 5,
-                                                      top: 2),
-                                                  height: 20,
-                                                  width: 103,
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      allTranslations.text(
-                                                          "NotYetSurveyed"),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                ));
-                                          }
+                                                ),
+                                              ));
+                                        }
 
-                                          return Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              cardkhaosat,
-                                              cardBatBuoc,
-                                            ],
-                                          );
-                                        })),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 4),
-                                          child: FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              "${listSurvey[i].thanhvienId} - ${listSurvey[i].hoVaTen}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                        if (finalListSurvey[i].ghiChu.length >
+                                                0 &&
+                                            finalListSurvey[i]
+                                                    .soTienDuyetChovay >
+                                                0) {
+                                          cardkhaosat = Card(
+                                              elevation: 3,
+                                              color: Colors.red,
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    right: 5, left: 5),
+                                                height: 20,
+                                                width: 100,
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    allTranslations
+                                                        .text("Surveyed"),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ));
+                                        } else {
+                                          cardkhaosat = Card(
+                                              elevation: 3,
+                                              color: Colors.grey,
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    right: 5, left: 5, top: 2),
+                                                height: 20,
+                                                width: 103,
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    allTranslations
+                                                        .text("NotYetSurveyed"),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ));
+                                        }
+
+                                        return Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
-                                              padding: EdgeInsets.only(left: 4),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    IconsCustomize.gender,
-                                                    size: 20,
-                                                    color: Colors.blue,
+                                            cardkhaosat,
+                                            cardBatBuoc,
+                                          ],
+                                        );
+                                      })),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 4),
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            "${finalListSurvey[i].thanhvienId} - ${finalListSurvey[i].hoVaTen}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        // crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  IconsCustomize.gender,
+                                                  size: 20,
+                                                  color: Colors.blue,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 10,
+                                                ),
+                                                Container(
+                                                  width: 30,
+                                                  child: Text(
+                                                    finalListSurvey[i]
+                                                                .gioiTinh ==
+                                                            0
+                                                        ? allTranslations
+                                                            .text("FeMale")
+                                                        : allTranslations
+                                                            .text("Male"),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13),
                                                   ),
-                                                  VerticalDivider(
-                                                    width: 10,
-                                                  ),
-                                                  Container(
-                                                    width: 30,
-                                                    child: Text(
-                                                      listSurvey[i].gioiTinh ==
-                                                              0
-                                                          ? allTranslations
-                                                              .text("FeMale")
-                                                          : allTranslations
-                                                              .text("Male"),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 13),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  IconsCustomize.birth_date,
+                                                  size: 20,
+                                                  color: Colors.red,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 10,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 1,
+                                                ),
+                                                Text(
+                                                  finalListSurvey[i]
+                                                      .ngaySinh
+                                                      .substring(0, 4),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Icon(
+                                                  IconsCustomize.id_card,
+                                                  color: Colors.orange,
+                                                  size: 20,
+                                                ),
+                                                VerticalDivider(
+                                                  width: 15,
+                                                ),
+                                                Text(
+                                                  finalListSurvey[i].cmnd,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 5),
+                                        padding: EdgeInsets.only(left: 6),
+                                        child: Row(
+                                          children: [
                                             Container(
-                                              padding: EdgeInsets.only(left: 4),
+                                              width: screenWidth * 0.72,
                                               child: Row(
                                                 children: [
                                                   Icon(
-                                                    IconsCustomize.birth_date,
-                                                    size: 20,
-                                                    color: Colors.red,
-                                                  ),
-                                                  VerticalDivider(
-                                                    width: 10,
+                                                    Icons.location_on,
+                                                    color: Colors.blue,
                                                   ),
                                                   VerticalDivider(
                                                     width: 1,
                                                   ),
-                                                  Text(
-                                                    listSurvey[i]
-                                                        .ngaySinh
-                                                        .substring(0, 4),
-                                                    style: TextStyle(
+                                                  Expanded(
+                                                    child: Text(
+                                                      finalListSurvey[i].diaChi,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 13),
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Container(
-                                              padding: EdgeInsets.only(left: 4),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Icon(
-                                                    IconsCustomize.id_card,
-                                                    color: Colors.orange,
-                                                    size: 20,
+                                            Expanded(
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    MapUtils.openMap(
+                                                        finalListSurvey[i]
+                                                            .diaChi);
+                                                  },
+                                                  child: Icon(
+                                                    Icons.assistant_direction,
+                                                    color: Colors.blue,
                                                   ),
-                                                  VerticalDivider(
-                                                    width: 15,
-                                                  ),
-                                                  Text(
-                                                    listSurvey[i].cmnd,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          padding: EdgeInsets.only(left: 6),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: screenWidth * 0.72,
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.location_on,
-                                                      color: Colors.blue,
-                                                    ),
-                                                    VerticalDivider(
-                                                      width: 1,
-                                                    ),
-                                                    Container(
-                                                      child: FittedBox(
-                                                        fit: BoxFit.scaleDown,
-                                                        child: Text(
-                                                          listSurvey[i].diaChi,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 13),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      MapUtils.openMap(
-                                                          listSurvey[i].diaChi);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.assistant_direction,
-                                                      color: Colors.blue,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                      )
+                                    ],
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                );
-              });
-        },
+                ),
+              );
+            });
+      },
+    );
+  }
+
+  void changeIndex(int index) {
+    setState(() {
+      selectedIndexKhuVuc = index;
+    });
+  }
+
+  Widget customRadio(String txt, int index, int badge) {
+    return OutlineButton(
+      onPressed: () => changeIndex(index),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      borderSide: BorderSide(
+          color: selectedIndexKhuVuc == index
+              ? Colors.grey[100]
+              : ColorConstants.cepColorBackground.withOpacity(0)),
+      child: Row(
+        children: [
+          Text(
+            txt,
+            style: TextStyle(
+                color: selectedIndexKhuVuc == index
+                    ? Colors.grey[100]
+                    : Colors.grey[300],
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Badge(
+            badgeColor: Colors.grey,
+            borderRadius: BorderRadius.circular(5),
+            position: BadgePosition.topEnd(top: 1, end: 10),
+            alignment: Alignment.topRight,
+            animationDuration: Duration(milliseconds: 1000),
+            animationType: BadgeAnimationType.scale,
+            badgeContent: Text(
+              badge.toString(),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold),
+            ),
+            // position: BadgePosition.topEnd(top: 0, end: 0),
+          )
+        ],
       ),
     );
   }

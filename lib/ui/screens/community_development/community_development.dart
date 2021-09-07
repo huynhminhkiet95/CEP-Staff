@@ -88,6 +88,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
     screenWidth = size.width;
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -99,7 +100,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
               //bool a = GlobalDownload.isSubmitDownload;
             },
           ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: const Text('Phát triển Cộng Đồng',
               style: TextStyle(fontWeight: FontWeight.w600)),
@@ -117,7 +118,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
             bloc: communityDevelopmentBloc,
             builder: (BuildContext context, CommunityDevelopmentState state) {
               return Container(
-                color: Theme.of(context).dividerColor,
+                color: ColorConstants.cepColorBackground,
                 child: ModalProgressHUDCustomize(
                   inAsyncCall: state?.isLoading ?? false,
                   child: StreamBuilder<List<KhachHang>>(
@@ -311,7 +312,7 @@ class _CommunityDevelopmentScreenState extends State<CommunityDevelopmentScreen>
                                   //  color: Colors.blue,
                                   ),
                               Material(
-                                color: Theme.of(context).dividerColor,
+                                color: ColorConstants.cepColorBackground,
                                 child: TabBar(
                                   isScrollable: true,
                                   unselectedLabelColor:

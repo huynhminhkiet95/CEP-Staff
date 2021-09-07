@@ -27,7 +27,6 @@ class Services {
     // final googleMapService = new GoogleMapService();
 
     await sharePreferenceService.getServerInfo();
-    await sharePreferenceService.getDriverProfile();
     await sharePreferenceService.getToken();
     await sharePreferenceService.getUserName();
     await sharePreferenceService.getPassword();

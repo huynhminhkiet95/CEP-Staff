@@ -556,10 +556,8 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
         : widget.surveyInfo.trinhDoHocVan.trim();
 
     /// quyen so huu
-    _ownershipModelDropdownList = Helper.buildDropdownFromMetaData(widget
-        .listCombobox
-        .where((e) => e.groupId == 'QuyenSoHuuNha')
-        .toList());
+    _ownershipModelDropdownList = Helper.buildDropdownFromMetaData(
+        widget.listCombobox.where((e) => e.groupId == 'SoHuuNha').toList());
     _ownershipValue = widget.surveyInfo.quyenSoHuuNha.trim().isEmpty
         ? "0"
         : widget.surveyInfo.quyenSoHuuNha.trim();
@@ -916,6 +914,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
             builder: (BuildContext context, SurveyState state) {
               return new Scaffold(
                 appBar: new AppBar(
+                  centerTitle: true,
                   leading: IconButton(
                       icon: Icon(
                         Icons.close,
@@ -1214,7 +1213,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                         Row(
                                           children: [
                                             SizedBox(
-                                              width: screenWidth * 0.40,
+                                              width: screenWidth * 0.42,
                                               child: Text(
                                                 "Khu vực",
                                                 style: TextStyle(
@@ -1417,6 +1416,68 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                             //   color: Colors.white,
                                             // ),
                                           ],
+                                        ),
+                                        Container(
+                                          height: 40,
+                                          margin: EdgeInsets.only(top: 10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                                spreadRadius: 1,
+                                                blurRadius: 1,
+                                                offset: Offset(0,
+                                                    1), // changes position of shadow
+                                              ),
+                                            ],
+                                          ),
+                                          child: RawMaterialButton(
+                                            splashColor: Colors.green,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: 15,
+                                                  top: 10,
+                                                  left: 10,
+                                                  bottom: 10),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Icon(
+                                                    Icons.qr_code,
+                                                    color: Colors.white,
+                                                    size: 19,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10.0,
+                                                  ),
+                                                  Text(
+                                                    'Cập nhật CCCD',
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pushNamed(context,
+                                                  'personalinforuserdetail',
+                                                  arguments: {
+                                                    'customerCode': widget
+                                                        .surveyInfo.thanhvienId,
+                                                    'branchID': widget
+                                                        .surveyInfo.chinhanhId,
+                                                  });
+                                            },
+                                            shape: const StadiumBorder(),
+                                          ),
                                         ),
                                       ],
                                     ),

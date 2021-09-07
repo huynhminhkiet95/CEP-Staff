@@ -1123,6 +1123,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -1132,7 +1133,7 @@ class _DeleteDataScreenState extends State<DeleteDataScreen>
               onPressed: () {
                 Navigator.of(context).pop();
               }),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: const Text(
             'Xóa Dữ Liệu',

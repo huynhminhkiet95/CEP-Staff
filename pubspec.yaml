@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.2+6
+version: 1.0.2+9
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -30,15 +30,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 
-  flutter_html: ^0.11.1
-  flutter_duration_picker: ^1.0.4
+  #flutter_html: ^0.11.1
+  #flutter_duration_picker: ^1.0.4
   cupertino_icons: ^0.1.2
   intl: ^0.16.1
   shared_preferences: "^0.5.1+1"
   rxdart: "^0.21.0"
   sprintf: "^4.0.2"
   http: ^0.12.2
-  progress_hud: ^1.1.0
+  #progress_hud: ^1.1.0
   fluttertoast: ^3.0.3
   flutter_launcher_icons: ^0.7.4
   modal_progress_hud: ^0.1.3
@@ -46,33 +46,40 @@ dependencies:
   url_launcher: ^5.7.10
   location: ^2.3.4
   android_intent: ^0.3.0+2
-  path_provider: ^0.5.0+1
-  camera: ^0.7.0+4
+  path_provider: any
+  camera: any
   path:
   image_picker: any
   image_crop: ^0.3.4
   local_auth: ^0.6.3+4
-  flutter_masked_text: ^0.7.0
+  #flutter_masked_text: ^0.7.0
   sqflite: ^1.3.2+4
   autocomplete_textfield: ^1.7.3
   date_utils: ^0.1.0+2
-  simple_gesture_detector: ^0.1.3
+  #simple_gesture_detector: ^0.1.3
   launch_review: ^2.0.0
   percent_indicator: ^2.1.9+1
   convex_bottom_bar: ^2.7.1+2
-  cupertino_radio_choice: 1.0.0+1
-  flutter_animated_dialog: ^1.2.0
-  easy_dialog: ^1.0.5
-  flutter_rounded_date_picker: ^1.0.5
+  #cupertino_radio_choice: 1.0.0+1
+  #flutter_animated_dialog: ^1.2.0
+  #easy_dialog: ^1.0.5
+  #flutter_rounded_date_picker: ^1.0.5
   settings_ui: ^0.4.0
-  number_slide_animation: ^0.1.1
+  #number_slide_animation: ^0.1.1
   package_info: ^0.4.3+4
   qr_code_scanner: ^0.3.5
-  firebase_analytics: any
-  firebase_messaging: any
-  firebase_core: ^0.4.0
+  firebase_analytics: ^5.0.16
+  firebase_messaging: ^6.0.16
+  firebase_core: ^0.3.1+1
   flutter_local_notifications: ^0.7.1+1
-
+  mlkit: ^0.15.1
+  http_parser: ^3.1.4
+  dio: ^3.0.8
+  google_maps_flutter: ^0.5.11
+  geocoding: ^1.0.5
+  geocoder: ^0.2.1
+  badges: ^1.2.0
+  cached_network_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -106,88 +113,34 @@ flutter:
   - locale/i18n_en.json
   - locale/i18n_vi.json
   - locale/i18n_kr.json
-  - assets/logo/icon_logo.png
   - assets/logo/CEP-logo_lauch.png
   - assets/logo/CEP-logo_lauch_1.png
   - assets/logo/cep-large-icon-logo-intro.png
-  - assets/logo/icon_main_logo.png
-  - assets/logo/logo.png
-  - assets/logo/bg3.png
-  - assets/logo/haulage.png
-  - assets/logo/customs.jpg
-  - assets/logo/loading.png
-  - assets/logo/circle-logo.png
-  - assets/logo/enterprise-logo.png
-  - assets/logo/bg.png
-  - assets/logo/login_box_bg.jpg
-  - assets/logo/background.png
-    #menu Icon
-     #warehousing menu
-  
- 
-  #Local Distribution Menu
-  - assets/menus/icon_loading_status.png
-  - assets/menus/icon_history_todo.png
-  - assets/menus/icon_logout.png
-  - assets/menus/checklist.png
-  - assets/menus/announcement.png
-  #General Menu 
-
   - assets/menus/icon_setting.png
-  - assets/images/icon_dc.png
   - assets/images/icon_username.png
   - assets/images/icon_phonenumber.png
-  - assets/images/icon_equipmentNo.png
   - assets/images/icon_time.png
   - assets/images/icon_address.png
-  - assets/images/icon_completed_status.png
   - assets/images/icon_call.png
-  - assets/images/iconsearchmap.jpg
-  - assets/images/iconsearchmap1.jpg
-  - assets/images/search.png
-  - assets/images/icon_date.png
-  - assets/images/picupplace.png
-  - assets/images/returnplace.png
-  - assets/images/returnplaceicon.png
-  - assets/images/icontimereturn.png
-  - assets/images/store_locator.png
-  - assets/images/truckpickup.png
   - assets/images/no_data.gif
-  
   - assets/images/icon_maps.png
   - assets/images/barcode.png
-  - assets/images/initialization.png
   - assets/images/clock.png
-  - assets/images/stopwatch.png
-  - assets/images/icon_todo.png
   - assets/images/vietnam.png
   - assets/images/united-kingdom.png
-  
   - assets/images/profile.png
-  - assets/images/triprecord.png
   - assets/images/new-icon.png
-  - assets/images/list-icon.png
   - assets/images/touch-id.jpg
   - assets/images/touch-id1.png
   - assets/images/person.png
   - assets/images/face_id.png
-  - assets/images/icon-start.png
-  - assets/images/icon-start1.png
-  - assets/images/icon-end.jpg
-  - assets/images/icon-end1.jpg
-  - assets/images/icon-end2.jpg
-  - assets/images/route.png
   - assets/images/C.png
   - assets/images/E.png
   - assets/images/P.png
-  - assets/images/new_button.gif
-
   #avatars
   - assets/dashboard/notification.png
   - assets/avatars/avatar.png
   - assets/dashboard/calendar.png
-  - assets/dashboard/festival.png
-  - assets/dashboard/food.png
   - assets/dashboard/map.png
   - assets/dashboard/setting.png
   - assets/dashboard/todo.png

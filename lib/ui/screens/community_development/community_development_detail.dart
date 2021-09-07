@@ -291,7 +291,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
 
     // trao hoc bong & qua tang
     selectedIndexScholarshipAndGift =
-        widget.khachHang.hocBong.hocbong_Quatang.toInt();
+        widget.khachHang.hocBong.hocbong_Quatang.toInt() == 0 ? 2 : 1;
 
     // muc dich su dung hoc bong
     listUsePurpose = widget.listCombobox
@@ -673,7 +673,6 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
     model.hocBong.lop = double.parse(_controllerClassName.text);
     model.hocBong.hocluc = double.parse(_capacityValue);
     model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
-    model.hocBong.hoancanhgiadinh = _controllerFamilyCircumstances.text;
     model.hocBong.hocbong_Quatang = selectedIndexScholarshipAndGift.toDouble();
     model.hocBong.mucdich =
         Helper.sumValueCheckedForListCheckbox(listUsePurpose);
@@ -772,6 +771,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
               icon: Icon(
                 Icons.save,
@@ -795,7 +795,7 @@ class _CommunityDevelopmentDetailState extends State<CommunityDevelopmentDetail>
                       children: [], width: screenWidth * 0.7);
                 })
           ],
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: const Text('Chi Tiết Phát triển Cộng Đồng'),
           bottom: TabBar(

@@ -523,7 +523,7 @@ class HocBong {
     lop = (json['lop'] ?? 0).toDouble();
     truonghoc = json['truonghoc'];
     quanhekhachhang = (json['quanhekhachhang'] ?? 0).toDouble();
-    hocbong_Quatang = (json['hocbong_Quatang'] ?? 0).toDouble();
+    hocbong_Quatang = (json['hocbong_Quatang'] ?? 2).toDouble();
     hocluc = (json['hocluc'] ?? 0).toDouble();
     danhanhocbong = json['danhanhocbong'] == 0 ? false : true;
     dinhKemHoSo = (json['dinhKemHoSo'] ?? 0).toDouble();
@@ -566,7 +566,7 @@ class HocBong {
     lop = (json['lop'] ?? 0).toDouble();
     truonghoc = json['truonghoc'];
     quanhekhachhang = (json['quanhekhachhang'] ?? 0).toDouble();
-    hocbong_Quatang = (json['hocbongQuatang'] ?? 0).toDouble();
+    hocbong_Quatang = (json['hocbongQuatang'] ?? 2).toDouble();
     hocluc = (json['hocluc'] ?? 0).toDouble();
     danhanhocbong = json['danhanhocbong'] == 0 ? false : true;
     dinhKemHoSo = (json['dinhKemHoSo'] ?? 0).toDouble();

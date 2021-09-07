@@ -35,6 +35,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -43,7 +44,7 @@ class ProfilePage extends StatelessWidget {
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 0.0,
           bottomOpacity: 0.0,
           title: Text(

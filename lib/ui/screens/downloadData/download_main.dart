@@ -82,6 +82,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -93,7 +94,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             //bool a = GlobalDownload.isSubmitDownload;
           },
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
         title: Text(
           allTranslations.text("DownLoad"),

@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:qr_code_demo/GlobalUser.dart';
 import 'package:qr_code_demo/bloc_helpers/bloc_provider.dart';
 import 'package:qr_code_demo/bloc_widgets/bloc_state_builder.dart';
 import 'package:qr_code_demo/blocs/authentication/authentication_bloc.dart';
 import 'package:qr_code_demo/blocs/authentication/authentication_event.dart';
 import 'package:qr_code_demo/blocs/authentication/authentication_state.dart';
 import 'package:qr_code_demo/config/version.dart';
+import 'package:qr_code_demo/global_variables/global_update.dart';
 import 'package:qr_code_demo/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
@@ -28,6 +33,9 @@ class _WelcomePageState extends State<WelcomePage> {
   double screenWidth, screenHeight;
   Services services;
   AuthenticationBloc authenticationBloc;
+  final LocalAuthentication localAuth = LocalAuthentication();
+  int _isAuthenType = 0;
+
   Widget _loginButton() {
     return InkWell(
       onTap: () {
@@ -61,17 +69,23 @@ class _WelcomePageState extends State<WelcomePage> {
             SizedBox(
               height: 20,
             ),
-            Icon(Icons.fingerprint,
-                size: screenHeight * 0.1, color: Colors.white),
+            InkWell(
+              onTap: () => showAuthenPopup(),
+              child: Icon(Icons.fingerprint,
+                  size: screenHeight * 0.1, color: Colors.white),
+            ),
             SizedBox(
               height: 20,
             ),
-            Text(
-              'Touch ID',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                decoration: TextDecoration.underline,
+            InkWell(
+              onTap: () => showAuthenPopup(),
+              child: Text(
+                'Touch ID',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ],
@@ -102,6 +116,17 @@ class _WelcomePageState extends State<WelcomePage> {
     // Todo: implement initState
     //
     super.initState();
+    if (GlobalUpdate.isNewVersion == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showDialogUpdate();
+      });
+    } else {
+      checkBiometric();
+      if (globalUser.getAuthenLocal) {
+        showAuthenPopup();
+      }
+    }
+
     print("initState");
   }
 
@@ -128,61 +153,51 @@ class _WelcomePageState extends State<WelcomePage> {
           child: BlocEventStateBuilder<AuthenticationState>(
               bloc: authenticationBloc,
               builder: (BuildContext context, AuthenticationState state) {
-                return StreamBuilder<bool>(
-                    stream: authenticationBloc.getIsNewVersionStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.data != null) {
-                        if (snapshot.data != true) {
-                          WidgetsBinding.instance
-                              .addPostFrameCallback((_) => _showDialog());
-                        }
-                      }
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        height: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey.shade200,
-                                  offset: Offset(2, 4),
-                                  blurRadius: 5,
-                                  spreadRadius: 2)
-                            ],
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Color(0xff223f92),
-                                  Color(0xff223f92),
-                                  Color(0xff0bf7c1),
-                                ])),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            //_title(),
-                            SizedBox(
-                              height: screenHeight * 0.2,
-                              child: Image.asset(
-                                'assets/logo/cep-large-icon-logo-intro.png',
-                                width: 150.0,
-                                height: 130.0,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            SizedBox(
-                              height: screenHeight * 0.15,
-                            ),
-                            _loginButton(),
-                            // SizedBox(
-                            //   height: 20,
-                            // ),
-                            _label()
-                          ],
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.grey.shade200,
+                            offset: Offset(2, 4),
+                            blurRadius: 5,
+                            spreadRadius: 2)
+                      ],
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0xff223f92),
+                            Color(0xff223f92),
+                            Color(0xff0bf7c1),
+                          ])),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      //_title(),
+                      SizedBox(
+                        height: screenHeight * 0.2,
+                        child: Image.asset(
+                          'assets/logo/cep-large-icon-logo-intro.png',
+                          width: 150.0,
+                          height: 130.0,
+                          fit: BoxFit.contain,
                         ),
-                      );
-                    });
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.15,
+                      ),
+                      _loginButton(),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      _label()
+                    ],
+                  ),
+                );
               }),
         ),
       ),
@@ -214,14 +229,7 @@ class _WelcomePageState extends State<WelcomePage> {
         false;
   }
 
-  Future checknewVersion() async {
-    var isnewVersion = await checkVersion();
-    if (isnewVersion) {
-      _showDialog();
-    }
-  }
-
-  void _showDialog() {
+  void _showDialogUpdate() {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -249,5 +257,82 @@ class _WelcomePageState extends State<WelcomePage> {
   void goUpdateApp() async {
     LaunchReview.launch(
         androidAppId: 'com.cep.CEPstaff', iOSAppId: '1477031564');
+  }
+
+  Future<void> checkBiometric() async {
+    try {
+      bool canCheckBiometrics = await localAuth.canCheckBiometrics;
+      if (!mounted) return;
+      setState(() {});
+
+      if (canCheckBiometrics) {
+        _getAvailableBiometrics();
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await localAuth.getAvailableBiometrics();
+      if (Platform.isIOS) {
+        if (availableBiometrics.contains(BiometricType.face)) {
+          // Face ID.
+          setState(() {
+            _isAuthenType = 1;
+          });
+        } else if (availableBiometrics.contains(BiometricType.fingerprint)) {
+          // Touch ID.
+          _isAuthenType = 2;
+        }
+      } else {
+        if (availableBiometrics.contains(BiometricType.fingerprint)) {
+          _isAuthenType = 2;
+        }
+      }
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    // setState(() {
+    //   _biometricTypes = availableBiometrics;
+    // });
+  }
+
+  showAuthenPopup() async {
+    var localAuth = LocalAuthentication();
+    try {
+      var androidStrings = AndroidAuthMessages(
+          cancelButton: allTranslations.text("Cancel"),
+          goToSettingsButton: allTranslations.text("Settings"),
+          goToSettingsDescription: allTranslations.text("PleaseSetupTouchID"),
+          fingerprintSuccess: allTranslations.text("SuccessfulAuthentication"),
+          fingerprintHint: "",
+          fingerprintRequiredTitle: allTranslations.text("SetupTouchID"),
+          signInTitle: "Touch ID for CEP-Nhân viên",
+          fingerprintNotRecognized:
+              allTranslations.text("FingerPrintingNotAvailable"));
+      bool isAuthenticate = await localAuth.authenticateWithBiometrics(
+          localizedReason:
+              allTranslations.text("PleaseScanYourFingerprintToLogin"),
+          stickyAuth: true,
+          androidAuthStrings: androidStrings);
+      if (isAuthenticate) {
+        _loginSubmitWithAuthenLocal();
+      }
+      print('isAuthenticate: ' + isAuthenticate.toString());
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
+  void _loginSubmitWithAuthenLocal() {
+    authenticationBloc.emitEvent(AuthenticationEventLogin(
+        userName: globalUser.getRememberUserName.toString().toLowerCase(),
+        password: globalUser.getPassword.toString(),
+        isRemember: true));
   }
 }

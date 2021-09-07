@@ -110,6 +110,7 @@
     "Statistical":"Statistical",
     "DownLoad":"DownLoad",
     "UpdatePersonalInfoUser":"Update Personal Info User",
+    "InfoCustomer":"Thông Tin Khách Hàng",
     "DeleteData":"Delete Data",
     "Settings":"Settings",
     "CodeNumber":"Code number",
@@ -158,6 +159,15 @@
     "Religion":"Religion",
     "IndividualTracesAndDeformities":"Individual traces and deformities",
     "DateOfIssue":"Date of issue",
-    "CustomerCode":"Customer code"
+    "CustomerCode":"Customer code",
+    "CurrentResidence":"Current residence",
+    "Longitude":"Longitude",
+    "Latitude":"Latitude",
+    "Coordinates":"Coordinates",
+    "All":"All",
+    "SaveImageFailed":"Image file save failed! Please contact admin for more details.",
+    "Warning":"Warning !",
+    "NotificationReset":"This action will restore system data on your apps but will delete all data currently on your device.! Do you want to reset.?",
+    "RestoreSuccessfully": "successfully restored."
 
 }

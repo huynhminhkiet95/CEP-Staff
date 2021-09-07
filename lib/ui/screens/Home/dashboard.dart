@@ -68,7 +68,14 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
     if (router == "logout") {
       globalUser.settoken = "";
       this.services.sharePreferenceService.saveToken("");
-      Navigator.pushNamed(context, '/welcomeLogin');
+
+      // /welcomeLogin
+      if (globalUser.getAuthenLocal) {
+        Navigator.pushNamed(context, '/welcomeLogin');
+      } else {
+        Navigator.pushNamed(context, '/login');
+      }
+
       return;
     }
     Navigator.pushNamed(context, router);
@@ -214,10 +221,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
           case "error":
             isDisable = true;
             break;
-          case "personalinforuser":
-            isDisable = true;
-            break;
-
           default:
         }
       }
@@ -454,10 +457,6 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                                       case "error":
                                         isDisable = true;
                                         break;
-                                      case "personalinforuser":
-                                        isDisable = true;
-                                        break;
-
                                       default:
                                     }
                                   }

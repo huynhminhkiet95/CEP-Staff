@@ -25,7 +25,8 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        centerTitle: true,
+        backgroundColor: ColorConstants.cepColorBackground,
         elevation: 20,
         title: Text(
           allTranslations.text("Language"),

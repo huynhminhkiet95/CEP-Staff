@@ -44,6 +44,7 @@ class _CalculationMoneyState extends State<CalculationMoney> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,

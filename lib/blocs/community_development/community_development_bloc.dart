@@ -7,7 +7,6 @@ import 'package:qr_code_demo/bloc_helpers/bloc_event_state.dart';
 import 'package:qr_code_demo/blocs/community_development/community_development_state.dart';
 import 'package:qr_code_demo/config/status_code.dart';
 import 'package:qr_code_demo/database/DBProvider.dart';
-import 'package:qr_code_demo/global_variables/global_teamID.dart';
 import 'package:qr_code_demo/models/community_development/comunity_development.dart';
 import 'package:qr_code_demo/services/commonService.dart';
 import 'package:qr_code_demo/services/sharePreference.dart';

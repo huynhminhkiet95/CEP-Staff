@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:qr_code_demo/GlobalUser.dart';
 import 'package:qr_code_demo/config/CustomIcons/my_flutter_app_icons.dart';
 import 'package:qr_code_demo/config/version.dart';
+import 'package:qr_code_demo/global_variables/global_update.dart';
 import 'package:qr_code_demo/ui/components/Widget/bezierContainer.dart';
 import 'package:qr_code_demo/ui/components/Widget/customClipper.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
-  String userName = '';
-  String password = '';
+  //String userName = '';
+  //String password = '';
   bool _isRemember = false;
 
   AnimationController _animationController;
@@ -71,10 +72,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void _loginSubmit() {
     if (formkey.currentState.validate()) {
       formkey.currentState.save();
-      userName = _userNameController.text.toString();
-      password = _passwordController.text.toString();
       authenticationBloc.emitEvent(AuthenticationEventLogin(
-          userName: _userNameController.text.toString(),
+          userName: _userNameController.text.toString().toLowerCase(),
           password: _passwordController.text.toString(),
           isRemember: _isRemember));
     } else {
@@ -85,11 +84,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   void _loginSubmitWithAuthenLocal() {
-    userName = _userNameController.text.toString();
-    password = globalUser.getPassword.toString();
     authenticationBloc.emitEvent(AuthenticationEventLogin(
-        userName: _userNameController.text.toString(),
-        password: password,
+        userName: _userNameController.text.toString().toLowerCase(),
+        password: globalUser.getPassword.toString(),
         isRemember: _isRemember));
   }
 
@@ -272,7 +269,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _userNameController.text = globalUser.getRememberUserName;
+    _userNameController.text = globalUser.getRememberUserName?.toLowerCase();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 700),
       vsync: this,
@@ -355,6 +352,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       showAuthenPopup();
     }
     super.initState();
+
+    if (GlobalUpdate.isNewVersion == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showDialogUpdate();
+      });
+    }
   }
 
   @override
@@ -378,6 +381,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     Orientation orientation = MediaQuery.of(context).orientation;
     var loginPage;
     if (orientation == Orientation.portrait) {
@@ -413,224 +417,277 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   ))),
             ],
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Form(
-                key: formkey,
-                autovalidate: _autoValidate,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .06),
-                    Container(child: _backButton()),
-                    SizedBox(height: height * .02),
-                    AnimatedOpacity(
-                        duration: Duration(
-                          milliseconds: 1000,
-                        ),
-                        opacity: opacityAnimationHeader,
-                        child: _title()),
-                    SizedBox(height: 100),
-                    SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0.2, 0.1),
-                        end: Offset.zero,
-                      ).animate(_animation),
-                      child: AnimatedOpacity(
-                        duration: Duration(milliseconds: 1000),
-                        opacity: opacityAnimation,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                  controller: _userNameController,
-                                  style: TextStyle(color: Colors.blue),
-                                  validator: (String str) {
-                                    if (str.length < 1)
-                                      return allTranslations
-                                          .text("UserNameValidation");
-                                    else
-                                      return null;
-                                  },
-                                  onSaved: (String val) {
-                                    userName = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.blue),
-                                      ),
-                                      fillColor: Colors.red,
-                                      border: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.red),
-                                          borderRadius:
-                                              BorderRadius.circular(20.0)),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.red),
-                                      ),
-                                      contentPadding: EdgeInsets.fromLTRB(
-                                          20.0, 15.0, 20.0, 15.0),
-                                      hintText:
-                                          allTranslations.text("user_name"),
-                                      prefixIcon: Padding(
-                                        padding: EdgeInsets.all(0.0),
-                                        child: Icon(
-                                          Icons.account_circle,
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                      suffixStyle:
-                                          TextStyle(color: Colors.red)))
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0.2, 0.1),
-                        end: Offset.zero,
-                      ).animate(_animation1),
-                      child: AnimatedOpacity(
-                        duration: Duration(milliseconds: 1000),
-                        opacity: opacityAnimation,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                controller: _passwordController,
-                                obscureText: !_passwordVisible,
-                                style: TextStyle(color: Colors.blue),
-                                validator: (String str) {
-                                  if (str.length < 1)
-                                    return allTranslations
-                                        .text("PasswordValidation");
-                                  else
-                                    return null;
-                                },
-                                decoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20.0)),
-                                      borderSide:
-                                          BorderSide(color: Colors.blue),
-                                    ),
-                                    fillColor: Colors.red,
-                                    border: OutlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.red),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20.0)),
-                                      borderSide: BorderSide(color: Colors.red),
-                                    ),
-                                    contentPadding: EdgeInsets.fromLTRB(
-                                        20.0, 15.0, 20.0, 15.0),
-                                    hintText: allTranslations.text("password"),
-                                    prefixIcon: Padding(
-                                      padding: EdgeInsets.all(0.0),
-                                      child: Icon(
-                                        Icons.lock_open,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    suffixStyle: TextStyle(color: Colors.red),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _passwordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _passwordVisible = !_passwordVisible;
-                                        });
-                                      },
-                                    )),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0.2, 0.1),
-                            end: Offset.zero,
-                          ).animate(_animation3),
-                          child: AnimatedOpacity(
-                            duration: Duration(milliseconds: 1000),
-                            opacity: opacityAnimation,
-                            child: Row(
-                              children: [
-                                new Switch(
-                                    value: _isRemember,
-                                    onChanged: _updateRemember,
-                                    activeColor: Colors.blue),
-                                new Text(
-                                  allTranslations.text("Rememberme"),
-                                  style: TextStyle(color: Colors.black87),
-                                ),
-                              ],
+          Stack(
+            children: [
+              Stack(
+                children: [
+                  Center(
+                    child: Container(
+                        margin: EdgeInsets.only(top: 70),
+                        child: AnimatedOpacity(
+                            duration: Duration(
+                              milliseconds: 1000,
                             ),
-                          ),
+                            opacity: opacityAnimationHeader,
+                            child: Container(
+                              width: width * 0.90,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: width * 0.90,
+                                    child: FittedBox(
+                                      fit: BoxFit.fitWidth,
+                                      child: Text(
+                                        "PHẦN MỀM KHẢO SÁT CHO VAY VÀ ",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: width * 0.3,
+                                    child: FittedBox(
+                                      fit: BoxFit.cover,
+                                      child: Text(
+                                        "THU HỒI NỢ",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ))
+                        //  _title()
+
                         ),
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 100),
+                      child: globalUser.getAuthenLocal ? _backButton() : null),
+                ],
+              ),
+              Center(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Form(
+                    key: formkey,
+                    autovalidate: _autoValidate,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        // SizedBox(height: height * .06),
+                        // Container(child: _backButton()),
+                        // SizedBox(height: height * .02),
+
+                        // SizedBox(height: 100),
                         SlideTransition(
                           position: Tween<Offset>(
                             begin: const Offset(0.2, 0.1),
                             end: Offset.zero,
-                          ).animate(_animation4),
+                          ).animate(_animation),
                           child: AnimatedOpacity(
                             duration: Duration(milliseconds: 1000),
                             opacity: opacityAnimation,
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                  allTranslations.text("forgotpassword"),
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500)),
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  TextFormField(
+                                      controller: _userNameController,
+                                      style: TextStyle(color: Colors.blue),
+                                      validator: (String str) {
+                                        if (str.length < 1)
+                                          return allTranslations
+                                              .text("UserNameValidation");
+                                        else
+                                          return null;
+                                      },
+                                      decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)),
+                                            borderSide:
+                                                BorderSide(color: Colors.blue),
+                                          ),
+                                          fillColor: Colors.red,
+                                          border: OutlineInputBorder(
+                                              borderSide:
+                                                  BorderSide(color: Colors.red),
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)),
+                                            borderSide:
+                                                BorderSide(color: Colors.red),
+                                          ),
+                                          contentPadding: EdgeInsets.fromLTRB(
+                                              20.0, 15.0, 20.0, 15.0),
+                                          hintText:
+                                              allTranslations.text("user_name"),
+                                          prefixIcon: Padding(
+                                            padding: EdgeInsets.all(0.0),
+                                            child: Icon(
+                                              Icons.account_circle,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          suffixStyle:
+                                              TextStyle(color: Colors.red)))
+                                ],
+                              ),
                             ),
                           ),
                         ),
+                        SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0.2, 0.1),
+                            end: Offset.zero,
+                          ).animate(_animation1),
+                          child: AnimatedOpacity(
+                            duration: Duration(milliseconds: 1000),
+                            opacity: opacityAnimation,
+                            child: Container(
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  TextFormField(
+                                    controller: _passwordController,
+                                    obscureText: !_passwordVisible,
+                                    style: TextStyle(color: Colors.blue),
+                                    validator: (String str) {
+                                      if (str.length < 1)
+                                        return allTranslations
+                                            .text("PasswordValidation");
+                                      else
+                                        return null;
+                                    },
+                                    decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.0)),
+                                          borderSide:
+                                              BorderSide(color: Colors.blue),
+                                        ),
+                                        fillColor: Colors.red,
+                                        border: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.red),
+                                            borderRadius:
+                                                BorderRadius.circular(20.0)),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.0)),
+                                          borderSide:
+                                              BorderSide(color: Colors.red),
+                                        ),
+                                        contentPadding: EdgeInsets.fromLTRB(
+                                            20.0, 15.0, 20.0, 15.0),
+                                        hintText:
+                                            allTranslations.text("password"),
+                                        prefixIcon: Padding(
+                                          padding: EdgeInsets.all(0.0),
+                                          child: Icon(
+                                            Icons.lock_open,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                        suffixStyle:
+                                            TextStyle(color: Colors.red),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _passwordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Theme.of(context)
+                                                .primaryColorDark,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _passwordVisible =
+                                                  !_passwordVisible;
+                                            });
+                                          },
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        new Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.2, 0.1),
+                                end: Offset.zero,
+                              ).animate(_animation3),
+                              child: AnimatedOpacity(
+                                duration: Duration(milliseconds: 1000),
+                                opacity: opacityAnimation,
+                                child: Row(
+                                  children: [
+                                    new Switch(
+                                        value: _isRemember,
+                                        onChanged: _updateRemember,
+                                        activeColor: Colors.blue),
+                                    new Text(
+                                      allTranslations.text("Rememberme"),
+                                      style: TextStyle(color: Colors.black87),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.2, 0.1),
+                                end: Offset.zero,
+                              ).animate(_animation4),
+                              child: AnimatedOpacity(
+                                duration: Duration(milliseconds: 1000),
+                                opacity: opacityAnimation,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                      allTranslations.text("forgotpassword"),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        //  SizedBox(height: 10),
+
+                        _submitButton(),
+
+                        SizedBox(height: height * .055),
                       ],
                     ),
-                    //  SizedBox(height: 10),
-
-                    _submitButton(),
-
-                    SizedBox(height: height * .055),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           )
         ],
       );
@@ -716,9 +773,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       .text("UserNameValidation");
                                 else
                                   return null;
-                              },
-                              onSaved: (String val) {
-                                userName = val;
                               },
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
@@ -843,31 +897,35 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ],
       );
     }
-    return Scaffold(
-      body: Container(
-        color: Colors.white,
-        height: height,
-        child: BlocEventStateBuilder<AuthenticationState>(
-            bloc: authenticationBloc,
-            builder: (BuildContext context, AuthenticationState state) {
-              return ModalProgressHUDCustomize(
-                inAsyncCall: state.isAuthenticating,
-                child: loginPage,
-              );
-            }),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          color: Colors.white,
+          height: height,
+          child: BlocEventStateBuilder<AuthenticationState>(
+              bloc: authenticationBloc,
+              builder: (BuildContext context, AuthenticationState state) {
+                return ModalProgressHUDCustomize(
+                  inAsyncCall: state.isAuthenticating,
+                  child: loginPage,
+                );
+              }),
+        ),
+        floatingActionButton: FloatingActionButton(
+            mini: true,
+            backgroundColor: Colors.transparent,
+            child: language == 'en'
+                ? new Image.asset('assets/images/united-kingdom.png',
+                    width: 30, height: 30)
+                : new Image.asset('assets/images/vietnam.png',
+                    width: 30, height: 30),
+            onPressed: () => setState(() {
+                  language = language == 'en' ? 'vi' : 'en';
+                  allTranslations.setNewLanguage(language, true);
+                })),
       ),
-      floatingActionButton: FloatingActionButton(
-          mini: true,
-          backgroundColor: Colors.transparent,
-          child: language == 'en'
-              ? new Image.asset('assets/images/united-kingdom.png',
-                  width: 30, height: 30)
-              : new Image.asset('assets/images/vietnam.png',
-                  width: 30, height: 30),
-          onPressed: () => setState(() {
-                language = language == 'en' ? 'vi' : 'en';
-                allTranslations.setNewLanguage(language, true);
-              })),
     );
   }
 
@@ -939,5 +997,62 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     } on PlatformException catch (e) {
       print(e);
     }
+  }
+
+  Future<bool> _onWillPop() async {
+    if (!globalUser.getAuthenLocal) {
+      return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Are you sure?'),
+              content: Text('Do you want to exit an App'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('No'),
+                ),
+                FlatButton(
+                  onPressed: () => exit(0),
+                  /*Navigator.of(context).pop(true)*/
+                  child: Text('Yes'),
+                ),
+              ],
+            ),
+          ) ??
+          false;
+    } else {
+      Navigator.of(context).pop();
+      return false;
+    }
+  }
+
+  void _showDialogUpdate() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: new Text("Update"),
+            content: new Text(allTranslations.text("UpdateVersion")),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text(allTranslations.text("OK")),
+                onPressed: () {
+                  goUpdateApp();
+                  exit(0);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void goUpdateApp() async {
+    LaunchReview.launch(
+        androidAppId: 'com.cep.CEPstaff', iOSAppId: '1477031564');
   }
 }

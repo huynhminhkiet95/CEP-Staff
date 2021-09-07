@@ -7,6 +7,8 @@ import 'package:qr_code_demo/blocs/setting/setting_bloc.dart';
 import 'package:qr_code_demo/blocs/setting/setting_event.dart';
 import 'package:qr_code_demo/blocs/setting/setting_state.dart';
 import 'package:qr_code_demo/config/colors.dart';
+import 'package:qr_code_demo/config/toast_result_message.dart';
+import 'package:qr_code_demo/database/DBProvider.dart';
 import 'package:qr_code_demo/services/service.dart';
 import 'package:qr_code_demo/ui/components/CustomDialog.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,8 @@ import 'dart:io';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
+
+import '../../../GlobalUser.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -61,7 +65,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       home: Scaffold(
         //  backgroundColor: Colors.blue,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          centerTitle: true,
+          backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: Text(
             allTranslations.text("Setting"),
@@ -126,34 +131,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
         SettingsSection(
-          title: 'Tài khoản',
-          tiles: [
-            SettingsTile(
-              title: allTranslations.text("PhoneNumber"),
-              leading: Icon(Icons.phone),
-              titleTextStyle: TextStyle(
-                color: Colors.black,
-                fontFamily: 'SourceSansPro',
-                fontSize: 16,
-              ),
-            ),
-            SettingsTile(
-              title: allTranslations.text("Email"),
-              leading: Icon(Icons.email),
-              titleTextStyle: TextStyle(
-                color: Colors.black,
-                fontFamily: 'SourceSansPro',
-                fontSize: 16,
-              ),
-            ),
-            SettingsTile(
-              title: allTranslations.text("Logout"),
-              leading: Icon(Icons.exit_to_app),
-              onTap: () => _loginSubmit(),
-            ),
-          ],
-        ),
-        SettingsSection(
           title: 'Bảo mật',
           tiles: [
             SettingsTile.switchTile(
@@ -213,12 +190,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leading: Icon(Icons.lock),
               onTap: () {},
             ),
+            SettingsTile(
+              title: 'Reset Database',
+              leading: Icon(Icons.reset_tv),
+              onTap: () {
+                dialogCustomForCEP(context, allTranslations.text("Warning"),
+                    () {
+                  DBProvider.db.dropDataBase();
+                  ToastResultMessage.success(
+                      allTranslations.text("RestoreSuccessfully"));
+                }, children: [
+                  Text(
+                    allTranslations.text("NotificationReset"),
+                    style: TextStyle(fontSize: 14, color: Colors.red),
+                  )
+                ], width: screenWidth * 0.7);
+                // DBProvider.db.dropDataBase();
+              },
+            ),
             SettingsTile.switchTile(
               title: allTranslations.text("Announcement"),
               enabled: notificationsEnabled,
               leading: Icon(Icons.notifications_active),
               switchValue: true,
               onToggle: (value) {},
+            ),
+          ],
+        ),
+        SettingsSection(
+          title: 'Tài khoản',
+          tiles: [
+            SettingsTile(
+              title: allTranslations.text("PhoneNumber"),
+              leading: Icon(Icons.phone),
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontFamily: 'SourceSansPro',
+                fontSize: 16,
+              ),
+            ),
+            // SettingsTile(
+            //   title: allTranslations.text("Email"),
+            //   leading: Icon(Icons.email),
+            //   titleTextStyle: TextStyle(
+            //     color: Colors.black,
+            //     fontFamily: 'SourceSansPro',
+            //     fontSize: 16,
+            //   ),
+            // ),
+            SettingsTile(
+              title: allTranslations.text("Logout"),
+              leading: Icon(Icons.exit_to_app),
+              onTap: () => _loginSubmit(),
             ),
           ],
         ),
@@ -251,7 +274,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _loginSubmit() {
-    _authenticationBloc.emitEvent(AuthenticationEventLogout());
+    globalUser.settoken = "";
+    this.services.sharePreferenceService.saveToken("");
+    if (globalUser.getAuthenLocal) {
+      Navigator.pushNamed(context, '/welcomeLogin');
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+    // _authenticationBloc.emitEvent(AuthenticationEventLogout());
   }
 
   Future<void> _getAvailableBiometrics() async {
