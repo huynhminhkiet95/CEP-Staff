@@ -610,12 +610,13 @@ class _CommunityDevelopmentDetailFakeState
           centerTitle: true,
           leading: IconButton(
               icon: Icon(
-                Icons.save,
+                Icons.close,
                 color: Colors.white,
                 size: 25,
               ),
               onPressed: () {
-                _onSaveToSqlite();
+                Navigator.pop(context);
+
                 // Navigator.pop(context, false);
               }),
           actions: [

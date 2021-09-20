@@ -4422,40 +4422,6 @@ class _SurveyDetailFakeScreenState extends State<SurveyDetailFakeScreen>
                                                   title: "13. Đề xuất",
                                                   width: screenWidth * 1,
                                                 ),
-                                                CardCustomizeWidget(
-                                                  children: [
-                                                    RawMaterialButton(
-                                                      fillColor: Colors.green,
-                                                      splashColor: Colors.blue,
-                                                      child: Padding(
-                                                        padding: EdgeInsets.all(
-                                                            10.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: const <
-                                                              Widget>[
-                                                            Text(
-                                                              "Phát Triển Cộng Đồng",
-                                                              maxLines: 1,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        onSaveDataToCommunityDevelopment();
-                                                      },
-                                                      shape:
-                                                          const StadiumBorder(),
-                                                    ),
-                                                  ],
-                                                  title:
-                                                      "14. Tham gia chương trình Phát Triển Cộng Đồng",
-                                                  width: screenWidth * 1,
-                                                ),
 
                                                 /// 4. Thông tin về thu nhập, chi phí, tích lũy hộ gia đình thành viên
                                               ],

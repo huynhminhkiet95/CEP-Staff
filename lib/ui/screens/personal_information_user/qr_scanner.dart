@@ -63,6 +63,26 @@ class _QRScannerState extends State<QRScannerScreen> {
                       Expanded(child: _buildQrView(context)),
                     ],
                   ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    margin: EdgeInsets.only(top: 70),
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Row(
+                        children: [
+                          Container(
+                            child: Icon(Icons.keyboard_arrow_left,
+                                color: Colors.white),
+                          ),
+                          Text('Back',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white))
+                        ],
+                      ),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
