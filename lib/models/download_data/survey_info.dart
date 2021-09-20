@@ -356,7 +356,9 @@ class SurveyInfo {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["id"] = this.id;
     data["ngayXuatDanhSach"] = this.ngayXuatDanhSach;
-    data["ngayKhaoSat"] = this.ngayKhaoSat;
+    data["ngayKhaoSat"] = this.ngayKhaoSat == "null" || this.ngayKhaoSat.isEmpty
+        ? null
+        : this.ngayKhaoSat;
     data["masoCanBoKhaoSat"] = this.masoCanBoKhaoSat;
     data["chinhanhID"] = this.chinhanhId;
     data["duanID"] = this.duanId;

@@ -217,7 +217,7 @@ class _PersonalInformationUserDetailState
           backgroundColor: ColorConstants.cepColorBackground,
           elevation: 20,
           title: Text(
-            "Quét QR Code",
+            allTranslations.text("UpdatePrivateInfo"),
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
@@ -286,7 +286,7 @@ class _PersonalInformationUserDetailState
                           child: Align(
                             alignment: Alignment.topCenter,
                             child: Text(
-                              "Thông Tin Khách Hàng",
+                              allTranslations.text("InfoCustomer"),
                               //  textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
@@ -348,7 +348,8 @@ class _PersonalInformationUserDetailState
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Thông Tin Chung",
+                                            allTranslations
+                                                .text("GeneralInformation"),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 15,
@@ -367,7 +368,9 @@ class _PersonalInformationUserDetailState
                                                           TextInputType.text,
                                                       validator: (value) {
                                                         if (value.isEmpty) {
-                                                          return 'Vui lòng nhập trường này!';
+                                                          return allTranslations
+                                                              .text(
+                                                                  'WNEnterThisField');
                                                         }
                                                         return null;
                                                       },
@@ -385,17 +388,23 @@ class _PersonalInformationUserDetailState
                                                           TextInputType.number,
                                                       validator: (value) {
                                                         if (value.isEmpty) {
-                                                          return 'Vui lòng nhập trường này!';
+                                                          return allTranslations
+                                                              .text(
+                                                                  'WNEnterThisField');
                                                         } else {
                                                           if (value
                                                               .contains(',')) {
-                                                            return 'Định dạng số không hợp lệ!';
+                                                            return allTranslations
+                                                                .text(
+                                                                    'WNInvalidNumberFormat');
                                                           }
                                                           if (double.parse(
                                                                       value) %
                                                                   1 !=
                                                               0) {
-                                                            return 'Chi nhánh không hợp lệ!';
+                                                            return allTranslations
+                                                                .text(
+                                                                    'WNInvalidBranch');
                                                           }
                                                         }
                                                         return null;
@@ -417,7 +426,9 @@ class _PersonalInformationUserDetailState
                                                           TextInputType.number,
                                                       validator: (value) {
                                                         if (value.isEmpty) {
-                                                          return 'Vui lòng nhập trường này!';
+                                                          return allTranslations
+                                                              .text(
+                                                                  'WNEnterThisField');
                                                         }
                                                         return null;
                                                       },
@@ -507,7 +518,8 @@ class _PersonalInformationUserDetailState
                                                   _controllerCurrentResidence,
                                               validator: (value) {
                                                 if (value.isEmpty) {
-                                                  return 'Vui lòng nhập trường này!';
+                                                  return allTranslations
+                                                      .text('WNEnterThisField');
                                                 }
                                                 return null;
                                               },
@@ -515,7 +527,8 @@ class _PersonalInformationUserDetailState
                                                   .text("CurrentResidence")),
                                           divider20,
                                           Text(
-                                            "Thông Tin Cá Nhân",
+                                            allTranslations
+                                                .text("PrivateInformation"),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 15,
@@ -534,7 +547,9 @@ class _PersonalInformationUserDetailState
                                                           TextInputType.number,
                                                       validator: (value) {
                                                         if (value.isEmpty) {
-                                                          return 'Vui lòng nhập trường này!';
+                                                          return allTranslations
+                                                              .text(
+                                                                  'WNEnterThisField');
                                                         }
                                                         return null;
                                                       },
@@ -551,7 +566,9 @@ class _PersonalInformationUserDetailState
                                                           TextInputType.number,
                                                       validator: (value) {
                                                         if (value.isEmpty) {
-                                                          return 'Vui lòng nhập trường này!';
+                                                          return allTranslations
+                                                              .text(
+                                                                  'WNEnterThisField');
                                                         }
                                                         return null;
                                                       },
@@ -564,7 +581,8 @@ class _PersonalInformationUserDetailState
                                               controller: _controllerFullName,
                                               validator: (value) {
                                                 if (value.isEmpty) {
-                                                  return 'Vui lòng nhập trường này!';
+                                                  return allTranslations
+                                                      .text('WNEnterThisField');
                                                 }
                                                 return null;
                                               },
@@ -578,7 +596,8 @@ class _PersonalInformationUserDetailState
                                                     controller: _controllerSex,
                                                     validator: (value) {
                                                       if (value.isEmpty) {
-                                                        return 'Vui lòng nhập trường này!';
+                                                        return allTranslations.text(
+                                                            'WNEnterThisField');
                                                       }
                                                       return null;
                                                     },
@@ -600,7 +619,8 @@ class _PersonalInformationUserDetailState
                                                         TextInputType.datetime,
                                                     validator: (value) {
                                                       if (value.isEmpty) {
-                                                        return 'Vui lòng nhập trường này!';
+                                                        return allTranslations.text(
+                                                            'WNEnterThisField');
                                                       }
                                                       return null;
                                                     },
@@ -615,7 +635,8 @@ class _PersonalInformationUserDetailState
                                                   _controllerNativePlace,
                                               validator: (value) {
                                                 if (value.isEmpty) {
-                                                  return 'Vui lòng nhập trường này!';
+                                                  return allTranslations
+                                                      .text('WNEnterThisField');
                                                 }
                                                 return null;
                                               },
@@ -634,7 +655,8 @@ class _PersonalInformationUserDetailState
                                                   TextInputType.datetime,
                                               validator: (value) {
                                                 if (value.isEmpty) {
-                                                  return 'Vui lòng nhập trường này!';
+                                                  return allTranslations
+                                                      .text('WNEnterThisField');
                                                 }
                                                 return null;
                                               },
@@ -642,7 +664,8 @@ class _PersonalInformationUserDetailState
                                                   .text("DateOfIssue")),
                                           divider10,
                                           Text(
-                                            "Hình ảnh đính kèm",
+                                            allTranslations
+                                                .text("AttachedImage"),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14,
@@ -661,7 +684,8 @@ class _PersonalInformationUserDetailState
                                                 child: Column(
                                                   children: [
                                                     Text(
-                                                      "Mặt trước",
+                                                      allTranslations
+                                                          .text("Front"),
                                                       style: TextStyle(
                                                           fontSize: 14,
                                                           color:
@@ -787,7 +811,8 @@ class _PersonalInformationUserDetailState
                                                             false
                                                         ? Container()
                                                         : Text(
-                                                            "Vui lòng nhập trường này!",
+                                                            allTranslations.text(
+                                                                'WNEnterThisField'),
                                                             style: TextStyle(
                                                                 color:
                                                                     Colors.red,
@@ -808,7 +833,8 @@ class _PersonalInformationUserDetailState
                                                 child: Column(
                                                   children: [
                                                     Text(
-                                                      "Mặt sau",
+                                                      allTranslations
+                                                          .text("Back"),
                                                       style: TextStyle(
                                                           fontSize: 14,
                                                           color:
@@ -1004,7 +1030,9 @@ class _PersonalInformationUserDetailState
                                           child: InkWell(
                                             onTap: () => clearData(),
                                             child: Center(
-                                                child: Text("Xóa",
+                                                child: Text(
+                                                    allTranslations
+                                                        .text("Clear"),
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 14,
@@ -1021,7 +1049,9 @@ class _PersonalInformationUserDetailState
                                           child: InkWell(
                                             onTap: () => onSubmit(context),
                                             child: Center(
-                                                child: Text("Cập Nhật",
+                                                child: Text(
+                                                    allTranslations
+                                                        .text("Update"),
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 14,

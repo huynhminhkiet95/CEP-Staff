@@ -5,9 +5,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:qr_code_demo/ui/navigation/slide_route.dart';
 import 'package:qr_code_demo/ui/screens/Home/dashboard.dart';
 import 'package:qr_code_demo/ui/screens/Login/loginPage.dart';
+import 'package:qr_code_demo/ui/screens/Login/signup.dart';
 import 'package:qr_code_demo/ui/screens/calculation_money/calculation_money.dart';
 import 'package:qr_code_demo/ui/screens/community_development/community_development.dart';
 import 'package:qr_code_demo/ui/screens/community_development/community_development_detail.dart';
+import 'package:qr_code_demo/ui/screens/community_development/community_development_detail_fake.dart';
 import 'package:qr_code_demo/ui/screens/delete_data/delete_data.dart';
 import 'package:qr_code_demo/ui/screens/dept_collection/dept_collection.dart';
 import 'package:qr_code_demo/ui/screens/downloadData/download_main.dart';
@@ -31,7 +33,9 @@ import 'package:qr_code_demo/ui/decision_page_no_business.dart';
 import 'package:qr_code_demo/ui/initialization_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:qr_code_demo/ui/screens/survey/survey_detail.dart';
+import 'package:qr_code_demo/ui/screens/survey/survey_detail_fake.dart';
 import 'models/common/message.dart';
+import 'models/download_data/comboboxmodel.dart';
 import 'ui/screens/Login/welcomePage.dart';
 import 'package:qr_code_demo/notifications/local_notications_helper.dart';
 
@@ -139,6 +143,7 @@ class AppState extends State<Application> {
     authenticationBloc = new AuthenticationBloc(
         services.commonService, services.sharePreferenceService);
     //DBProvider.db.checkColumn();
+    // Android-specific code
   }
 
   Future displayNotification(Map<String, dynamic> message) async {
@@ -248,6 +253,7 @@ class AppState extends State<Application> {
                 ));
               }
               break;
+
             case 'personalinforuserupdate':
               final Map<String, Object> arguments = settings.arguments;
               return SlideLeftRoute(
@@ -280,6 +286,10 @@ class AppState extends State<Application> {
                 listSurveyHistory: arguments['surveyhistory'],
               ));
               break;
+            case 'surveydetailfake':
+              return SlideTopRoute(page: SurveyDetailFakeScreen());
+              break;
+
             case 'download':
               final Map<String, Object> arguments = settings.arguments;
               if (arguments == null) {
@@ -302,12 +312,19 @@ class AppState extends State<Application> {
                 listCombobox: arguments['metadata'],
               ));
               break;
+            case 'comunitydevelopmentdetailfake':
+              return SlideTopRoute(page: CommunityDevelopmentDetailFake());
+              break;
+
             case 'setting':
               return SlideLeftRoute(page: SettingsScreen());
             case 'language':
               return SlideBottomToTopRoute(page: LanguagesScreen());
             case 'calculation':
               return SlideLeftRoute(page: CalculationMoney());
+            case 'signup':
+              return SlideLeftRoute(page: SignUpPage());
+
             case 'googlemaps':
               final Map<String, Object> arguments = settings.arguments;
               return SlideLeftRoute(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../GlobalTranslations.dart';
+import '../../GlobalUser.dart';
 
 class ItemDashBoard {
   String title;
@@ -15,8 +16,10 @@ class ItemDashBoard {
         title: allTranslations.text("Survey"),
         img: "assets/dashboard/survey.png",
         icon: Icons.library_books,
-        router: "survey"));
-
+        router: globalUser.getUserInfo.chucVu == "register"
+            ? "surveydetailfake"
+            : "survey"));
+    //globalUser.user = register
     list.add(new ItemDashBoard(
         title: allTranslations.text("DeptRecovery"),
         img: "assets/dashboard/credit-hover.png",
@@ -31,7 +34,9 @@ class ItemDashBoard {
         title: allTranslations.text("CommunityDevelopment"),
         img: "assets/dashboard/develop-hover.png",
         icon: Icons.people_rounded,
-        router: "comunitydevelopment"));
+        router: globalUser.getUserInfo.chucVu == "register"
+            ? "comunitydevelopmentdetailfake"
+            : "comunitydevelopment"));
     list.add(new ItemDashBoard(
         title: allTranslations.text("Statistical"),
         img: "assets/dashboard/statistical-analysis.png",
@@ -46,7 +51,9 @@ class ItemDashBoard {
         title: allTranslations.text("InfoCustomer"),
         img: "assets/dashboard/document-download-outline.png",
         icon: Icons.download_rounded,
-        router: "personalinforuser"));
+        router: globalUser.getUserInfo.chucVu == "register"
+            ? "personalinforuserdetail"
+            : "personalinforuser"));
 
     return list;
   }

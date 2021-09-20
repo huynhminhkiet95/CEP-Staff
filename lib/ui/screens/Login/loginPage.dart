@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:qr_code_demo/GlobalUser.dart';
 import 'package:qr_code_demo/config/CustomIcons/my_flutter_app_icons.dart';
+import 'package:qr_code_demo/config/colors.dart';
 import 'package:qr_code_demo/config/version.dart';
+import 'package:qr_code_demo/global_variables/global_register.dart';
 import 'package:qr_code_demo/global_variables/global_update.dart';
 import 'package:qr_code_demo/ui/components/Widget/bezierContainer.dart';
 import 'package:qr_code_demo/ui/components/Widget/customClipper.dart';
@@ -172,7 +174,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     alignment: Alignment.center,
                     child: Text(
                       allTranslations.text("sign_in"),
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -405,13 +410,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         height: MediaQuery.of(context).size.height * 1.1,
                         width: MediaQuery.of(context).size.width * 0.9,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                              Color(0xff223f92),
-                              Color(0xff223f92)
-                            ])),
+                            color: ColorConstants.cepColorBackground),
                       ),
                     ),
                   ))),
@@ -435,24 +434,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    width: width * 0.90,
+                                    width: width * 0.80,
                                     child: FittedBox(
                                       fit: BoxFit.fitWidth,
                                       child: Text(
-                                        "PHẦN MỀM KHẢO SÁT CHO VAY VÀ ",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: width * 0.3,
-                                    child: FittedBox(
-                                      fit: BoxFit.cover,
-                                      child: Text(
-                                        "THU HỒI NỢ",
+                                        "ỨNG DỤNG KHẢO SÁT VAY VỐN",
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w700,
@@ -479,14 +465,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     key: formkey,
                     autovalidate: _autoValidate,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         // SizedBox(height: height * .06),
                         // Container(child: _backButton()),
                         // SizedBox(height: height * .02),
 
                         // SizedBox(height: 100),
+                        SizedBox(height: height * 0.3),
                         SlideTransition(
                           position: Tween<Offset>(
                             begin: const Offset(0.2, 0.1),
@@ -682,6 +669,38 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         _submitButton(),
 
                         SizedBox(height: height * .055),
+                        Builder(builder: (context) {
+                          if (GlobalRegister.isRegister && Platform.isIOS) {
+                            return Center(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(allTranslations.text("NotCustomer"),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                                VerticalDivider(
+                                  width: 5,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    redirectToRegisterPage();
+                                  },
+                                  child: Text(
+                                      allTranslations.text("RegisterNow"),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black)),
+                                ),
+                              ],
+                            ));
+                          } else {
+                            return Container();
+                          }
+                          //
+                        }),
                       ],
                     ),
                   ),
@@ -708,13 +727,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         height: MediaQuery.of(context).size.height * .99,
                         width: MediaQuery.of(context).size.width * 1.20,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                              Color(0xff223f92),
-                              Color(0xff223f92)
-                            ])),
+                          color: ColorConstants.cepColorBackground,
+                        ),
                       ),
                     ),
                   ))),
@@ -731,13 +745,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         height: MediaQuery.of(context).size.height * 1.9,
                         width: MediaQuery.of(context).size.width * 1.3,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                              Color(0xff223f92),
-                              Color(0xff223f92)
-                            ])),
+                          color: ColorConstants.cepColorBackground,
+                        ),
                       ),
                     ),
                   ))),
@@ -1049,6 +1058,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         );
       },
     );
+  }
+
+  void redirectToRegisterPage() async {
+    var data = await Navigator.pushNamed(
+      context,
+      'signup',
+    );
+    _userNameController.text = data;
   }
 
   void goUpdateApp() async {

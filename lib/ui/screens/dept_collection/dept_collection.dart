@@ -69,7 +69,7 @@ class _DeptCollectionScreenState extends State<DeptCollectionScreen> {
   //await DBProvider.db.newCustomerInfo(customerInfo);
   Future<List<Map>> getCustomerInfo() async {
     List<Map> listCustomerInfomation = schoolLists;
-    await Future.delayed(Duration(seconds: 5), () {
+    await Future.delayed(Duration(seconds: 1), () {
       // 5 seconds over, navigate to Page2.
     });
     return listCustomerInfomation;
@@ -78,27 +78,129 @@ class _DeptCollectionScreenState extends State<DeptCollectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          backgroundColor: ColorConstants.cepColorBackground,
+          elevation: 20,
+          title: Text(
+            allTranslations.text("DeptRecovery"),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          actions: [
+            PopupMenuButton<String>(
+              //   onSelected: handleClick,
+              itemBuilder: (BuildContext context) {
+                return {'Logout', 'Settings'}.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
+
+            //   DropD
+          ],
+        ),
         backgroundColor: Colors.grey[300],
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(top: 145),
-                  height: MediaQuery.of(context).size.height,
-                  width: double.infinity,
-                  child: FutureBuilder(
-                      future: getCustomerInfo(),
-                      builder: (context, snapshot) {
-                        customerInfoList = snapshot.data ?? new List<Map>();
-                        return ModalProgressHUD(
-                          progressIndicator: RefreshProgressIndicator(
-                            backgroundColor: Color(0xff223f92),
-                          ),
-                          color: Colors.grey,
-                          inAsyncCall: !snapshot.hasData,
+        body: Container(
+          child: FutureBuilder(
+              future: getCustomerInfo(),
+              builder: (context, snapshot) {
+                customerInfoList = snapshot.data ?? new List<Map>();
+                return ModalProgressHUD(
+                  progressIndicator: RefreshProgressIndicator(
+                    backgroundColor: Color(0xff223f92),
+                  ),
+                  color: Colors.grey,
+                  inAsyncCall: !snapshot.hasData,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(top: 20),
+                        height: 50,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.69,
+                                  child: Material(
+                                    elevation: 5.0,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30)),
+                                    child: TextField(
+                                      controller: _controllerCustomerName,
+                                      cursorColor:
+                                          Theme.of(context).primaryColor,
+                                      style: dropdownMenuItem,
+                                      onChanged: (value) {
+                                        // customerInfoListAfterSearch = customerInfoList
+                                        //   .where((e) => e.fullName
+                                        //       .contains(_controllerCustomerName.text))
+                                        //   .toList();
+                                        setState(() {});
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: "Tìm kiếm danh sách...",
+                                          hintStyle: TextStyle(
+                                              color: Colors.black38,
+                                              fontSize: 16),
+                                          prefixIcon: Material(
+                                            elevation: 0.0,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(30)),
+                                            child: Icon(Icons.search),
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 25, vertical: 13)),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () => Navigator.of(context).pop(),
+                                  child: Container(
+                                    //margin: EdgeInsets.only(top: 70),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          bottomLeft: Radius.circular(15),
+                                          bottomRight: Radius.circular(15),
+                                          topRight: Radius.circular(15),
+                                        )),
+                                    width: 50,
+                                    height: 50,
+                                    child: Icon(
+                                      IconsCustomize.sliders_h,
+                                      color: primary,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 20),
                           child: Builder(builder: (context) {
                             customerInfoListAfterSearch = customerInfoList;
                             if (customerInfoListAfterSearch.length > 0) {
@@ -123,148 +225,12 @@ class _DeptCollectionScreenState extends State<DeptCollectionScreen> {
                               );
                             }
                           }),
-                        );
-                        // if (snapshot.hasData) {
-                        //   List<CustomerInfo> customerInfoList = snapshot.data;
-                        //   return ListView.builder(
-                        //       itemCount: customerInfoList.length,
-                        //       itemBuilder: (BuildContext context, int index) {
-                        //         return buildList(
-                        //             context, customerInfoList[index]);
-                        //       });
-                        // } else {
-                        //   return Container();
-                        // }
-                      }),
-                ),
-                Container(
-                  height: 140,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: primary,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(30),
-                          bottomRight: Radius.circular(30))),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Container(
-                      margin: EdgeInsets.only(top: 50),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              child: Container(
-                                //margin: EdgeInsets.only(top: 70),
-                                // decoration: BoxDecoration(
-                                //     color: Colors.blue,
-                                //     borderRadius: BorderRadius.only(
-                                //       topLeft: Radius.circular(15),
-                                //       bottomLeft: Radius.circular(15),
-                                //       bottomRight: Radius.circular(15),
-                                //       topRight: Radius.circular(15),
-                                //     )),
-
-                                child: Icon(
-                                  Icons.arrow_back_ios,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: SizedBox(
-                                child: Text(
-                                  "Tìm Kiếm Thu Nợ",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            ),
-                            SizedBox()
-                          ],
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 130,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.69,
-                            child: Material(
-                              elevation: 5.0,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
-                              child: TextField(
-                                controller: _controllerCustomerName,
-                                cursorColor: Theme.of(context).primaryColor,
-                                style: dropdownMenuItem,
-                                onChanged: (value) {
-                                  // customerInfoListAfterSearch = customerInfoList
-                                  //   .where((e) => e.fullName
-                                  //       .contains(_controllerCustomerName.text))
-                                  //   .toList();
-                                  setState(() {});
-                                },
-                                decoration: InputDecoration(
-                                    hintText: "Tìm kiếm danh sách...",
-                                    hintStyle: TextStyle(
-                                        color: Colors.black38, fontSize: 16),
-                                    prefixIcon: Material(
-                                      elevation: 0.0,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(30)),
-                                      child: Icon(Icons.search),
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 25, vertical: 13)),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              //margin: EdgeInsets.only(top: 70),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    bottomLeft: Radius.circular(15),
-                                    bottomRight: Radius.circular(15),
-                                    topRight: Radius.circular(15),
-                                  )),
-                              width: 50,
-                              height: 50,
-                              child: Icon(
-                                IconsCustomize.sliders_h,
-                                color: primary,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
-                )
-              ],
-            ),
-          ),
+                );
+              }),
         ),
         floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
         floatingActionButton: FloatingActionButton(
@@ -307,18 +273,6 @@ class _DeptCollectionScreenState extends State<DeptCollectionScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Container(
-            //   width: 50,
-            //   height: 50,
-            //   margin: EdgeInsets.only(right: 15),
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(50),
-            //     border: Border.all(width: 3, color: secondary),
-            //     image: DecorationImage(
-            //         image: NetworkImage(schoolLists[index]['logoText']),
-            //         fit: BoxFit.fill),
-            //   ),
-            // ),
             Expanded(
               child: Row(
                 children: [

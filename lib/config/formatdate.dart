@@ -141,6 +141,7 @@ class FormatDateConstants {
     if (jsonDate == null || jsonDate.isEmpty) {
       return null;
     }
+
     jsonDate = jsonDate.replaceAll("T", " ");
     DateTime datetime = new DateFormat("yyyy-MM-dd hh:mm:ss").parse(jsonDate);
     return datetime;
@@ -148,7 +149,7 @@ class FormatDateConstants {
 
   static String convertDateTimeToStringT(DateTime dateTime) {
     if (dateTime == null) {
-      return  "";
+      return "";
     }
     return DateFormat('yyyy-MM-ddT00:00:00').format(dateTime);
   }

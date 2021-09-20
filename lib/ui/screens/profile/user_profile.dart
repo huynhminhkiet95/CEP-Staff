@@ -195,9 +195,7 @@ class ProfilePage extends StatelessWidget {
                           width: 10,
                         ),
                         Text(
-                          globalUser.getUserInfo == null
-                              ? ''
-                              : globalUser.getUserInfo.dienThoai.toString(),
+                          '',
                           style: _styleValue(),
                         ),
                       ],

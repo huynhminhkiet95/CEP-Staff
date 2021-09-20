@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:qr_code_demo/GlobalUser.dart';
+import 'package:qr_code_demo/config/status_authen_local.dart';
+import 'package:qr_code_demo/models/common/register.dart';
 import 'package:qr_code_demo/models/community_development/comunity_development.dart';
 import 'package:qr_code_demo/models/download_data/comboboxmodel.dart';
 import 'package:qr_code_demo/models/download_data/survey_info.dart';
@@ -63,6 +65,13 @@ class DBProvider {
           "createDate TEXT,"
           "updateDate TEXT,"
           "username TEXT"
+          ")");
+      await db.execute("CREATE TABLE IF NOT EXISTS register_account("
+          "username TEXT,"
+          "fullname TEXT,"
+          "password TEXT,"
+          "phone TEXT,"
+          "email TEXT"
           ")");
     }, onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE KhaoSat("
@@ -1866,6 +1875,60 @@ class DBProvider {
     List<CustomerInfo> listCustomerInfomation =
         res.isNotEmpty ? res.map((c) => CustomerInfo.fromJson(c)).toList() : [];
     return listCustomerInfomation;
+  }
+
+  newRegisterAccount(dynamic model) async {
+    final db = await database;
+    int rs = 0;
+    try {
+      int checkExistsData = Sqflite.firstIntValue(
+          await db.rawQuery('''SELECT COUNT(*) FROM register_account " +
+              "WHERE username = "${model['username']}" '''));
+      String queryString;
+      if (checkExistsData == 0) {
+        queryString =
+            '''INSERT Into register_account(username,fullname,password,phone,email)
+             SELECT "${model['username']}", "${model['fullname']}","${model['password']}","${model['phone']}",
+                    "${model['email']}"
+             WHERE NOT EXISTS(SELECT 1 FROM register_account WHERE username = "${model['username']}")''';
+        rs = await db.rawInsert(queryString);
+      }
+      return rs;
+    } on Exception catch (ex) {
+      print(ex);
+      return rs;
+      // only executed if error is of type Exception
+    } catch (error) {
+      // executed for errors of all types other than Exception
+    }
+  }
+
+  authenByRegisterAccount(String username, String password) async {
+    final db = await database;
+    int status; // 0 account not exists, 1 wrong the password, 2 true
+    int checkExistsData = Sqflite.firstIntValue(
+        await db.rawQuery('''SELECT COUNT(*) FROM register_account " +
+              "WHERE username = "$username"'''));
+    if (checkExistsData > 0) {
+      int checkLogin = Sqflite.firstIntValue(
+          await db.rawQuery('''SELECT COUNT(*) FROM register_account " +
+              "WHERE username = "$username" and password = "$password"'''));
+      if (checkLogin > 0) {
+        status = StatusAuthenLocal.authenSuccess;
+      } else {
+        status = StatusAuthenLocal.wrongPassword; // wrong password
+      }
+    } else {
+      status = StatusAuthenLocal.notExists;
+    }
+    return status;
+  }
+
+  getRegisterAccount(String username) async {
+    final db = await database;
+    var res = await db.query("register_account",
+        where: "username = ?", whereArgs: [username], limit: 1);
+    return res.isNotEmpty ? res.map((c) => Register.fromMap(c)).first : [];
   }
 
   dropDataBase() async {
