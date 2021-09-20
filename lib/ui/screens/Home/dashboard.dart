@@ -221,6 +221,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
           case "error":
             isDisable = true;
             break;
+          case "deptcollection":
+            isDisable = true;
+            break;
           default:
         }
       }
@@ -455,6 +458,9 @@ class _MenuDashboardPageState extends State<MenuDashboardPage>
                                   } else {
                                     switch (listDashboard[index].router) {
                                       case "error":
+                                        isDisable = true;
+                                        break;
+                                      case "deptcollection":
                                         isDisable = true;
                                         break;
                                       default:

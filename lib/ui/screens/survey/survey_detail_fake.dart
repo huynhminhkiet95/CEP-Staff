@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:qr_code_demo/GlobalUser.dart';
 import 'package:qr_code_demo/bloc_widgets/bloc_state_builder.dart';
 import 'package:qr_code_demo/blocs/survey/survey_state.dart';
 import 'package:qr_code_demo/config/colors.dart';
@@ -25,24 +26,16 @@ import 'package:qr_code_demo/resources/CurrencyInputFormatter.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class SurveyDetailScreen extends StatefulWidget {
-  final int id;
-  final List<ComboboxModel> listCombobox;
-  final SurveyInfo surveyInfo;
-  final List<SurveyInfoHistory> listSurveyHistory;
-  const SurveyDetailScreen(
-      {Key key,
-      this.id,
-      this.listCombobox,
-      this.surveyInfo,
-      this.listSurveyHistory})
-      : super(key: key);
+class SurveyDetailFakeScreen extends StatefulWidget {
+  const SurveyDetailFakeScreen({
+    Key key,
+  }) : super(key: key);
 
   @override
-  _SurveyDetailScreenState createState() => _SurveyDetailScreenState();
+  _SurveyDetailFakeScreenState createState() => _SurveyDetailFakeScreenState();
 }
 
-class _SurveyDetailScreenState extends State<SurveyDetailScreen>
+class _SurveyDetailFakeScreenState extends State<SurveyDetailFakeScreen>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   GlobalKey<FormState> formkeySurveyDetail = GlobalKey<FormState>();
   TabController tabController;
@@ -171,7 +164,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
 
   TextEditingController _textDateEditingController = TextEditingController(
       text: FormatDateConstants.convertDateTimeToString(DateTime.now()));
-
+  List<ComboboxModel> listCombobox;
   double _animatedHeight1 = 0.0;
   double _animatedHeight2 = 0.0;
   double _animatedHeightCapital1 = 0.0;
@@ -332,6 +325,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
 
   @override
   void initState() {
+    listCombobox = globalUser.getListComboboxModel;
     tabController = new TabController(length: 5, vsync: this);
     tabController.addListener(() {
       if (_controllerDisbursementAmountOrientationDeposit.text.isEmpty) {
@@ -339,14 +333,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
             _controllerSavingsDepositAmountEverytime.text;
       }
     });
-    surveyInfoHistory = widget.listSurveyHistory
-                .where((e) => e.thanhvienId == widget.surveyInfo.thanhvienId)
-                .length >
-            0
-        ? widget.listSurveyHistory
-            .where((e) => e.thanhvienId == widget.surveyInfo.thanhvienId)
-            .first
-        : null;
+
     if (surveyInfoHistory != null) {
       this.isDataHistory = true;
     }
@@ -359,483 +346,247 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   }
 
   void _onSubmit() {
-    SurveyInfo model = new SurveyInfo();
-    model.id = widget.id;
-    model.ngayXuatDanhSach = widget.surveyInfo.ngayXuatDanhSach;
-    model.ngayKhaoSat =
-        FormatDateConstants.convertDateTimeToStringT(selectedSurveyDate);
-    model.masoCanBoKhaoSat = widget.surveyInfo.masoCanBoKhaoSat;
-    model.chinhanhId = widget.surveyInfo.chinhanhId;
-    model.duanId = widget.surveyInfo.duanId;
-    model.cumId = widget.surveyInfo.cumId;
-    model.thanhvienId = widget.surveyInfo.thanhvienId;
-    model.tinhTrangHonNhan = _maritalStatusValue;
-    model.trinhDoHocVan = _educationLevelValue;
-    model.khuVuc = selectedIndexKhuVuc;
-    model.lanvay = widget.surveyInfo.lanvay;
-    model.nguoiTraloiKhaoSat = _surveyRespondentsValue;
-    model.songuoiTrongHo = int.parse(
-        _controllerNumberPeopleInFamily.text.isEmpty
-            ? "0"
-            : _controllerNumberPeopleInFamily.text);
-    model.songuoiCoviecLam = int.parse(
-        _controllerNumberPeopleWorked.text.isEmpty
-            ? "0"
-            : _controllerNumberPeopleWorked.text);
-    model.dientichDatTrong = widget.surveyInfo.dientichDatTrong;
-    model.giaTriVatNuoi = widget.surveyInfo.giaTriVatNuoi;
-    model.dungCuLaoDong =
-        MoneyFormat.convertCurrencyToInt(_controllerAmountOfLaborTools.text);
-    model.phuongTienDiLai = MoneyFormat.convertCurrencyToInt(
-        _controllerAmountOfVehiclesTransport.text);
-    model.taiSanSinhHoat =
-        MoneyFormat.convertCurrencyToInt(_controllerAmountLivingEquipment.text);
-    model.quyenSoHuuNha = _ownershipValue;
-    model.hemTruocNha = int.parse(_controllerNumberOfAlleyNearHome.text.isEmpty
-        ? "0"
-        : _controllerNumberOfAlleyNearHome.text);
-    model.maiNha = _roofValue;
-    model.tuongNha = _wallValue;
-    model.nenNha = _floorValue;
-    model.dienTichNhaTinhTren1Nguoi = int.parse(
-        _controllerAcreageOfHome.text.isEmpty
-            ? "0"
-            : _controllerAcreageOfHome.text);
-    model.dien = _powerValue;
-    model.nuoc = _waterValue;
-    model.mucDichSudungVon = _controllerPurposeUseMoney.text;
-    model.soTienCanThiet = MoneyFormat.convertCurrencyToInt(
-        _controllerAmountRequiredForCapitalUsePurposes.text);
-
-    model.soTienThanhVienDaCo =
-        MoneyFormat.convertCurrencyToInt(_controllerAmountMemberHave.text);
-
-    model.soTienCanVay =
-        MoneyFormat.convertCurrencyToInt(_controllerAmountMemberNeed.text);
-
-    model.thoiDiemSuDungVonvay = selectedTimetoUseLoanDate != null
-        ? DateFormat('MM/dd').format(selectedTimetoUseLoanDate)
-        : "";
-    model.tongVonDauTu =
-        MoneyFormat.convertCurrencyToInt(_controllerTotalAmountGetSeason.text);
-    model.thuNhapRongHangThang = MoneyFormat.convertCurrencyToInt(
-        _controllerTotalAmountMonthlyforActivityIncomeIncrease.text);
-    model.thuNhapCuaVoChong =
-        MoneyFormat.convertCurrencyToInt(_controllerIncomeOfWifeHusband.text);
-    model.thuNhapCuaCacCon =
-        MoneyFormat.convertCurrencyToInt(_controllerIncomeOfChild.text);
-
-    model.thuNhapKhac =
-        MoneyFormat.convertCurrencyToInt(_controllerIncomeOther.text);
-
-    if (selectedIndexTotalMonthly == 0) {
-      model.tongChiPhiCuaThanhvien = MoneyFormat.convertCurrencyToInt(
-          _controllerTotalMonthlyExpenses.text);
-      model.chiPhiDienNuoc = 0;
-      model.chiPhiAnUong = 0;
-      model.chiPhiHocTap = 0;
-      model.chiPhiKhac = 0;
-    } else {
-      model.tongChiPhiCuaThanhvien = 0;
-      model.chiPhiDienNuoc =
-          MoneyFormat.convertCurrencyToInt(_controllerTotalPowerAndWater.text);
-      model.chiPhiAnUong =
-          MoneyFormat.convertCurrencyToInt(_controllerTotalCharge.text);
-      model.chiPhiHocTap =
-          MoneyFormat.convertCurrencyToInt(_controllerTotalFee.text);
-      model.chiPhiKhac =
-          MoneyFormat.convertCurrencyToInt(_controllerTotalOtherCost.text);
-    }
-
-    model.chiTraTienVayHangThang = MoneyFormat.convertCurrencyToInt(
-        _controllerCostofLoanRepaymentToCEPMonthly.text);
-    model.tichLuyTangThemHangThang = MoneyFormat.convertCurrencyToInt(
-        _controllerMonthlyBalanceUseCapital.text);
-    model.nguonVay1 = _capital1Value;
-    model.sotienVay1 =
-        MoneyFormat.convertCurrencyToInt(_controllerTotalAmountCapital1.text);
-
-    model.lyDoVay1 = _reasonLoan1Value;
-    model.thoiDiemTatToan1 = selectedFinalSettlement1Date != null
-        ? DateFormat('MM/dd').format(selectedFinalSettlement1Date)
-        : "";
-    model.bienPhapThongNhat1 = _uniformMeasure1Value;
-    model.nguonVay2 = _capital2Value;
-    model.sotienVay2 =
-        MoneyFormat.convertCurrencyToInt(_controllerTotalAmountCapital2.text);
-    model.lyDoVay2 = _reasonLoan2Value;
-    model.thoiDiemTatToan2 = selectedFinalSettlement2Date != null
-        ? DateFormat('MM/dd').format(selectedFinalSettlement2Date)
-        : "";
-    model.bienPhapThongNhat2 = _uniformMeasure2Value;
-    model.thanhVienThuocDien = _typeMemberValue;
-    model.maSoHoNgheo = _controllerPoorHouseholdsCode.text;
-    model.hoTenChuHo = _controllerNameofHouseholdHead.text;
-    model.soTienGuiTietKiemMoiKy = MoneyFormat.convertCurrencyToInt(
-        _controllerSavingsDepositAmountEverytime.text);
-    model.tietKiemBatBuocXinRut =
-        MoneyFormat.convertCurrencyToInt(_controllerRequiredDeposit.text);
-    model.tietKiemTuNguyenXinRut =
-        MoneyFormat.convertCurrencyToInt(_controllerOrientationDeposit.text);
-    model.tietKiemLinhHoatXinRut =
-        MoneyFormat.convertCurrencyToInt(_controllerFlexibleDeposit.text);
-    if (selectedIndexTimeOfWithdrawal == 0) {
-      model.thoiDiemRut = "";
-    } else {
-      model.thoiDiemRut = selectedTimeOfWithdrawalDate != null
-          ? DateFormat('MM/dd').format(selectedTimeOfWithdrawalDate)
-          : "";
-    }
-    model.mucVayBoSung =
-        MoneyFormat.convertCurrencyToInt(_controllerAmountAdditionalLoan.text);
-    model.mucDichVayBoSung = _additionalLoanPurposeValue;
-    model.ngayVayBoSung = FormatDateConstants.convertDateTimeToStringT(
-        selectedDateofAdditionalCapital);
-    model.ghiChu = _controllerCreditOfficerNotes.text;
-    model.soTienDuyetChovay =
-        MoneyFormat.convertCurrencyToInt(_controllerDisbursementAmount.text);
-    model.tietKiemDinhHuong = MoneyFormat.convertCurrencyToInt(
-        _controllerDisbursementAmountOrientationDeposit.text);
-    model.mucDichVay = _loanPurposeValue;
-    model.duyetChovayNgay = widget.surveyInfo.duyetChovayNgay; //??
-    model.daCapNhatVaoHoSoChovay =
-        widget.surveyInfo.daCapNhatVaoHoSoChovay; //??
-    model.tinhTrangNgheo = widget.surveyInfo.tinhTrangNgheo; //??
-    model.daDuocDuyet = widget.surveyInfo.daDuocDuyet; //??
-    model.username = widget.surveyInfo.username; //??
-    model.ngaycapnhat = widget.surveyInfo.ngaycapnhat; //??
-    model.daDuocDuyet = widget.surveyInfo.daDuocDuyet; //??
-    model.masoCanBoKhaoSatPss = widget.surveyInfo.masoCanBoKhaoSatPss; //??
-    model.sotienVayLantruoc = widget.surveyInfo.sotienVayLantruoc; //??
-    model.thoiGianTaivay = widget.surveyInfo.thoiGianTaivay; //??
-    model.songayNoquahanCaonhat = widget.surveyInfo.songayNoquahanCaonhat; //??
-    model.thoiGianKhaosatGannhat =
-        widget.surveyInfo.thoiGianKhaosatGannhat; //??
-    model.ngayTatToanDotvayTruoc =
-        widget.surveyInfo.ngayTatToanDotvayTruoc; //??
-    model.batBuocKhaosat = widget.surveyInfo.batBuocKhaosat; //??
-    model.conNo = widget.surveyInfo.conNo; //??
-    model.dichVuSgb = widget.surveyInfo.dichVuSgb; //??
-    model.moTheMoi = widget.surveyInfo.moTheMoi; //??
-    model.soTienDuyetChoVayCk = widget.surveyInfo.soTienDuyetChoVayCk; //??
-    model.gioiTinh = widget.surveyInfo.gioiTinh; //??
-    model.cmnd = widget.surveyInfo.cmnd; //??
-    model.ngaySinh = widget.surveyInfo.ngaySinh; //??
-    model.diaChi = widget.surveyInfo.diaChi; //??
-    model.thoigianthamgia = widget.surveyInfo.thoigianthamgia; //??
-    model.hoVaTen = widget.surveyInfo.hoVaTen; //??
-    model.statusCheckBox = widget.surveyInfo.statusCheckBox; //??
-    model.idHistoryKhaoSat = widget.surveyInfo.idHistoryKhaoSat; //??
-    surVeyBloc.emitEvent(UpdateSurveyEvent(model, context));
+    //surVeyBloc.emitEvent(UpdateSurveyEvent(model, context));
   }
 
   void loadInitData() {
+    SurveyInfo surveyInfo = new SurveyInfo();
+    List<SurveyInfoHistory> listSurveyHistory;
     // khu vuc
-    selectedIndexKhuVuc = widget.surveyInfo.khuVuc;
+    selectedIndexKhuVuc = surveyInfo.khuVuc;
 
     /// nguoi tra loi khao sat
     _surveyRespondentsModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox
-            .where((e) => e.groupId == 'NguoiTraloiKhaosat')
-            .toList());
-    _surveyRespondentsValue =
-        widget.surveyInfo.nguoiTraloiKhaoSat.trim().isEmpty
-            ? "0"
-            : widget.surveyInfo.nguoiTraloiKhaoSat.trim();
+        listCombobox.where((e) => e.groupId == 'NguoiTraloiKhaosat').toList());
+    _surveyRespondentsValue = surveyInfo.nguoiTraloiKhaoSat == null
+        ? "0"
+        : surveyInfo.nguoiTraloiKhaoSat;
 
     /// tinh trang hon nhan
-    _maritalStatusModelDropdownList = Helper.buildDropdownFromMetaData(widget
-        .listCombobox
-        .where((e) => e.groupId == 'TinhTrangHonNhan')
-        .toList());
-    _maritalStatusValue = widget.surveyInfo.tinhTrangHonNhan.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.tinhTrangHonNhan;
+    _maritalStatusModelDropdownList = Helper.buildDropdownFromMetaData(
+        listCombobox.where((e) => e.groupId == 'TinhTrangHonNhan').toList());
+    _maritalStatusValue =
+        surveyInfo.tinhTrangHonNhan == null ? "0" : surveyInfo.tinhTrangHonNhan;
 
     ///trinh do hoc van
-    _educationLevelModelDropdownList = Helper.buildDropdownFromMetaData(widget
-        .listCombobox
-        .where((e) => e.groupId == 'TrinhDoHocVan')
-        .toList());
-    _educationLevelValue = widget.surveyInfo.trinhDoHocVan.trim().isEmpty
+    _educationLevelModelDropdownList = Helper.buildDropdownFromMetaData(
+        listCombobox.where((e) => e.groupId == 'TrinhDoHocVan').toList());
+    _educationLevelValue = surveyInfo.trinhDoHocVan == null
         ? "0"
-        : widget.surveyInfo.trinhDoHocVan.trim();
+        : surveyInfo.trinhDoHocVan.trim();
 
     /// quyen so huu
     _ownershipModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'SoHuuNha').toList());
-    _ownershipValue = widget.surveyInfo.quyenSoHuuNha.trim().isEmpty
+        listCombobox.where((e) => e.groupId == 'SoHuuNha').toList());
+    _ownershipValue = surveyInfo.quyenSoHuuNha == null
         ? "0"
-        : widget.surveyInfo.quyenSoHuuNha.trim();
+        : surveyInfo.quyenSoHuuNha.trim();
 
     ///mai nha
     _roofModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'MaiNha').toList());
-    _roofValue = widget.surveyInfo.maiNha.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.maiNha.trim();
+        listCombobox.where((e) => e.groupId == 'MaiNha').toList());
+    _roofValue = surveyInfo.maiNha == null ? "0" : surveyInfo.maiNha.trim();
 
     ///tuong nha
     _wallModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'TuongNha').toList());
-    _wallValue = widget.surveyInfo.tuongNha.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.tuongNha.trim();
+        listCombobox.where((e) => e.groupId == 'TuongNha').toList());
+    _wallValue = surveyInfo.tuongNha == null ? "0" : surveyInfo.tuongNha.trim();
 
     ///nen nha
     _floorModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'NenNha').toList());
-    _floorValue = widget.surveyInfo.nenNha.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.nenNha.trim();
+        listCombobox.where((e) => e.groupId == 'NenNha').toList());
+    _floorValue = surveyInfo.nenNha == null ? "0" : surveyInfo.nenNha.trim();
 
     ///dien
     _powerModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'Dien').toList());
-    _powerValue = widget.surveyInfo.dien.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.dien.trim();
+        listCombobox.where((e) => e.groupId == 'Dien').toList());
+    _powerValue = surveyInfo.dien == null ? "0" : surveyInfo.dien.trim();
 
     ///nuoc
     _waterModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'Nuoc').toList());
-    _waterValue = widget.surveyInfo.nuoc.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.nuoc.trim();
+        listCombobox.where((e) => e.groupId == 'Nuoc').toList());
+    _waterValue = surveyInfo.nuoc == null ? "0" : surveyInfo.nuoc.trim();
 
     ///nguon vay 1
     _capitalModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'NguonVay').toList());
-    _capital1Value = widget.surveyInfo.nguonVay1.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.nguonVay1.trim();
-    _capital2Value = widget.surveyInfo.nguonVay2.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.nguonVay2.trim();
+        listCombobox.where((e) => e.groupId == 'NguonVay').toList());
+    _capital1Value =
+        surveyInfo.nguonVay1 == null ? "0" : surveyInfo.nguonVay1.trim();
+    _capital2Value =
+        surveyInfo.nguonVay2 == null ? "0" : surveyInfo.nguonVay2.trim();
 
     ///ly do vay
     _reasonLoanModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'LyDoVay').toList());
-    _reasonLoan1Value = widget.surveyInfo.lyDoVay1.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.lyDoVay1.trim();
-    _reasonLoan2Value = widget.surveyInfo.lyDoVay2.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.lyDoVay2.trim();
+        listCombobox.where((e) => e.groupId == 'LyDoVay').toList());
+    _reasonLoan1Value =
+        surveyInfo.lyDoVay1 == null ? "0" : surveyInfo.lyDoVay1.trim();
+    _reasonLoan2Value =
+        surveyInfo.lyDoVay2 == null ? "0" : surveyInfo.lyDoVay2.trim();
 
     ///bien phap thong nhat
-    _uniformMeasuresModelDropdownList = Helper.buildDropdownFromMetaData(widget
-        .listCombobox
-        .where((e) => e.groupId == 'BienPhapThongNhat')
-        .toList());
-    _uniformMeasure1Value = widget.surveyInfo.bienPhapThongNhat1.trim().isEmpty
+    _uniformMeasuresModelDropdownList = Helper.buildDropdownFromMetaData(
+        listCombobox.where((e) => e.groupId == 'BienPhapThongNhat').toList());
+    _uniformMeasure1Value = surveyInfo.bienPhapThongNhat1 == null
         ? "0"
-        : widget.surveyInfo.bienPhapThongNhat1.trim();
-    _uniformMeasure2Value = widget.surveyInfo.bienPhapThongNhat2.trim().isEmpty
+        : surveyInfo.bienPhapThongNhat1.trim();
+    _uniformMeasure2Value = surveyInfo.bienPhapThongNhat2 == null
         ? "0"
-        : widget.surveyInfo.bienPhapThongNhat2.trim();
+        : surveyInfo.bienPhapThongNhat2.trim();
 
     //thanh vien thuoc dien
-    _typeMemberModelDropdownList = Helper.buildDropdownFromMetaData(widget
-        .listCombobox
-        .where((e) => e.groupId == 'ThanhVienThuocDien')
-        .toList());
-    _typeMemberValue = widget.surveyInfo.thanhVienThuocDien.trim().isEmpty
+    _typeMemberModelDropdownList = Helper.buildDropdownFromMetaData(
+        listCombobox.where((e) => e.groupId == 'ThanhVienThuocDien').toList());
+    _typeMemberValue = surveyInfo.thanhVienThuocDien == null
         ? "0"
-        : widget.surveyInfo.thanhVienThuocDien.trim();
+        : surveyInfo.thanhVienThuocDien.trim();
 
     ///muc dich vay von bo sung
     _additionalLoanPurposeModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
-    _additionalLoanPurposeValue =
-        widget.surveyInfo.mucDichVayBoSung.trim().isEmpty
-            ? "0"
-            : widget.surveyInfo.mucDichVayBoSung.trim();
+        listCombobox.where((e) => e.groupId == 'MucDich').toList());
+    _additionalLoanPurposeValue = surveyInfo.mucDichVayBoSung == null
+        ? "0"
+        : surveyInfo.mucDichVayBoSung.trim();
 
     ///muc dich vay von
     _loanPurposeModelDropdownList = Helper.buildDropdownFromMetaData(
-        widget.listCombobox.where((e) => e.groupId == 'MucDich').toList());
-    _loanPurposeValue = widget.surveyInfo.mucDichVay.trim().isEmpty
-        ? "0"
-        : widget.surveyInfo.mucDichVay.trim();
+        listCombobox.where((e) => e.groupId == 'MucDich').toList());
+    _loanPurposeValue = "0";
 
-    selectedSurveyDate = FormatDateConstants.convertJsonDateToDateTime(
-        widget.surveyInfo.ngayKhaoSat);
+    selectedSurveyDate = null;
 
-    if (widget.surveyInfo.thoiDiemSuDungVonvay.length > 1) {
-      selectedTimetoUseLoanDate = DateFormat('MM/dd/yyyy').parse(
-          widget.surveyInfo.thoiDiemSuDungVonvay +
-              '/' +
-              DateTime.now().year.toString());
-    }
+    selectedTimetoUseLoanDate = null;
 
-    if (widget.surveyInfo.thoiDiemTatToan1.length > 1) {
-      selectedFinalSettlement1Date = DateFormat('MM/dd/yyyy').parse(
-          widget.surveyInfo.thoiDiemTatToan1 +
-              '/' +
-              DateTime.now().year.toString());
-    }
+    selectedFinalSettlement1Date = null;
 
-    if (widget.surveyInfo.thoiDiemTatToan2.length > 1) {
-      selectedFinalSettlement2Date = DateFormat('MM/dd/yyyy').parse(
-          widget.surveyInfo.thoiDiemTatToan2 +
-              '/' +
-              DateTime.now().year.toString());
-    }
+    selectedFinalSettlement2Date = null;
 
-    if (widget.surveyInfo.thoiDiemRut.length > 1) {
-      selectedTimeOfWithdrawalDate = DateFormat('MM/dd/yyyy').parse(
-          widget.surveyInfo.thoiDiemRut + '/' + DateTime.now().year.toString());
-    }
+    selectedTimeOfWithdrawalDate = null;
 
-    selectedDateofAdditionalCapital =
-        FormatDateConstants.convertJsonDateToDateTime(
-            widget.surveyInfo.ngayVayBoSung);
+    selectedDateofAdditionalCapital = null;
 
-    _controllerNumberPeopleInFamily = new TextEditingController(
-        text: widget.surveyInfo.songuoiTrongHo.toString());
+    _controllerNumberPeopleInFamily = new TextEditingController(text: '0');
 
-    _controllerNumberPeopleWorked = new TextEditingController(
-        text: widget.surveyInfo.songuoiCoviecLam.toString());
+    _controllerNumberPeopleWorked = new TextEditingController(text: '0');
 
-    _controllerAmountOfLaborTools.text =
-        MoneyFormat.moneyFormat(widget.surveyInfo.dungCuLaoDong.toString());
+    _controllerAmountOfLaborTools.text = null;
 
-    _controllerAmountOfVehiclesTransport.text =
-        MoneyFormat.moneyFormat(widget.surveyInfo.phuongTienDiLai.toString());
+    _controllerAmountOfVehiclesTransport.text = null;
 
-    _controllerAmountLivingEquipment.text =
-        MoneyFormat.moneyFormat(widget.surveyInfo.taiSanSinhHoat.toString());
+    _controllerAmountLivingEquipment.text = null;
 
-    _controllerNumberOfAlleyNearHome = new TextEditingController(
-        text: widget.surveyInfo.hemTruocNha.toString());
+    _controllerNumberOfAlleyNearHome = null;
 
-    _controllerAcreageOfHome = new TextEditingController(
-        text: widget.surveyInfo.dienTichNhaTinhTren1Nguoi.toString());
+    _controllerAcreageOfHome = new TextEditingController(text: '0');
 
-    _controllerPurposeUseMoney = new TextEditingController(
-        text: widget.surveyInfo.mucDichSudungVon.toString());
+    _controllerPurposeUseMoney = new TextEditingController(text: '0');
 
     _controllerAmountRequiredForCapitalUsePurposes.text =
-        MoneyFormat.moneyFormat(widget.surveyInfo.soTienCanThiet
+        MoneyFormat.moneyFormat(surveyInfo.soTienCanThiet
             .toString()); // maybe so tien can cho muc dich su dung von
 
     _controllerAmountMemberHave = new TextEditingController(
-        text: MoneyFormat.moneyFormat(
-            widget.surveyInfo.soTienThanhVienDaCo.toString()));
+        text:
+            MoneyFormat.moneyFormat(surveyInfo.soTienThanhVienDaCo.toString()));
 
     _controllerAmountMemberNeed = new TextEditingController(
-        text:
-            MoneyFormat.moneyFormat(widget.surveyInfo.soTienCanVay.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.soTienCanVay.toString()));
 
     _controllerTotalAmountGetSeason = new TextEditingController(
-        text:
-            MoneyFormat.moneyFormat(widget.surveyInfo.tongVonDauTu.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.tongVonDauTu.toString()));
 
     _controllerTotalAmountMonthlyforActivityIncomeIncrease =
         new TextEditingController(
             text: MoneyFormat.moneyFormat(
-                widget.surveyInfo.thuNhapRongHangThang.toString()));
+                surveyInfo.thuNhapRongHangThang.toString()));
 
     _controllerIncomeOfWifeHusband = new TextEditingController(
-        text: MoneyFormat.moneyFormat(
-            widget.surveyInfo.thuNhapCuaVoChong.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.thuNhapCuaVoChong.toString()));
 
     _controllerIncomeOfChild = new TextEditingController(
-        text: MoneyFormat.moneyFormat(
-            widget.surveyInfo.thuNhapCuaCacCon.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.thuNhapCuaCacCon.toString()));
 
     _controllerIncomeOther = new TextEditingController(
-        text:
-            MoneyFormat.moneyFormat(widget.surveyInfo.thuNhapKhac.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.thuNhapKhac.toString()));
 
     _controllerTotalMonthlyExpenses = new TextEditingController(
         text: MoneyFormat.moneyFormat(
-            widget.surveyInfo.tongChiPhiCuaThanhvien.toString()));
+            surveyInfo.tongChiPhiCuaThanhvien.toString()));
     _controllerTotalPowerAndWater = new TextEditingController(
-        text: MoneyFormat.moneyFormat(
-            widget.surveyInfo.chiPhiDienNuoc.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.chiPhiDienNuoc.toString()));
     _controllerTotalCharge = new TextEditingController(
-        text:
-            MoneyFormat.moneyFormat(widget.surveyInfo.chiPhiAnUong.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.chiPhiAnUong.toString()));
     _controllerTotalFee = new TextEditingController(
-        text:
-            MoneyFormat.moneyFormat(widget.surveyInfo.chiPhiHocTap.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.chiPhiHocTap.toString()));
     _controllerTotalOtherCost = new TextEditingController(
-        text: MoneyFormat.moneyFormat(widget.surveyInfo.chiPhiKhac.toString()));
+        text: MoneyFormat.moneyFormat(surveyInfo.chiPhiKhac.toString()));
     _controllerCostofLoanRepaymentToCEPMonthly = new TextEditingController(
         text: MoneyFormat.moneyFormat(
-            widget.surveyInfo.chiTraTienVayHangThang.toString()));
+            surveyInfo.chiTraTienVayHangThang.toString()));
     _controllerMonthlyBalanceUseCapital = new TextEditingController(
         text: MoneyFormat.moneyFormat(
-            widget.surveyInfo.tichLuyTangThemHangThang.toString()));
+            surveyInfo.tichLuyTangThemHangThang.toString()));
     _controllerTotalAmountCapital1.text =
-        MoneyFormat.moneyFormat(widget.surveyInfo.sotienVay1.toString());
+        MoneyFormat.moneyFormat(surveyInfo.sotienVay1.toString());
 
-    // = new TextEditingController(text: widget.surveyInfo.sotienVay1 == null? "": widget.surveyInfo.sotienVay1.toString());
+    // = new TextEditingController(text: surveyInfo.sotienVay1 == null? "": surveyInfo.sotienVay1.toString());
     _controllerTotalAmountCapital2 = new TextEditingController(
-        text: widget.surveyInfo.sotienVay2 == null
+        text: surveyInfo.sotienVay2 == null
             ? ""
-            : MoneyFormat.moneyFormat(widget.surveyInfo.sotienVay2.toString()));
+            : MoneyFormat.moneyFormat(surveyInfo.sotienVay2.toString()));
     _controllerPoorHouseholdsCode = new TextEditingController(
-        text: widget.surveyInfo.maSoHoNgheo == null
+        text: surveyInfo.maSoHoNgheo == null
             ? ""
-            : widget.surveyInfo.maSoHoNgheo.toString());
+            : surveyInfo.maSoHoNgheo.toString());
     _controllerNameofHouseholdHead = new TextEditingController(
-        text: widget.surveyInfo.hoTenChuHo == null
+        text: surveyInfo.hoTenChuHo == null
             ? ""
-            : widget.surveyInfo.hoTenChuHo.toString());
+            : surveyInfo.hoTenChuHo.toString());
     _controllerSavingsDepositAmountEverytime = new TextEditingController(
-        text: widget.surveyInfo.soTienGuiTietKiemMoiKy == null
+        text: surveyInfo.soTienGuiTietKiemMoiKy == null
             ? ""
             : MoneyFormat.moneyFormat(
-                widget.surveyInfo.soTienGuiTietKiemMoiKy.toString()));
+                surveyInfo.soTienGuiTietKiemMoiKy.toString()));
     _controllerRequiredDeposit = new TextEditingController(
-        text: widget.surveyInfo.tietKiemBatBuocXinRut == null
+        text: surveyInfo.tietKiemBatBuocXinRut == null
             ? ""
             : MoneyFormat.moneyFormat(
-                widget.surveyInfo.tietKiemBatBuocXinRut.toString()));
+                surveyInfo.tietKiemBatBuocXinRut.toString()));
     _controllerOrientationDeposit = new TextEditingController(
-        text: widget.surveyInfo.tietKiemTuNguyenXinRut == null
+        text: surveyInfo.tietKiemTuNguyenXinRut == null
             ? ""
             : MoneyFormat.moneyFormat(
-                widget.surveyInfo.tietKiemTuNguyenXinRut.toString()));
+                surveyInfo.tietKiemTuNguyenXinRut.toString()));
 
     _controllerFlexibleDeposit = new TextEditingController(
-        text: widget.surveyInfo.tietKiemLinhHoatXinRut == null
+        text: surveyInfo.tietKiemLinhHoatXinRut == null
             ? ""
             : MoneyFormat.moneyFormat(
-                widget.surveyInfo.tietKiemLinhHoatXinRut.toString()));
+                surveyInfo.tietKiemLinhHoatXinRut.toString()));
 
     _controllerAmountAdditionalLoan = new TextEditingController(
-        text: widget.surveyInfo.mucVayBoSung == null
+        text: surveyInfo.mucVayBoSung == null
             ? ""
-            : MoneyFormat.moneyFormat(
-                widget.surveyInfo.mucVayBoSung.toString()));
+            : MoneyFormat.moneyFormat(surveyInfo.mucVayBoSung.toString()));
 
     _controllerCreditOfficerNotes = new TextEditingController(
-        text: widget.surveyInfo.ghiChu == null
-            ? ""
-            : widget.surveyInfo.ghiChu.toString());
+        text: surveyInfo.ghiChu == null ? "" : surveyInfo.ghiChu.toString());
 
     _controllerDisbursementAmount = new TextEditingController(
-        text: widget.surveyInfo.soTienDuyetChovay == null
+        text: surveyInfo.soTienDuyetChovay == null
             ? ""
-            : MoneyFormat.moneyFormat(
-                widget.surveyInfo.soTienDuyetChovay.toString()));
+            : MoneyFormat.moneyFormat(surveyInfo.soTienDuyetChovay.toString()));
 
     _controllerDisbursementAmountOrientationDeposit = new TextEditingController(
-        text: widget.surveyInfo.tietKiemDinhHuong == null
+        text: surveyInfo.tietKiemDinhHuong == null
             ? ""
-            : MoneyFormat.moneyFormat(
-                widget.surveyInfo.tietKiemDinhHuong.toString()));
+            : MoneyFormat.moneyFormat(surveyInfo.tietKiemDinhHuong.toString()));
 
-    if (widget.surveyInfo.tongChiPhiCuaThanhvien == 0)
+    if (surveyInfo.tongChiPhiCuaThanhvien == 0)
       selectedIndexTotalMonthly = 1;
     else
       selectedIndexTotalMonthly = 0;
 
-    if (widget.surveyInfo.thoiDiemRut == "") {
+    if (surveyInfo.thoiDiemRut == "") {
       selectedIndexTimeOfWithdrawal = 0;
     } else {
       selectedIndexTimeOfWithdrawal = 1;
@@ -1077,9 +828,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               width: 10,
                                             ),
                                             Text(
-                                              widget.surveyInfo.thanhvienId +
-                                                  ' - ' +
-                                                  widget.surveyInfo.hoVaTen,
+                                              globalUser.getUserInfo.hoTen,
                                               style: TextStyle(
                                                   color: Colors.black87,
                                                   fontSize: 14,
@@ -1103,9 +852,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               ),
                                             ),
                                             Text(
-                                              widget.surveyInfo.gioiTinh == 1
-                                                  ? "Nam"
-                                                  : "Nữ",
+                                              "Nam",
                                               style: TextStyle(
                                                   color: Colors.black87,
                                                   fontSize: 14,
@@ -1119,8 +866,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               ),
                                             ),
                                             Text(
-                                              widget.surveyInfo.ngaySinh
-                                                  .substring(0, 4),
+                                              '',
                                               style: TextStyle(
                                                   color: Colors.black87,
                                                   fontSize: 14,
@@ -1134,7 +880,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               ),
                                             ),
                                             Text(
-                                              widget.surveyInfo.cmnd,
+                                              '',
                                               style: TextStyle(
                                                   color: Colors.black87,
                                                   fontSize: 14,
@@ -1159,7 +905,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               width: 10,
                                             ),
                                             Text(
-                                              widget.surveyInfo.diaChi,
+                                              '',
                                               style: TextStyle(
                                                   color: Colors.black87,
                                                   fontSize: 14,
@@ -1187,10 +933,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                     width: 10,
                                                   ),
                                                   Text(
-                                                    FormatDateConstants
-                                                        .convertDateTimeToDDMMYYYY(
-                                                            widget.surveyInfo
-                                                                .thoigianthamgia),
+                                                    '',
                                                     style: TextStyle(
                                                         color: Colors.black87,
                                                         fontSize: 14,
@@ -1204,7 +947,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                               width: 100,
                                             ),
                                             Text(
-                                              "Vay lần ${widget.surveyInfo.lanvay}",
+                                              "Vay lần 1",
                                               style: TextStyle(
                                                 color: Colors.black87,
                                                 fontSize: 14,
@@ -1472,16 +1215,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                 ],
                                               ),
                                             ),
-                                            onPressed: () {
-                                              Navigator.pushNamed(context,
-                                                  'personalinforuserdetail',
-                                                  arguments: {
-                                                    'customerCode': widget
-                                                        .surveyInfo.thanhvienId,
-                                                    'branchID': widget
-                                                        .surveyInfo.chinhanhId,
-                                                  });
-                                            },
+                                            onPressed: () {},
                                             shape: const StadiumBorder(),
                                           ),
                                         ),
@@ -3934,8 +3668,7 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
                                                             ),
                                                             Container(
                                                               child: Text(
-                                                                widget
-                                                                    .listCombobox
+                                                                listCombobox
                                                                     .where((e) =>
                                                                         e.groupId ==
                                                                             'ThanhVienThuocDien' &&
@@ -4980,35 +4713,5 @@ class _SurveyDetailScreenState extends State<SurveyDetailScreen>
   @override
   bool get wantKeepAlive => true;
 
-  onSaveDataToCommunityDevelopment() {
-    List<KhachHang> listKhachang = new List<KhachHang>();
-    KhachHang model = new KhachHang();
-    model.maKhachHang = widget.surveyInfo.chinhanhId.toString() +
-        '_' +
-        widget.surveyInfo.thanhvienId;
-    model.chinhanhId = widget.surveyInfo.chinhanhId.toDouble();
-    model.duanId = widget.surveyInfo.duanId.toDouble();
-    model.masoql = widget.surveyInfo.masoCanBoKhaoSat;
-    model.cumId = widget.surveyInfo.cumId;
-    model.hoTen = widget.surveyInfo.hoVaTen;
-    model.thanhVienId = widget.surveyInfo.thanhvienId;
-    model.cmnd = widget.surveyInfo.cmnd;
-    model.gioitinh = widget.surveyInfo.gioiTinh.toDouble();
-    model.ngaysinh = widget.surveyInfo.ngaySinh;
-    model.diachi = widget.surveyInfo.diaChi;
-    model.dienthoai = "";
-    model.lanvay = widget.surveyInfo.lanvay.toDouble();
-    model.thoigianthamgia = widget.surveyInfo.thoigianthamgia;
-    model.thanhVienThuocDien = widget.surveyInfo.thanhVienThuocDien.isEmpty
-        ? 0
-        : double.parse(widget.surveyInfo.thanhVienThuocDien);
-    model.maHongheoCanngheo = widget.surveyInfo.maSoHoNgheo;
-    model.ngheNghiep = 0;
-    model.ghiChu = "";
-    model.moHinhNghe = false;
-    model.thunhapHangthangCuaho = 0;
-    model.coVoChongConLaCnv = false;
-    listKhachang.add(model);
-    surVeyBloc.emitEvent(InsertNewCommunityDevelopment(context, listKhachang));
-  }
+  onSaveDataToCommunityDevelopment() {}
 }

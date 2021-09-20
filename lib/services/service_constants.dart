@@ -29,4 +29,5 @@ mixin ServiceName {
   static const String SaveImage = "api/document/saveimage";
   static const String GetDocuments = "api/document/getdocuments";
   static const String DeleteDocument = "api/document/deletedocument";
+  static const String GetCanRegister = "api/NhanVien/DangKyAppNhanVien";
 }

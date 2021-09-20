@@ -1,15 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:qr_code_demo/GlobalTranslations.dart';
 import 'package:qr_code_demo/GlobalUser.dart';
 import 'package:qr_code_demo/bloc_helpers/bloc_event_state.dart';
 import 'package:qr_code_demo/blocs/authentication/authentication_event.dart';
 import 'package:qr_code_demo/blocs/authentication/authentication_state.dart';
+import 'package:qr_code_demo/blocs/download_data/download_data_bloc.dart';
+import 'package:qr_code_demo/blocs/download_data/download_data_event.dart';
+import 'package:qr_code_demo/config/status_authen_local.dart';
 import 'package:qr_code_demo/config/status_code.dart';
 import 'package:qr_code_demo/database/DBProvider.dart';
 import 'package:qr_code_demo/dtos/datalogin.dart';
 import 'package:qr_code_demo/globalRememberUser.dart';
 import 'package:qr_code_demo/globalServer.dart';
+import 'package:qr_code_demo/global_variables/global_register.dart';
+import 'package:qr_code_demo/models/common/register.dart';
 import 'package:qr_code_demo/models/common/version_staff.dart';
 import 'package:qr_code_demo/models/users/user_info.dart';
 import 'package:qr_code_demo/models/users/user_role.dart';
@@ -55,6 +61,8 @@ class AuthenticationBloc
   Stream<AuthenticationState> eventHandler(
       AuthenticationEvent event, AuthenticationState currentState) async* {
     if (event is AuthenticationEventLogin) {
+      DownloadDataBloc downloadDataBloc =
+          new DownloadDataBloc(_sharePreferenceService, _commonService);
       yield AuthenticationState.authenticating(currentState);
 
       /// khi khong co mang//
@@ -69,6 +77,45 @@ class AuthenticationBloc
       ///
 
       // the network is ready to test
+
+      // if isRegister == true => login by register
+      if (GlobalRegister.isRegister && Platform.isIOS) {
+        var rs = await DBProvider.db
+            .authenByRegisterAccount(event.userName, event.password);
+        print(rs);
+        if (rs == StatusAuthenLocal.authenSuccess) {
+          Register registerResult =
+              await DBProvider.db.getRegisterAccount(event.userName);
+
+          UserInfo userInfo = new UserInfo();
+          userInfo.chiNhanhID = 0;
+          userInfo.toTinDung = 0;
+          userInfo.tenChiNhanh = "";
+          userInfo.chucVu = "register";
+          userInfo.hoTen = registerResult.fullname;
+          userInfo.dienThoai = registerResult.phone;
+          userInfo.masoql = "0";
+
+          UserRole userRole = new UserRole();
+
+          globalUser.setUserInfo = userInfo;
+          globalUser.setUserRoles = userRole;
+          globalUser.setUserName = event.userName;
+          yield AuthenticationState.authenticated(event.isRemember,
+              event.userName, event.password, currentState.serverCode);
+          return;
+        } else if (rs == StatusAuthenLocal.wrongPassword) {
+          yield AuthenticationState.failedByUser(currentState);
+          Fluttertoast.showToast(
+            msg: allTranslations.text("IncorrectPassword"),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red[300].withOpacity(0.7),
+            textColor: Colors.white,
+          );
+          return;
+        }
+      }
 
       var dataToken = new DataLogin(
         userName: event.userName,
@@ -109,6 +156,18 @@ class AuthenticationBloc
                 await DBProvider.db.newUserRole(responses[1]);
                 globalUser.setUserInfo = responses[0];
                 globalUser.setUserRoles = responses[1];
+                if (event.userName == 'kiet.hm' && Platform.isIOS) {
+                  downloadDataBloc.emitEvent(DownloadDataSurveyEvent(
+                      chiNhanhID: globalUser.getUserInfo == null
+                          ? ''
+                          : globalUser.getUserInfo.chiNhanhID,
+                      //chiNhanhID: 4,
+                      cumID: 'B101'.toUpperCase(),
+                      ngayxuatDS: '2021-09-16',
+                      //masoql: globalUser.getUserInfo == null ? '' : globalUser.getUserInfo.masoql
+                      masoql: globalUser.getUserInfo.masoql.toString()));
+                }
+
                 yield AuthenticationState.authenticated(event.isRemember,
                     event.userName, event.password, currentState.serverCode);
               }
@@ -142,6 +201,15 @@ class AuthenticationBloc
             );
           }
         } else if (token.statusCode == StatusCodeConstants.BAD_REQUEST) {
+          yield AuthenticationState.failedByUser(currentState);
+          Fluttertoast.showToast(
+            msg: allTranslations.text("ServerNotFound"),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM, // also possible "TOP" and "CENTER"
+            backgroundColor: Colors.red[300].withOpacity(0.7),
+            textColor: Colors.white,
+          );
+        } else {
           yield AuthenticationState.failedByUser(currentState);
           Fluttertoast.showToast(
             msg: allTranslations.text("ServerNotFound"),

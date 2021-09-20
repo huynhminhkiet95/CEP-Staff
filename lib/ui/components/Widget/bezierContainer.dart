@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:qr_code_demo/config/colors.dart';
 
 import 'customClipper.dart';
 
@@ -18,10 +19,8 @@ class BezierContainer extends StatelessWidget {
           height: MediaQuery.of(context).size.height * .9,
           width: MediaQuery.of(context).size.width * 1,
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff223f92), Color(0xff223f92)])),
+            color: ColorConstants.cepColorBackground,
+          ),
         ),
       ),
     ));

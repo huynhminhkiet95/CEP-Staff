@@ -2,6 +2,7 @@
     "app_title": "CEP",
     "main_title": "CEP",
     "password":"Mật khẩu",
+    "confirmpassword":"Nhập lại mật khẩu",
     "user_name":"Tên đăng nhập",
     "sign_in":"Đăng nhập",
     "pleaseinputuser":"Tên đăng nhập",
@@ -19,7 +20,14 @@
     "others":"Khác",
     "PhoneNumber":"Số Điện Thoại",
     "UserNameValidation":"Tên đăng nhập không được trống !",
+    "EmailValidation":"Email không được trống !",
+    "EmailNotMatch":"Email không hợp lệ !",
+    "PhoneValidation":"Số điện thoại không được trống !",
+    "PhoneNotMatch":"Số điện thoại không hợp lệ !",
     "PasswordValidation":"Mật khẩu không được trống !",
+    "ConfirmPasswordValidation":"Mật khẩu không được trống !",
+    "PasswordNotMatch":"Mật khẩu không khớp !",
+    "FullNameValidation":"Họ & Tên không không được trống !",
     "Iamhere":"Tôi ở đây",
     "FullCompletedTrip":"Hoàn thành",
     "Fail":"Thất bại",
@@ -168,7 +176,21 @@
     "SaveImageFailed":"Lưu hình ảnh lên máy chủ thất bại! Vui lòng liên hệ admin để biết thêm chi tiết.",
     "Warning":"Cảnh báo !",
     "NotificationReset":"Hành động này sẽ khôi phục lại hệ thống dữ liệu trên ứng dụng của bạn nhưng sẽ xóa tất cả dữ liệu hiện tại của máy.! Bạn có muốn thực hiện không.?",
-    "RestoreSuccessfully": "Khôi phục hệ thống thành công."
-    
+    "RestoreSuccessfully": "Khôi phục hệ thống thành công.",
+    "RegisterNow": "Đăng ký",
+    "NotCustomer":"Bạn chưa là khách hàng của CEP ?",
+    "FullName":"Họ & Tên",
+    "RegisterSuccessfuly":"Đăng ký tài khoản thành công ! Vui lòng sử dụng tài khoản này để nhập thông tin khảo sát !",
+    "IncorrectPassword":"Mật khẩu không chính xác !",
+    "GeneralInformation":"Thông Tin Chung",
+    "PrivateInformation":"Thông Tin Cá Nhân",
+    "Front":"Mặt trước",
+    "Back":"Mặt sau",
+    "AttachedImage":"Hình ảnh đính kèm",
+    "UpdatePrivateInfo":"Cập Nhật Thông Tin Cá Nhân",
+    "WNEnterThisField":"Vui lòng nhập trường này !",
+    "WNInvalidNumberFormat":"Định dạng số không hợp lệ !",
+    "WNInvalidBranch":"Chi nhánh không hợp lệ !"
+
 
 }

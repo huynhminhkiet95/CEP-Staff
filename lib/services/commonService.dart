@@ -139,4 +139,9 @@ class CommonService {
     return _httpBase.httpPostToken(
         ServiceName.UpdateInfoCustomer.toString(), body);
   }
+
+  Future<Response> getCanRegister() {
+    var url = ServiceName.GetCanRegister.toString();
+    return _httpBase.httpGet(url);
+  }
 }
