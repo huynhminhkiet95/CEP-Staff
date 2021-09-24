@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../GlobalTranslations.dart';
@@ -20,16 +22,19 @@ class ItemDashBoard {
             ? "surveydetailfake"
             : "survey"));
     //globalUser.user = register
-    list.add(new ItemDashBoard(
-        title: allTranslations.text("DeptRecovery"),
-        img: "assets/dashboard/credit-hover.png",
-        icon: Icons.attach_money,
-        router: "deptcollection"));
-    list.add(new ItemDashBoard(
-        title: allTranslations.text("SavingAdvisory"),
-        img: "assets/dashboard/saving-hover.png",
-        icon: Icons.record_voice_over_outlined,
-        router: "error"));
+    if (Platform.isAndroid) {
+      list.add(new ItemDashBoard(
+          title: allTranslations.text("DeptRecovery"),
+          img: "assets/dashboard/credit-hover.png",
+          icon: Icons.attach_money,
+          router: "deptcollection"));
+      list.add(new ItemDashBoard(
+          title: allTranslations.text("SavingAdvisory"),
+          img: "assets/dashboard/saving-hover.png",
+          icon: Icons.record_voice_over_outlined,
+          router: "error"));
+    }
+
     list.add(new ItemDashBoard(
         title: allTranslations.text("CommunityDevelopment"),
         img: "assets/dashboard/develop-hover.png",
